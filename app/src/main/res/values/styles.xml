@@ -5,4 +5,8 @@
         <!-- Customize your theme here. -->
     </style>
 
+    //<!-- Hack for Robolectric to run with appcompat.v7 -->
+    <style name="RoboAppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    </style>
+
 </resources>
