@@ -41,4 +41,5 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:2.4'
+    testCompile 'com.github.tomakehurst:wiremock:1.51:standalone'
 }
