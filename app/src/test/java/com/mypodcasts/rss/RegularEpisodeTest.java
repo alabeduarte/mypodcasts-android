@@ -2,6 +2,7 @@ package com.mypodcasts.rss;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.rometools.fetcher.FetcherException;
+import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.io.FeedException;
 
 import org.junit.Before;
@@ -22,12 +23,11 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class LatestEpisodeTest {
-
+public class RegularEpisodeTest {
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(1111);
 
-  LatestEpisode latestEpisode;
+  RegularEpisode regularEpisode;
   final String url = "http://localhost:1111/rss";
 
   @Before
@@ -35,37 +35,38 @@ public class LatestEpisodeTest {
     givenThat(get(urlEqualTo("/rss"))
         .willReturn(aResponse()
             .withStatus(200)
-            .withBodyFile("latest_episode_rss.xml")));
+            .withBodyFile("rss.xml")));
 
     Feed feed = new Feed(new URL(url));
-    latestEpisode = new LatestEpisode(feed);
+    SyndEntry syndEntry = feed.getEpisodes().get(0);
+    regularEpisode = new RegularEpisode(syndEntry);
   }
 
   @Test
   public void itReturnsTitle() {
-    assertThat(latestEpisode.getTitle(), is("Latest Episode!"));
+    assertThat(regularEpisode.getTitle(), is("123 – My Podcasts"));
   }
 
   @Test
   public void itReturnsDescription() {
-    assertThat(latestEpisode.getDescription(), is("Latest episode description"));
+    assertThat(regularEpisode.getDescription(), is("Some description"));
   }
 
   @Test
   public void itReturnsPublishedDate() throws ParseException {
     DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-    Date expectedDate = formatter.parse("Sat Jun 20 00:10:01 BRT 2015");
+    Date expectedDate = formatter.parse("Fri Jun 19 00:10:01 BRT 2015");
 
-    assertThat(latestEpisode.getPublishedDate(), is(expectedDate));
+    assertThat(regularEpisode.getPublishedDate(), is(expectedDate));
   }
 
   @Test
   public void itReturnsAudioUrl() {
-    assertThat(latestEpisode.getAudioUrl(), is("http://example.com/my_latest_episode.mp3"));
+    assertThat(regularEpisode.getAudioUrl(), is("http://example.com/my_first_podcast.mp3"));
   }
 
   @Test
   public void itReturnsAudioLength() {
-    assertThat(latestEpisode.getAudioLength(), is(60000000L));
+    assertThat(regularEpisode.getAudioLength(), is(52417026L));
   }
 }

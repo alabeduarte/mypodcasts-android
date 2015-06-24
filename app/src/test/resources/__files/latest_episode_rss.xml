@@ -1,0 +1,26 @@
+<rss version="2.0">
+  <channel>
+    <title>MyPodcasts</title>
+    <image>
+      <url>http://example.com/feed_image.jpg</url>
+      <width>144</width>
+      <height>144</height>
+    </image>
+    <item>
+      <title>Latest Episode!</title>
+      <pubDate>Sat, 20 Jun 2015 03:10:01 +0000</pubDate>
+      <description>
+        <![CDATA[Latest episode description]]>
+      </description>
+      <enclosure url="http://example.com/my_latest_episode.mp3" length="60000000" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>First Episode!</title>
+      <pubDate>Fri, 19 Jun 2015 03:10:01 +0000</pubDate>
+      <description>
+        <![CDATA[Some description]]>
+      </description>
+      <enclosure url="http://example.com/my_first_podcast.mp3" length="52417026" type="audio/mpeg"/>
+    </item>
+  </channel>
+</rss>
