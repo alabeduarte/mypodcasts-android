@@ -27,7 +27,11 @@ public class Feed {
     return feed.getTitle();
   }
 
-  public List<SyndEntry> getEntries() {
+  public List<SyndEntry> getEpisodes() {
     return feed.getEntries();
+  }
+
+  public String getImageUrl() {
+    return feed.getImage().getUrl();
   }
 }

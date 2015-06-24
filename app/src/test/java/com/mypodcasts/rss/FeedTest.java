@@ -40,4 +40,14 @@ public class FeedTest {
   public void itReturnsTitle() {
     assertThat(feed.getTitle(), is("MyPodcasts"));
   }
+
+  @Test
+  public void itReturnsImageUrl() {
+    assertThat(feed.getImageUrl(), is("http://example.com/feed_image.jpg"));
+  }
+
+  @Test
+  public void itReturnsEpisodes() {
+    assertThat(feed.getEpisodes().size(), is(1));
+  }
 }

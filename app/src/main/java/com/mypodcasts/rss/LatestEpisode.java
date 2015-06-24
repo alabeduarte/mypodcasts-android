@@ -1,14 +1,14 @@
 package com.mypodcasts.rss;
 
-public class LatestEntry {
+public class LatestEpisode {
   private final Feed feed;
   private final Integer POSITION = 0;
 
-  public LatestEntry(Feed feed) {
+  public LatestEpisode(Feed feed) {
     this.feed = feed;
   }
 
   public String getTitle() {
-    return feed.getEntries().get(POSITION).getTitle();
+    return feed.getEpisodes().get(POSITION).getTitle();
   }
 }
