@@ -41,6 +41,9 @@ public class Feed {
         })
         .toList();
   }
+  public Episode getLatestEpisode() {
+    return getEpisodes().get(0);
+  }
 
   public String getImageUrl() {
     return feed.getImage().getUrl();

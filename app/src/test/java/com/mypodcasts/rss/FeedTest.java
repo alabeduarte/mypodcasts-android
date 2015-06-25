@@ -56,4 +56,9 @@ public class FeedTest {
     assertThat(newestEpisode.getTitle(), is("Newest Episode!"));
     assertThat(oldestEpisode.getTitle(), is("Oldest Episode!"));
   }
+
+  @Test
+  public void itReturnsLatestEpisode() {
+    assertThat(feed.getLatestEpisode().getTitle(), is("Newest Episode!"));
+  }
 }
