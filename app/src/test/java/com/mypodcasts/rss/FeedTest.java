@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -31,7 +32,7 @@ public class FeedTest {
     givenThat(get(urlEqualTo("/rss"))
         .willReturn(aResponse()
             .withStatus(200)
-            .withBodyFile("rss.xml")));
+            .withBodyFile("feed_rss.xml")));
 
     feed = new Feed(new URL(url));
   }
@@ -48,6 +49,11 @@ public class FeedTest {
 
   @Test
   public void itReturnsEpisodes() {
-    assertThat(feed.getEpisodes().size(), is(1));
+    List<Episode> episodes = feed.getEpisodes();
+    Episode newestEpisode = episodes.get(0);
+    Episode oldestEpisode = episodes.get(1);
+
+    assertThat(newestEpisode.getTitle(), is("Newest Episode!"));
+    assertThat(oldestEpisode.getTitle(), is("Oldest Episode!"));
   }
 }

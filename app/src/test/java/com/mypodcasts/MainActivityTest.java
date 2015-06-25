@@ -6,7 +6,7 @@ import android.widget.TextView;
 import com.google.inject.AbstractModule;
 import com.mypodcasts.podcasts.UserPodcasts;
 import com.mypodcasts.rss.Episode;
-import com.mypodcasts.rss.LatestEpisode;
+import com.mypodcasts.stubs.StubbedEpisode;
 
 import org.junit.After;
 import org.junit.Before;
@@ -16,14 +16,10 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import static java.lang.String.valueOf;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -87,34 +83,6 @@ public class MainActivityTest {
 
     activity = buildActivity(MainActivity.class).create().get();
     listView = (ListView) activity.findViewById(R.id.episodesListView);
-  }
-
-  class StubbedEpisode implements Episode {
-
-    @Override
-    public String getTitle() {
-      return null;
-    }
-
-    @Override
-    public String getDescription() {
-      return null;
-    }
-
-    @Override
-    public Date getPublishedDate() {
-      return null;
-    }
-
-    @Override
-    public String getAudioUrl() {
-      return null;
-    }
-
-    @Override
-    public Long getAudioLength() {
-      return null;
-    }
   }
 
   public class MyTestModule extends AbstractModule {

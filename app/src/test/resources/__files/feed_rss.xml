@@ -7,20 +7,20 @@
       <height>144</height>
     </image>
     <item>
-      <title>Latest Episode!</title>
+      <title>Newest Episode!</title>
       <pubDate>Sat, 20 Jun 2015 03:10:01 +0000</pubDate>
       <description>
-        <![CDATA[Latest episode description]]>
+        <![CDATA[Newest episode description]]>
       </description>
-      <enclosure url="http://example.com/my_latest_episode.mp3" length="60000000" type="audio/mpeg"/>
+      <enclosure url="http://example.com/newest_episode.mp3" length="60000000" type="audio/mpeg"/>
     </item>
     <item>
-      <title>First Episode!</title>
+      <title>Oldest Episode!</title>
       <pubDate>Fri, 19 Jun 2015 03:10:01 +0000</pubDate>
       <description>
-        <![CDATA[Some description]]>
+        <![CDATA[Oldest episode description]]>
       </description>
-      <enclosure url="http://example.com/my_first_podcast.mp3" length="52417026" type="audio/mpeg"/>
+      <enclosure url="http://example.com/oldest_podcast.mp3" length="52417026" type="audio/mpeg"/>
     </item>
   </channel>
 </rss>

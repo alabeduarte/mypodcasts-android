@@ -1,5 +1,7 @@
 package com.mypodcasts.rss;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.rometools.fetcher.FeedFetcher;
 import com.rometools.fetcher.FetcherException;
 import com.rometools.fetcher.impl.FeedFetcherCache;
@@ -11,6 +13,7 @@ import com.rometools.rome.io.FeedException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Feed {
@@ -27,8 +30,16 @@ public class Feed {
     return feed.getTitle();
   }
 
-  public List<SyndEntry> getEpisodes() {
-    return feed.getEntries();
+  public List<Episode> getEpisodes() {
+    return FluentIterable
+        .from(feed.getEntries())
+        .transform(new Function<SyndEntry, Episode>() {
+          @Override
+          public Episode apply(SyndEntry entry) {
+            return new RegularEpisode(entry);
+          }
+        })
+        .toList();
   }
 
   public String getImageUrl() {

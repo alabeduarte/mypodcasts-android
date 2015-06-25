@@ -35,6 +35,7 @@ dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   compile 'com.android.support:appcompat-v7:21.0.3'
   compile 'org.roboguice:roboguice:3.+'
+  compile 'com.google.guava:guava:+'
   provided 'org.roboguice:roboblender:3.+'
   compile('com.rometools:rome-fetcher:1.5.0') {
     exclude group: 'commons-codec'

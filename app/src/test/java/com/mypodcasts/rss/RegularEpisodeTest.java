@@ -1,44 +1,59 @@
 package com.mypodcasts.rss;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.rometools.fetcher.FetcherException;
+import com.rometools.rome.feed.synd.SyndContent;
+import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndEntry;
+import com.rometools.rome.feed.synd.SyndEntryImpl;
 import com.rometools.rome.io.FeedException;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.givenThat;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class RegularEpisodeTest {
-  @Rule
-  public WireMockRule wireMockRule = new WireMockRule(1111);
-
   RegularEpisode regularEpisode;
-  final String url = "http://localhost:1111/rss";
 
   @Before
   public void setup() throws IOException, FetcherException, FeedException {
-    givenThat(get(urlEqualTo("/rss"))
-        .willReturn(aResponse()
-            .withStatus(200)
-            .withBodyFile("rss.xml")));
+    SyndEntry syndEntry = new SyndEntryImpl() {
+      @Override
+      public String getTitle() {
+        return "123 – My Podcasts";
+      }
 
-    Feed feed = new Feed(new URL(url));
-    SyndEntry syndEntry = feed.getEpisodes().get(0);
+      @Override
+      public SyndContent getDescription() {
+        SyndContent syndContent = mock(SyndContent.class);
+        when(syndContent.getValue()).thenReturn("Some description");
+
+        return syndContent;
+      }
+
+      @Override
+      public Date getPublishedDate() {
+        return new Date();
+      }
+
+      @Override
+      public List<SyndEnclosure> getEnclosures() {
+        SyndEnclosure enclosure = mock(SyndEnclosure.class);
+        when(enclosure.getUrl()).thenReturn("http://example.com/my_first_podcast.mp3");
+        when(enclosure.getLength()).thenReturn(52417026L);
+
+        return asList(enclosure);
+      }
+    };
+
     regularEpisode = new RegularEpisode(syndEntry);
   }
 
@@ -53,11 +68,8 @@ public class RegularEpisodeTest {
   }
 
   @Test
-  public void itReturnsPublishedDate() throws ParseException {
-    DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-    Date expectedDate = formatter.parse("Fri Jun 19 00:10:01 BRT 2015");
-
-    assertThat(regularEpisode.getPublishedDate(), is(expectedDate));
+  public void itReturnsPublishedDate() {
+    assertThat(regularEpisode.getPublishedDate(), is(new Date()));
   }
 
   @Test
