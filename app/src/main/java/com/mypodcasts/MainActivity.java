@@ -1,15 +1,14 @@
 package com.mypodcasts;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.mypodcasts.podcasts.EpisodesAdapter;
+import com.mypodcasts.rss.Episode;
+
+import java.util.ArrayList;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
@@ -25,7 +24,7 @@ public class MainActivity extends RoboActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    episodesListView.setAdapter(new EpisodesAdapter(getLayoutInflater()));
+    episodesListView.setAdapter(new EpisodesAdapter(new ArrayList<Episode>(), getLayoutInflater()));
   }
 
   @Override

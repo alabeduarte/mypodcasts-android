@@ -6,6 +6,5 @@
   <TextView
       android:id="@+id/episode_title"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:text="123 - Podcast Episode"/>
+      android:layout_height="match_parent"/>
 </LinearLayout>

@@ -7,12 +7,17 @@ import android.widget.TextView;
 
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
+import com.mypodcasts.rss.Episode;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -29,6 +34,8 @@ public class EpisodesAdapterTest {
   View convertView;
   ViewGroup parent;
 
+  List<Episode> episodes;
+
   @Before
   public void setup() {
     activity = buildActivity(Activity.class).create().get();
@@ -40,12 +47,28 @@ public class EpisodesAdapterTest {
       }
     };
 
-    episodesAdapter = new EpisodesAdapter(activity.getLayoutInflater());
+    episodes = new ArrayList<Episode>() {{
+      add(new StubbedEpisode() {
+        @Override
+        public String getTitle() {
+          return "123 - Podcast Episode";
+        }
+      });
+
+      add(new StubbedEpisode() {
+        @Override
+        public String getTitle() {
+          return "456 - Another Podcast Episode";
+        }
+      });
+    }};
+
+    episodesAdapter = new EpisodesAdapter(episodes, activity.getLayoutInflater());
   }
 
   @Test
   public void itReturnsEpisodesCount() {
-    assertThat(episodesAdapter.getCount(), is(1));
+    assertThat(episodesAdapter.getCount(), is(episodes.size()));
   }
 
   @Test
@@ -58,7 +81,7 @@ public class EpisodesAdapterTest {
   }
 
   @Test
-  public void itShowsEpisodeTitle() {
+  public void itShowsFirstEpisodeTitle() {
     int position = 0;
 
     View row = episodesAdapter.getView(position, convertView, parent);
@@ -66,5 +89,44 @@ public class EpisodesAdapterTest {
     String title = valueOf(textView.getText());
 
     assertThat(title, is("123 - Podcast Episode"));
+  }
+
+  @Test
+  public void itShowsSecondEpisodeTitle() {
+    int position = 1;
+
+    View row = episodesAdapter.getView(position, convertView, parent);
+    TextView textView = (TextView) row.findViewById(R.id.episode_title);
+    String title = valueOf(textView.getText());
+
+    assertThat(title, is("456 - Another Podcast Episode"));
+  }
+
+  class StubbedEpisode implements Episode {
+
+    @Override
+    public String getTitle() {
+      return null;
+    }
+
+    @Override
+    public String getDescription() {
+      return null;
+    }
+
+    @Override
+    public Date getPublishedDate() {
+      return null;
+    }
+
+    @Override
+    public String getAudioUrl() {
+      return null;
+    }
+
+    @Override
+    public Long getAudioLength() {
+      return null;
+    }
   }
 }
