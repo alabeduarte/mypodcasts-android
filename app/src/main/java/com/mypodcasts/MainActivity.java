@@ -32,9 +32,7 @@ public class MainActivity extends RoboActivity {
 
     episodesListView.setAdapter(new EpisodesAdapter(Collections.<Episode>emptyList(), getLayoutInflater()));
 
-    LatestEpisodesAsyncTask asyncTask = new LatestEpisodesAsyncTask();
-    List<Episode> latestEpisodes = asyncTask.doInBackground();
-    episodesListView.setAdapter(new EpisodesAdapter(latestEpisodes, getLayoutInflater()));
+    new LatestEpisodesAsyncTask().execute();
   }
 
   class LatestEpisodesAsyncTask extends AsyncTask<Void, Void, List<Episode>> {
@@ -42,6 +40,12 @@ public class MainActivity extends RoboActivity {
     @Override
     protected List<Episode> doInBackground(Void... params) {
       return userPodcasts.getLatestEpisodes();
+    }
+
+    @Override
+    protected void onPostExecute(List<Episode> latestEpisodes) {
+      System.out.println(latestEpisodes);
+      episodesListView.setAdapter(new EpisodesAdapter(latestEpisodes, getLayoutInflater()));
     }
   }
 }
