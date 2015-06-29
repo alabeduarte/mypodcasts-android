@@ -4,9 +4,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
-import com.mypodcasts.podcasts.UserPodcasts;
-import com.mypodcasts.rss.Episode;
-import com.mypodcasts.stubs.StubbedEpisode;
+import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.podcast.UserPodcasts;
 
 import org.junit.After;
 import org.junit.Before;
@@ -69,8 +68,8 @@ public class MainActivityTest {
   @Test
   public void itLoadsLatestEpisodesWhenThereIsEpisodesOnCreate() {
    List<Episode> episodes = new ArrayList<Episode>() {{
-      add(new StubbedEpisode());
-      add(new StubbedEpisode());
+      add(new Episode());
+      add(new Episode());
     }};
 
     createActivityWith(episodes);

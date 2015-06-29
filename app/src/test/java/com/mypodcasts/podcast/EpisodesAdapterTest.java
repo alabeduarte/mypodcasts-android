@@ -1,4 +1,4 @@
-package com.mypodcasts.podcasts;
+package com.mypodcasts.podcast;
 
 import android.app.Activity;
 import android.view.View;
@@ -7,8 +7,7 @@ import android.widget.TextView;
 
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
-import com.mypodcasts.rss.Episode;
-import com.mypodcasts.stubs.StubbedEpisode;
+import com.mypodcasts.podcast.models.Episode;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,14 +47,14 @@ public class EpisodesAdapterTest {
     };
 
     episodes = new ArrayList<Episode>() {{
-      add(new StubbedEpisode() {
+      add(new Episode() {
         @Override
         public String getTitle() {
           return "123 - Podcast Episode";
         }
       });
 
-      add(new StubbedEpisode() {
+      add(new Episode() {
         @Override
         public String getTitle() {
           return "456 - Another Podcast Episode";
