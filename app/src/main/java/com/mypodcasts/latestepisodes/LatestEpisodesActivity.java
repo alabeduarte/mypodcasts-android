@@ -45,7 +45,6 @@ public class LatestEpisodesActivity extends RoboActivity {
 
     @Override
     protected void onPostExecute(List<Episode> latestEpisodes) {
-      System.out.println(latestEpisodes);
       episodesListView.setAdapter(new EpisodesAdapter(latestEpisodes, getLayoutInflater()));
     }
   }
