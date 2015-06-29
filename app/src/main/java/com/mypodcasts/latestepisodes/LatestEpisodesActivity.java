@@ -1,9 +1,10 @@
-package com.mypodcasts;
+package com.mypodcasts.latestepisodes;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodesAdapter;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Episode;
@@ -17,8 +18,8 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
-@ContentView(R.layout.activity_main)
-public class MainActivity extends RoboActivity {
+@ContentView(R.layout.latest_episodes)
+public class LatestEpisodesActivity extends RoboActivity {
 
   @InjectView(R.id.episodesListView)
   ListView episodesListView;

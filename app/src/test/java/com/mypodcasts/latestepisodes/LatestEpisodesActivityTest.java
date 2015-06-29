@@ -1,9 +1,11 @@
-package com.mypodcasts;
+package com.mypodcasts.latestepisodes;
 
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
+import com.mypodcasts.BuildConfig;
+import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.UserPodcasts;
 
@@ -30,9 +32,9 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class MainActivityTest {
+public class LatestEpisodesActivityTest {
 
-  MainActivity activity;
+  LatestEpisodesActivity activity;
   ListView listView;
 
   UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
@@ -80,7 +82,7 @@ public class MainActivityTest {
   void createActivityWith(List<Episode> episodes) {
     when(userPodcastsMock.getLatestEpisodes()).thenReturn(episodes);
 
-    activity = buildActivity(MainActivity.class).create().get();
+    activity = buildActivity(LatestEpisodesActivity.class).create().get();
     listView = (ListView) activity.findViewById(R.id.episodesListView);
   }
 

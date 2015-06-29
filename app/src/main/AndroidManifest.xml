@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme" >
         <meta-data android:name="roboguice.modules" android:value="com.mypodcasts.injection.MyPodcastsModule"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".latestepisodes.LatestEpisodesActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

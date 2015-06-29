@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyPodcasts</string>
+
+    <string name="base_url">http://10.0.2.2:1111</string>
+</resources>
