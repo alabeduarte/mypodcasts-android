@@ -31,7 +31,7 @@ public class UserPodcastsTest {
             .withStatus(200)
             .withBodyFile("user_podcasts.json")));
 
-    userPodcasts = new UserPodcasts();
+    userPodcasts = new UserPodcasts(new RestAdapter.Builder());
   }
 
   @Test

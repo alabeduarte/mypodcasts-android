@@ -4,9 +4,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.EpisodesAdapter;
 import com.mypodcasts.podcast.UserPodcasts;
+import com.mypodcasts.podcast.models.Episode;
 
 import java.util.Collections;
 import java.util.List;
