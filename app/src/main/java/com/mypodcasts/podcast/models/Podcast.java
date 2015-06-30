@@ -1,6 +1,8 @@
 package com.mypodcasts.podcast.models;
 
-public class Podcast {
+import java.io.Serializable;
+
+public class Podcast implements Serializable {
   private String id;
   private String title;
   private Image image;

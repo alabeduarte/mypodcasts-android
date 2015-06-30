@@ -1,6 +1,8 @@
 package com.mypodcasts.podcast.models;
 
-public class Audio {
+import java.io.Serializable;
+
+public class Audio implements Serializable {
   private String url;
   private String length;
   private String type;
