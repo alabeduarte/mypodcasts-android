@@ -11,6 +11,7 @@ import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Episode;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -91,6 +93,17 @@ public class LatestEpisodesActivityTest {
 
     Intent intent = shadowOf(activity).peekNextStartedActivity();
     assertThat(AudioPlayerActivity.class.getCanonicalName(), is(intent.getComponent().getClassName()));
+  }
+
+  @Test
+  public void itOpensAPlayerOnItemClickPassingAnEpisodeToBeOpenned() {
+    Episode episode = new Episode();
+    createActivityWith(asList(episode));
+
+    performItemClickAtPosition(0);
+
+    Intent intent = shadowOf(activity).peekNextStartedActivity();
+    assertThat(intent.getSerializableExtra(episode.toString()), CoreMatchers.<Serializable>is(episode));
   }
 
   void createActivityWith(List<Episode> episodes) {

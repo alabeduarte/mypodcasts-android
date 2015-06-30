@@ -1,6 +1,8 @@
 package com.mypodcasts.podcast.models;
 
-public class Episode {
+import java.io.Serializable;
+
+public class Episode implements Serializable {
 
   private String title;
   private String publishedDate;

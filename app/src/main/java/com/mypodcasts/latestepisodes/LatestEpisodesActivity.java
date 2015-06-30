@@ -39,7 +39,10 @@ public class LatestEpisodesActivity extends RoboActivity {
     episodesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Episode episode = (Episode) episodesListView.getAdapter().getItem(position);
         Intent intent = new Intent(LatestEpisodesActivity.this, AudioPlayerActivity.class);
+        intent.putExtra(episode.toString(), episode);
+
         startActivity(intent);
       }
     });
