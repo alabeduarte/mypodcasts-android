@@ -1,11 +1,13 @@
 package com.mypodcasts.latestepisodes;
 
+import android.content.Intent;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
+import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Episode;
 
@@ -21,12 +23,14 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.RuntimeEnvironment.application;
+import static org.robolectric.Shadows.shadowOf;
 import static roboguice.RoboGuice.Util.reset;
 import static roboguice.RoboGuice.overrideApplicationInjector;
 
@@ -79,11 +83,29 @@ public class LatestEpisodesActivityTest {
     assertThat(listView.getCount(), is(2));
   }
 
+  @Test
+  public void itOpensAPlayerOnItemClick() {
+    createActivityWith(asList(new Episode()));
+
+    performItemClickAtPosition(0);
+
+    Intent intent = shadowOf(activity).peekNextStartedActivity();
+    assertThat(AudioPlayerActivity.class.getCanonicalName(), is(intent.getComponent().getClassName()));
+  }
+
   void createActivityWith(List<Episode> episodes) {
     when(userPodcastsMock.getLatestEpisodes()).thenReturn(episodes);
 
     activity = buildActivity(LatestEpisodesActivity.class).create().get();
     listView = (ListView) activity.findViewById(R.id.episodesListView);
+  }
+
+  private void performItemClickAtPosition(int position) {
+    listView.performItemClick(
+        listView.getAdapter().getView(position, null, null),
+        position,
+        position
+    );
   }
 
   public class MyTestModule extends AbstractModule {
