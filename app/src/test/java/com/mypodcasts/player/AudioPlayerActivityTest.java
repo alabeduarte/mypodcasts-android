@@ -1,11 +1,13 @@
 package com.mypodcasts.player;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
+import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Audio;
 import com.mypodcasts.podcast.models.Episode;
 
@@ -46,6 +48,7 @@ public class AudioPlayerActivityTest {
     }
   };
 
+  ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   MediaPlayer mediaPlayerMock = mock(MediaPlayer.class);
 
   @Before
@@ -56,6 +59,20 @@ public class AudioPlayerActivityTest {
   @After
   public void teardown() {
     reset();
+  }
+
+  @Test
+  public void itShowsAndHideProgressDialog() {
+    String message = application.getString(R.string.loading_episode);
+
+    createActivity();
+
+    InOrder order = inOrder(progressDialogMock);
+
+    order.verify(progressDialogMock).show();
+    order.verify(progressDialogMock).setMessage(message);
+
+    order.verify(progressDialogMock).cancel();
   }
 
   @Test
@@ -131,6 +148,7 @@ public class AudioPlayerActivityTest {
   public class MyTestModule extends AbstractModule {
     @Override
     protected void configure() {
+      bind(ProgressDialog.class).toInstance(progressDialogMock);
       bind(MediaPlayer.class).toInstance(mediaPlayerMock);
     }
   }
