@@ -1,5 +1,6 @@
 package com.mypodcasts.latestepisodes;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,10 +27,13 @@ import roboguice.inject.InjectView;
 public class LatestEpisodesActivity extends RoboActivity {
 
   @InjectView(R.id.episodesListView)
-  ListView episodesListView;
+  private ListView episodesListView;
 
   @Inject
-  UserPodcasts userPodcasts;
+  private ProgressDialog progressDialog;
+
+  @Inject
+  private UserPodcasts userPodcasts;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,11 @@ public class LatestEpisodesActivity extends RoboActivity {
   }
 
   class LatestEpisodesAsyncTask extends AsyncTask<Void, Void, List<Episode>> {
+    @Override
+    protected void onPreExecute() {
+      progressDialog.show();
+      progressDialog.setMessage(getResources().getString(R.string.loading_latest_episodes));
+    }
 
     @Override
     protected List<Episode> doInBackground(Void... params) {
@@ -63,6 +72,7 @@ public class LatestEpisodesActivity extends RoboActivity {
 
     @Override
     protected void onPostExecute(List<Episode> latestEpisodes) {
+      progressDialog.cancel();
       episodesListView.setAdapter(new EpisodesAdapter(latestEpisodes, getLayoutInflater()));
     }
   }

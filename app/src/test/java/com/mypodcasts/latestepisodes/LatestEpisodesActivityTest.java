@@ -1,5 +1,6 @@
 package com.mypodcasts.latestepisodes;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,10 +13,13 @@ import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Episode;
 
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -28,7 +32,9 @@ import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.RuntimeEnvironment.application;
@@ -43,7 +49,9 @@ public class LatestEpisodesActivityTest {
   LatestEpisodesActivity activity;
   ListView listView;
 
+  ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
+
   List<Episode> emptyList = Collections.<Episode>emptyList();
 
   @Before
@@ -54,6 +62,20 @@ public class LatestEpisodesActivityTest {
   @After
   public void teardown() {
     reset();
+  }
+
+  @Test
+  public void itShowsAndHideProgressDialog() {
+    String message = application.getString(R.string.loading_latest_episodes);
+
+    createActivityWith(emptyList);
+
+    InOrder order = inOrder(progressDialogMock);
+
+    order.verify(progressDialogMock).show();
+    order.verify(progressDialogMock).setMessage(message);
+
+    order.verify(progressDialogMock).cancel();
   }
 
   @Test
@@ -97,13 +119,20 @@ public class LatestEpisodesActivityTest {
 
   @Test
   public void itOpensAPlayerOnItemClickPassingAnEpisodeToBeOpenned() {
-    Episode episode = new Episode();
-    createActivityWith(asList(episode));
+    Episode episode1 = new Episode();
+    Episode episode2 = new Episode();
+    createActivityWith(asList(episode1, episode2));
 
-    performItemClickAtPosition(0);
+    int secondPosition = 1;
+    Matcher<Serializable> serializedEpisode2 = CoreMatchers.<Serializable>is(episode2);
 
+    performItemClickAtPosition(secondPosition);
     Intent intent = shadowOf(activity).peekNextStartedActivity();
-    assertThat(intent.getSerializableExtra(Episode.class.toString()), CoreMatchers.<Serializable>is(episode));
+
+    assertThat(
+        intent.getSerializableExtra(Episode.class.toString()),
+        serializedEpisode2
+    );
   }
 
   void createActivityWith(List<Episode> episodes) {
@@ -124,6 +153,7 @@ public class LatestEpisodesActivityTest {
   public class MyTestModule extends AbstractModule {
     @Override
     protected void configure() {
+      bind(ProgressDialog.class).toInstance(progressDialogMock);
       bind(UserPodcasts.class).toInstance(userPodcastsMock);
     }
   }
