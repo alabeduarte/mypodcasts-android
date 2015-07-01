@@ -1,19 +1,25 @@
 package com.mypodcasts.player;
 
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
+import com.mypodcasts.podcast.models.Audio;
 import com.mypodcasts.podcast.models.Episode;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.IOException;
+
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -28,7 +34,17 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 public class AudioPlayerActivityTest {
 
   AudioPlayerActivity activity;
-  Episode episode = new Episode();
+  Episode episode = new Episode() {
+    @Override
+    public Audio getAudio() {
+      return new Audio() {
+        @Override
+        public String getUrl() {
+          return "http://example.com/audio.mp3";
+        }
+      };
+    }
+  };
 
   MediaPlayer mediaPlayerMock = mock(MediaPlayer.class);
 
@@ -40,6 +56,30 @@ public class AudioPlayerActivityTest {
   @After
   public void teardown() {
     reset();
+  }
+
+  @Test
+  public void itSetsAudioStreamType() throws IOException {
+    createActivity();
+
+    verify(mediaPlayerMock).setAudioStreamType(AudioManager.STREAM_MUSIC);
+  }
+
+  @Test
+  public void itSetsDataSourceOnActivityCreation() throws IOException {
+    createActivity();
+
+    verify(mediaPlayerMock).setDataSource(episode.getAudio().getUrl());
+  }
+
+  @Test
+  public void itTriggersPreparationRightAfterSetDataSource() throws IOException {
+    createActivity();
+
+    InOrder order = inOrder(mediaPlayerMock);
+
+    order.verify(mediaPlayerMock).setDataSource(episode.getAudio().getUrl());
+    order.verify(mediaPlayerMock).prepare();
   }
 
   @Test
@@ -84,7 +124,7 @@ public class AudioPlayerActivityTest {
 
   private Intent getIntent() {
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.putExtra(episode.toString(), episode);
+    intent.putExtra(Episode.class.toString(), episode);
     return intent;
   }
 

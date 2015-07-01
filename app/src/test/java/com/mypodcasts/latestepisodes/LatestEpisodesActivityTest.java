@@ -103,7 +103,7 @@ public class LatestEpisodesActivityTest {
     performItemClickAtPosition(0);
 
     Intent intent = shadowOf(activity).peekNextStartedActivity();
-    assertThat(intent.getSerializableExtra(episode.toString()), CoreMatchers.<Serializable>is(episode));
+    assertThat(intent.getSerializableExtra(Episode.class.toString()), CoreMatchers.<Serializable>is(episode));
   }
 
   void createActivityWith(List<Episode> episodes) {
