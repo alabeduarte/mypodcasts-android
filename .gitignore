@@ -5,3 +5,6 @@
 .DS_Store
 /build
 /captures
+
+**/*/node_modules/*
+**/*/npm-debug.log
