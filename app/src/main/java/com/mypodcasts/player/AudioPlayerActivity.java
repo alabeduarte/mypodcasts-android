@@ -24,23 +24,23 @@ public class AudioPlayerActivity extends RoboActivity {
   private ProgressDialog progressDialog;
 
   @Inject
-  private MediaPlayer mediaPlayer;
+  private AudioPlayerStreaming audioPlayerStreaming;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    new Player().execute(getAudioUrl());
+    Episode episode = (Episode) getIntent().getSerializableExtra(Episode.class.toString());
+    new Player().execute(episode);
   }
 
   @Override
   protected void onPause() {
     super.onPause();
-    mediaPlayer.reset();
-    mediaPlayer.release();
+    audioPlayerStreaming.release();
   }
 
-  class Player extends AsyncTask<String, Void, Boolean> {
+  class Player extends AsyncTask<Episode, Void, MediaPlayer> {
 
     @Override
     protected void onPreExecute() {
@@ -49,38 +49,23 @@ public class AudioPlayerActivity extends RoboActivity {
     }
 
     @Override
-    protected Boolean doInBackground(String... params) {
-      startPlayer(getUrl(params));
-
-      return true;
-    }
-
-    @Override
-    protected void onPostExecute(Boolean aBoolean) {
-      progressDialog.cancel();
-    }
-
-    private String getUrl(String... params) {
-      return params[0];
-    }
-
-    private void startPlayer(String url) {
-      mediaPlayer.setAudioStreamType(STREAM_MUSIC);
+    protected MediaPlayer doInBackground(Episode... params) {
       try {
-        mediaPlayer.setDataSource(url);
-        mediaPlayer.prepare();
+        return audioPlayerStreaming.play(getEpisode(params));
       } catch (IOException e) {
         e.printStackTrace();
       }
 
-      if (!mediaPlayer.isPlaying()) {
-        mediaPlayer.start();
-      }
+      return null;
     }
-  }
 
-  private String getAudioUrl() {
-    Episode episode = (Episode) getIntent().getSerializableExtra(Episode.class.toString());
-    return episode.getAudio().getUrl();
+    @Override
+    protected void onPostExecute(MediaPlayer mediaPlayer) {
+      progressDialog.cancel();
+    }
+
+    private Episode getEpisode(Episode... params) {
+      return params[0];
+    }
   }
 }

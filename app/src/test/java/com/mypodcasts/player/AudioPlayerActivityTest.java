@@ -36,20 +36,10 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 public class AudioPlayerActivityTest {
 
   AudioPlayerActivity activity;
-  Episode episode = new Episode() {
-    @Override
-    public Audio getAudio() {
-      return new Audio() {
-        @Override
-        public String getUrl() {
-          return "http://example.com/audio.mp3";
-        }
-      };
-    }
-  };
+  Episode episode = new Episode();
 
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
-  MediaPlayer mediaPlayerMock = mock(MediaPlayer.class);
+  AudioPlayerStreaming audioPlayerStreamingMock = mock(AudioPlayerStreaming.class);
 
   @Before
   public void setup() {
@@ -76,59 +66,18 @@ public class AudioPlayerActivityTest {
   }
 
   @Test
-  public void itSetsAudioStreamType() throws IOException {
+  public void itPlaysAudioStreamingGivenAnEpisode() throws IOException {
     createActivity();
 
-    verify(mediaPlayerMock).setAudioStreamType(AudioManager.STREAM_MUSIC);
+    verify(audioPlayerStreamingMock).play(episode);
   }
 
   @Test
-  public void itSetsDataSourceOnActivityCreation() throws IOException {
-    createActivity();
-
-    verify(mediaPlayerMock).setDataSource(episode.getAudio().getUrl());
-  }
-
-  @Test
-  public void itTriggersPreparationRightAfterSetDataSource() throws IOException {
-    createActivity();
-
-    InOrder order = inOrder(mediaPlayerMock);
-
-    order.verify(mediaPlayerMock).setDataSource(episode.getAudio().getUrl());
-    order.verify(mediaPlayerMock).prepare();
-  }
-
-  @Test
-  public void itStartsPlayerOnActivityCreation() {
-    createActivity();
-
-    verify(mediaPlayerMock).start();
-  }
-
-  @Test
-  public void itDoNotStartIfItsAlreadyPlaying() {
-    when(mediaPlayerMock.isPlaying()).thenReturn(true);
-
-    createActivity();
-
-    verify(mediaPlayerMock, never()).start();
-  }
-
-  @Test
-  public void itResetsMediaPlayerOnActivityPause() {
+  public void itReleasesAudioPlayerOnActivityPause() {
     Intent intent = getIntent();
     activity = buildActivity(AudioPlayerActivity.class).withIntent(intent).create().pause().get();
 
-    verify(mediaPlayerMock).reset();
-  }
-
-  @Test
-  public void itReleasesMediaPlayerOnActivityPause() {
-    Intent intent = getIntent();
-    activity = buildActivity(AudioPlayerActivity.class).withIntent(intent).create().pause().get();
-
-    verify(mediaPlayerMock).release();
+    verify(audioPlayerStreamingMock).release();
   }
 
   private void createActivity() {
@@ -147,7 +96,7 @@ public class AudioPlayerActivityTest {
     @Override
     protected void configure() {
       bind(ProgressDialog.class).toInstance(progressDialogMock);
-      bind(MediaPlayer.class).toInstance(mediaPlayerMock);
+      bind(AudioPlayerStreaming.class).toInstance(audioPlayerStreamingMock);
     }
   }
 }
