@@ -101,8 +101,6 @@ public class AudioPlayerActivityTest {
 
   @Test
   public void itStartsPlayerOnActivityCreation() {
-    when(mediaPlayerMock.isPlaying()).thenReturn(false);
-
     createActivity();
 
     verify(mediaPlayerMock).start();

@@ -13,9 +13,11 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import roboguice.activity.RoboActivity;
+import roboguice.inject.ContentView;
 
 import static android.media.AudioManager.STREAM_MUSIC;
 
+@ContentView(R.layout.audio_player)
 public class AudioPlayerActivity extends RoboActivity {
 
   @Inject
