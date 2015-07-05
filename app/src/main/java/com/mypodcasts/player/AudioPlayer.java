@@ -11,6 +11,10 @@ public interface AudioPlayer {
 
   MediaPlayer pause();
 
+  MediaPlayer unPause(Episode episode);
+
+  MediaPlayer play(Episode episode, int seekTo);
+
   void release();
 
   boolean isPlaying();

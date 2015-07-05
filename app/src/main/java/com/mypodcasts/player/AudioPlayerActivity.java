@@ -37,16 +37,24 @@ public class AudioPlayerActivity extends RoboActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    final Episode episode = (Episode)
+        getIntent().getSerializableExtra(Episode.class.toString());
+
+    togglePlayButtonLabel();
     playPauseButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        audioPlayerStreaming.pause();
+        if (audioPlayerStreaming.isPlaying()) {
+          audioPlayerStreaming.pause();
+        } else {
+          audioPlayerStreaming.unPause(episode);
+        }
+
         togglePlayButtonLabel();
       }
     });
-    togglePlayButtonLabel();
 
-    Episode episode = (Episode) getIntent().getSerializableExtra(Episode.class.toString());
+
     new Player(episode).execute();
   }
 

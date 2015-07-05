@@ -37,6 +37,19 @@ public class AudioPlayerStreaming implements AudioPlayer {
   }
 
   @Override
+  public MediaPlayer unPause(Episode episode) {
+    return play(episode, mediaPlayer.getCurrentPosition());
+  }
+
+  @Override
+  public MediaPlayer play(Episode episode, int millisecond) {
+    mediaPlayer.seekTo(millisecond);
+    mediaPlayer.start();
+
+    return mediaPlayer;
+  }
+
+  @Override
   public void release() {
     mediaPlayer.reset();
     mediaPlayer.release();

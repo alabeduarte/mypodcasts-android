@@ -16,6 +16,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -63,6 +64,34 @@ public class AudioPlayerStreamingTest {
     audioPlayerStreaming.pause();
 
     verify(mediaPlayerMock).pause();
+  }
+
+  @Test
+  public void itPlaysGivenEpisodeUrlAndSeekToMilliseconds() throws IOException {
+    int msec = 1000;
+    audioPlayerStreaming.play(episode, msec);
+
+    InOrder order = inOrder(mediaPlayerMock);
+
+    order.verify(mediaPlayerMock, never()).setDataSource(episode.getAudio().getUrl());
+    order.verify(mediaPlayerMock, never()).prepare();
+
+    order.verify(mediaPlayerMock).seekTo(msec);
+    order.verify(mediaPlayerMock).start();
+  }
+
+  @Test
+  public void itUnPausesGivenCurrentPosition() throws IOException {
+    int msec = 1000;
+    when(mediaPlayerMock.getCurrentPosition()).thenReturn(msec);
+
+    audioPlayerStreaming.unPause(episode);
+
+    InOrder order = inOrder(mediaPlayerMock);
+    order.verify(mediaPlayerMock, never()).setDataSource(episode.getAudio().getUrl());
+    order.verify(mediaPlayerMock, never()).prepare();
+    order.verify(mediaPlayerMock).seekTo(msec);
+    order.verify(mediaPlayerMock).start();
   }
 
   @Test

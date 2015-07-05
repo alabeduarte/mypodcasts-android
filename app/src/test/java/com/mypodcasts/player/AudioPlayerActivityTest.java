@@ -105,7 +105,7 @@ public class AudioPlayerActivityTest {
   }
 
   @Test
-  public void itPausesAudioPlayerOnTouchTheButton() {
+  public void itChangesButtonLabelToPlayOnTouchTheButton() {
     when(audioPlayerStreamingMock.isPlaying()).thenReturn(true);
     createActivity();
 
@@ -117,7 +117,43 @@ public class AudioPlayerActivityTest {
     String play = application.getResources().getString(R.string.play);
 
     assertThat(valueOf(button.getText()), is(play));
+  }
+
+  @Test
+  public void itPausesAudioPlayerOnTouchTheButton() {
+    when(audioPlayerStreamingMock.isPlaying()).thenReturn(true);
+    createActivity();
+
+    Button button = playPauseButton();
+    button.performClick();
+
     verify(audioPlayerStreamingMock).pause();
+  }
+
+  @Test
+  public void itChangesButtonLabelToPauseOnTouchTheButton() {
+    when(audioPlayerStreamingMock.isPlaying()).thenReturn(false);
+    createActivity();
+
+    Button button = playPauseButton();
+    when(audioPlayerStreamingMock.isPlaying()).thenReturn(true);
+
+    button.performClick();
+
+    String pause = application.getResources().getString(R.string.pause);
+
+    assertThat(valueOf(button.getText()), is(pause));
+  }
+
+  @Test
+  public void itPlaysFromTheLatestPointAfterPause() throws IOException {
+    when(audioPlayerStreamingMock.isPlaying()).thenReturn(false);
+    createActivity();
+
+    Button button = playPauseButton();
+    button.performClick();
+
+    verify(audioPlayerStreamingMock).unPause(episode);
   }
 
   private void createActivity() {
