@@ -10,4 +10,6 @@ public interface AudioPlayer {
   MediaPlayer play(Episode episode) throws IOException;
 
   void release();
+
+  boolean isPlaying();
 }

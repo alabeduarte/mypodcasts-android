@@ -12,9 +12,12 @@ import org.mockito.InOrder;
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AudioPlayerStreamingTest {
 
@@ -63,5 +66,19 @@ public class AudioPlayerStreamingTest {
 
     order.verify(mediaPlayerMock).reset();
     order.verify(mediaPlayerMock).release();
+  }
+
+  @Test
+  public void itReturnsFalseIfMediaPlayerIsNotPlaying() {
+    when(mediaPlayerMock.isPlaying()).thenReturn(false);
+
+    assertThat(audioPlayerStreaming.isPlaying(), is(false));
+  }
+
+  @Test
+  public void itReturnsTrueIfMediaPlayerIsPlaying() {
+    when(mediaPlayerMock.isPlaying()).thenReturn(true);
+
+    assertThat(audioPlayerStreaming.isPlaying(), is(true));
   }
 }

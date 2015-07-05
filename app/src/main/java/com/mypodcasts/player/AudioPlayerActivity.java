@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.Button;
 
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
@@ -14,11 +15,16 @@ import javax.inject.Inject;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 
 import static android.media.AudioManager.STREAM_MUSIC;
+import static java.lang.String.valueOf;
 
 @ContentView(R.layout.audio_player)
 public class AudioPlayerActivity extends RoboActivity {
+
+  @InjectView(R.id.play_pause_button)
+  Button playPauseButton;
 
   @Inject
   private ProgressDialog progressDialog;
@@ -29,6 +35,8 @@ public class AudioPlayerActivity extends RoboActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    togglePlayButtonLabel();
 
     Episode episode = (Episode) getIntent().getSerializableExtra(Episode.class.toString());
     new Player().execute(episode);
@@ -62,10 +70,19 @@ public class AudioPlayerActivity extends RoboActivity {
     @Override
     protected void onPostExecute(MediaPlayer mediaPlayer) {
       progressDialog.cancel();
+      togglePlayButtonLabel();
     }
 
     private Episode getEpisode(Episode... params) {
       return params[0];
     }
+  }
+
+  private void togglePlayButtonLabel() {
+    String buttonLabel = audioPlayerStreaming.isPlaying() ?
+        valueOf(getResources().getText(R.string.pause)) :
+        valueOf(getResources().getText(R.string.play));
+
+    playPauseButton.setText(buttonLabel);
   }
 }

@@ -34,4 +34,9 @@ public class AudioPlayerStreaming implements AudioPlayer {
     mediaPlayer.reset();
     mediaPlayer.release();
   }
+
+  @Override
+  public boolean isPlaying() {
+    return mediaPlayer.isPlaying();
+  }
 }

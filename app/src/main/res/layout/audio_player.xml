@@ -2,4 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+  <Button
+      android:text="Play/Pause Button"
+      android:id="@+id/play_pause_button"
+      android:layout_alignParentBottom="true"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
 </RelativeLayout>

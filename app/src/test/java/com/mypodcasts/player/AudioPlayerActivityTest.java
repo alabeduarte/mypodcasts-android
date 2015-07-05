@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.widget.Button;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
@@ -21,6 +22,9 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
+import static java.lang.String.valueOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -73,6 +77,30 @@ public class AudioPlayerActivityTest {
   }
 
   @Test
+  public void itShowsPlayButtonBeforeSTartPlayingAudio() {
+    when(audioPlayerStreamingMock.isPlaying()).thenReturn(false);
+
+    createActivity();
+
+    Button button = playPauseButton();
+    String buttonLabel = application.getResources().getString(R.string.play);
+
+    assertThat(valueOf(button.getText()), is(buttonLabel));
+  }
+
+  @Test
+  public void itShowsPauseButtonWhenPlayingAudio() {
+    when(audioPlayerStreamingMock.isPlaying()).thenReturn(true);
+
+    createActivity();
+
+    Button button = playPauseButton();
+    String buttonLabel = application.getResources().getString(R.string.pause);
+
+    assertThat(valueOf(button.getText()), is(buttonLabel));
+  }
+
+  @Test
   public void itReleasesAudioPlayerOnActivityPause() {
     Intent intent = getIntent();
     activity = buildActivity(AudioPlayerActivity.class).withIntent(intent).create().pause().get();
@@ -90,6 +118,10 @@ public class AudioPlayerActivityTest {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.putExtra(Episode.class.toString(), episode);
     return intent;
+  }
+
+  private Button playPauseButton() {
+    return (Button) activity.findViewById(R.id.play_pause_button);
   }
 
   public class MyTestModule extends AbstractModule {
