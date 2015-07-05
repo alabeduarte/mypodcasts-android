@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import com.mypodcasts.R;
@@ -36,10 +37,17 @@ public class AudioPlayerActivity extends RoboActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    playPauseButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        audioPlayerStreaming.pause();
+        togglePlayButtonLabel();
+      }
+    });
     togglePlayButtonLabel();
 
     Episode episode = (Episode) getIntent().getSerializableExtra(Episode.class.toString());
-    new Player().execute(episode);
+    new Player(episode).execute();
   }
 
   @Override
@@ -48,7 +56,12 @@ public class AudioPlayerActivity extends RoboActivity {
     audioPlayerStreaming.release();
   }
 
-  class Player extends AsyncTask<Episode, Void, MediaPlayer> {
+  class Player extends AsyncTask<Void, Void, MediaPlayer> {
+    private final Episode episode;
+
+    Player(Episode episode) {
+      this.episode = episode;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -57,9 +70,9 @@ public class AudioPlayerActivity extends RoboActivity {
     }
 
     @Override
-    protected MediaPlayer doInBackground(Episode... params) {
+    protected MediaPlayer doInBackground(Void... params) {
       try {
-        return audioPlayerStreaming.play(getEpisode(params));
+        return audioPlayerStreaming.play(episode);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -71,10 +84,6 @@ public class AudioPlayerActivity extends RoboActivity {
     protected void onPostExecute(MediaPlayer mediaPlayer) {
       progressDialog.cancel();
       togglePlayButtonLabel();
-    }
-
-    private Episode getEpisode(Episode... params) {
-      return params[0];
     }
   }
 

@@ -30,6 +30,13 @@ public class AudioPlayerStreaming implements AudioPlayer {
   }
 
   @Override
+  public MediaPlayer pause() {
+    mediaPlayer.pause();
+
+    return mediaPlayer;
+  }
+
+  @Override
   public void release() {
     mediaPlayer.reset();
     mediaPlayer.release();

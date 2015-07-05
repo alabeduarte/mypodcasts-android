@@ -59,6 +59,13 @@ public class AudioPlayerStreamingTest {
   }
 
   @Test
+  public void itPausesMediaPlayer() {
+    audioPlayerStreaming.pause();
+
+    verify(mediaPlayerMock).pause();
+  }
+
+  @Test
   public void itReleasesMediaPlayer() {
     audioPlayerStreaming.release();
 

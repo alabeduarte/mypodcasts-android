@@ -2,14 +2,11 @@ package com.mypodcasts.player;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.widget.Button;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
-import com.mypodcasts.podcast.models.Audio;
 import com.mypodcasts.podcast.models.Episode;
 
 import org.junit.After;
@@ -27,7 +24,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
@@ -83,9 +79,9 @@ public class AudioPlayerActivityTest {
     createActivity();
 
     Button button = playPauseButton();
-    String buttonLabel = application.getResources().getString(R.string.play);
+    String play = application.getResources().getString(R.string.play);
 
-    assertThat(valueOf(button.getText()), is(buttonLabel));
+    assertThat(valueOf(button.getText()), is(play));
   }
 
   @Test
@@ -95,9 +91,9 @@ public class AudioPlayerActivityTest {
     createActivity();
 
     Button button = playPauseButton();
-    String buttonLabel = application.getResources().getString(R.string.pause);
+    String pause = application.getResources().getString(R.string.pause);
 
-    assertThat(valueOf(button.getText()), is(buttonLabel));
+    assertThat(valueOf(button.getText()), is(pause));
   }
 
   @Test
@@ -106,6 +102,22 @@ public class AudioPlayerActivityTest {
     activity = buildActivity(AudioPlayerActivity.class).withIntent(intent).create().pause().get();
 
     verify(audioPlayerStreamingMock).release();
+  }
+
+  @Test
+  public void itPausesAudioPlayerOnTouchTheButton() {
+    when(audioPlayerStreamingMock.isPlaying()).thenReturn(true);
+    createActivity();
+
+    Button button = playPauseButton();
+    when(audioPlayerStreamingMock.isPlaying()).thenReturn(false);
+
+    button.performClick();
+
+    String play = application.getResources().getString(R.string.play);
+
+    assertThat(valueOf(button.getText()), is(play));
+    verify(audioPlayerStreamingMock).pause();
   }
 
   private void createActivity() {

@@ -9,6 +9,8 @@ import java.io.IOException;
 public interface AudioPlayer {
   MediaPlayer play(Episode episode) throws IOException;
 
+  MediaPlayer pause();
+
   void release();
 
   boolean isPlaying();
