@@ -28,6 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.RuntimeEnvironment.application;
+import static org.robolectric.Shadows.shadowOf;
 import static roboguice.RoboGuice.Util.reset;
 import static roboguice.RoboGuice.overrideApplicationInjector;
 
@@ -39,7 +40,7 @@ public class AudioPlayerActivityTest {
   Episode episode = new Episode();
 
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
-  AudioPlayerStreaming audioPlayerStreamingMock = mock(AudioPlayerStreaming.class);
+  AudioPlayerMediator audioPlayerMediatorMock = mock(AudioPlayerMediator.class);
 
   @Before
   public void setup() {
@@ -66,15 +67,15 @@ public class AudioPlayerActivityTest {
   }
 
   @Test
-  public void itPlaysAudioStreamingGivenAnEpisode() throws IOException {
+  public void itStartsAudioServiceGivenAnEpisode() throws IOException {
     createActivity();
 
-    verify(audioPlayerStreamingMock).play(episode);
+    verify(audioPlayerMediatorMock).startService(activity, episode);
   }
 
   @Test
   public void itShowsPlayButtonBeforeSTartPlayingAudio() {
-    when(audioPlayerStreamingMock.isPlaying()).thenReturn(false);
+    when(audioPlayerMediatorMock.isPlaying()).thenReturn(false);
 
     createActivity();
 
@@ -86,7 +87,7 @@ public class AudioPlayerActivityTest {
 
   @Test
   public void itShowsPauseButtonWhenPlayingAudio() {
-    when(audioPlayerStreamingMock.isPlaying()).thenReturn(true);
+    when(audioPlayerMediatorMock.isPlaying()).thenReturn(true);
 
     createActivity();
 
@@ -97,20 +98,12 @@ public class AudioPlayerActivityTest {
   }
 
   @Test
-  public void itReleasesAudioPlayerOnActivityPause() {
-    Intent intent = getIntent();
-    activity = buildActivity(AudioPlayerActivity.class).withIntent(intent).create().pause().get();
-
-    verify(audioPlayerStreamingMock).release();
-  }
-
-  @Test
   public void itChangesButtonLabelToPlayOnTouchTheButton() {
-    when(audioPlayerStreamingMock.isPlaying()).thenReturn(true);
+    when(audioPlayerMediatorMock.isPlaying()).thenReturn(true);
     createActivity();
 
     Button button = playPauseButton();
-    when(audioPlayerStreamingMock.isPlaying()).thenReturn(false);
+    when(audioPlayerMediatorMock.isPlaying()).thenReturn(false);
 
     button.performClick();
 
@@ -120,23 +113,12 @@ public class AudioPlayerActivityTest {
   }
 
   @Test
-  public void itPausesAudioPlayerOnTouchTheButton() {
-    when(audioPlayerStreamingMock.isPlaying()).thenReturn(true);
-    createActivity();
-
-    Button button = playPauseButton();
-    button.performClick();
-
-    verify(audioPlayerStreamingMock).pause();
-  }
-
-  @Test
   public void itChangesButtonLabelToPauseOnTouchTheButton() {
-    when(audioPlayerStreamingMock.isPlaying()).thenReturn(false);
+    when(audioPlayerMediatorMock.isPlaying()).thenReturn(false);
     createActivity();
 
     Button button = playPauseButton();
-    when(audioPlayerStreamingMock.isPlaying()).thenReturn(true);
+    when(audioPlayerMediatorMock.isPlaying()).thenReturn(true);
 
     button.performClick();
 
@@ -146,14 +128,13 @@ public class AudioPlayerActivityTest {
   }
 
   @Test
-  public void itPlaysFromTheLatestPointAfterPause() throws IOException {
-    when(audioPlayerStreamingMock.isPlaying()).thenReturn(false);
+  public void itTogglesPlayPauseForEpisodeOnTouchTheButton() {
     createActivity();
 
     Button button = playPauseButton();
     button.performClick();
 
-    verify(audioPlayerStreamingMock).unPause(episode);
+    verify(audioPlayerMediatorMock).togglePlayPauseFor(episode);
   }
 
   private void createActivity() {
@@ -176,7 +157,7 @@ public class AudioPlayerActivityTest {
     @Override
     protected void configure() {
       bind(ProgressDialog.class).toInstance(progressDialogMock);
-      bind(AudioPlayerStreaming.class).toInstance(audioPlayerStreamingMock);
+      bind(AudioPlayerMediator.class).toInstance(audioPlayerMediatorMock);
     }
   }
 }
