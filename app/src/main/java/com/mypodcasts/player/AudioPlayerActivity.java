@@ -1,6 +1,7 @@
 package com.mypodcasts.player;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -26,12 +27,10 @@ public class AudioPlayerActivity extends RoboActivity {
 
   @Inject
   private EventBus eventBus;
+  private AudioPlayerService audioPlayerService;
 
   @Inject
   private ProgressDialog progressDialog;
-
-  @Inject
-  private AudioPlayerMediator audioPlayerMediator;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +49,12 @@ public class AudioPlayerActivity extends RoboActivity {
     eventBus.unregister(this);
   }
 
-  class AudioPlayerAsyncTask extends AsyncTask<Void, Void, AudioPlayerMediator> {
+  public void onEvent(AudioPlayingEvent event){
+    audioPlayerService = event.getAudioPlayerService();
+    togglePlayButtonLabel();
+  }
+
+  class AudioPlayerAsyncTask extends AsyncTask<Void, Void, Episode> {
 
     @Override
     protected void onPreExecute() {
@@ -59,26 +63,33 @@ public class AudioPlayerActivity extends RoboActivity {
     }
 
     @Override
-    protected AudioPlayerMediator doInBackground(Void... params) {
+    protected Episode doInBackground(Void... params) {
       return playAudio();
     }
 
     @Override
-    protected void onPostExecute(AudioPlayerMediator audioPlayerMediator) {
+    protected void onPostExecute(Episode episode) {
       progressDialog.cancel();
-      togglePlayButtonLabel();
     }
   }
 
-  private AudioPlayerMediator playAudio() {
+  private Episode playAudio() {
     final Episode episode = (Episode)
         getIntent().getSerializableExtra(Episode.class.toString());
 
-    return audioPlayerMediator.startService(this, episode);
+    Intent intent = new Intent(
+        AudioPlayerActivity.this,
+        AudioPlayerService.class
+    );
+
+    intent.putExtra(Episode.class.toString(), episode);
+    startService(intent);
+
+    return episode;
   }
 
   private void togglePlayButtonLabel() {
-    String buttonLabel = audioPlayerMediator.isPlaying() ?
+    String buttonLabel = audioPlayerService.isPlaying() ?
         valueOf(getResources().getText(R.string.pause)) :
         valueOf(getResources().getText(R.string.play));
 
@@ -93,7 +104,7 @@ public class AudioPlayerActivity extends RoboActivity {
     playPauseButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        audioPlayerMediator.togglePlayPauseFor(episode);
+        audioPlayerService.togglePlayPauseFor(episode);
 
         togglePlayButtonLabel();
       }

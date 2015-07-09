@@ -6,4 +6,8 @@ public class AudioPlayingEvent {
   public AudioPlayingEvent(AudioPlayerService audioPlayerService) {
     this.audioPlayerService = audioPlayerService;
   }
+
+  public AudioPlayerService getAudioPlayerService() {
+    return audioPlayerService;
+  }
 }

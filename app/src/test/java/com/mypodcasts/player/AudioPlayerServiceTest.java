@@ -104,6 +104,35 @@ public class AudioPlayerServiceTest {
     verify(audioPlayerStreamingMock).release();
   }
 
+  @Test
+  public void itReturnsIfIsPlaying() {
+    createService();
+
+    service.isPlaying();
+
+    verify(audioPlayerStreamingMock).isPlaying();
+  }
+
+  @Test
+  public void itPausesIfPlaying() {
+    createService();
+    when(audioPlayerStreamingMock.isPlaying()).thenReturn(true);
+
+    service.togglePlayPauseFor(episode);
+
+    verify(audioPlayerStreamingMock).pause();
+  }
+
+  @Test
+  public void itUnPausesIfNotPlaying() {
+    createService();
+    when(audioPlayerStreamingMock.isPlaying()).thenReturn(false);
+
+    service.togglePlayPauseFor(episode);
+
+    verify(audioPlayerStreamingMock).unPause(episode);
+  }
+
   private void createService() {
     Intent intent = getIntent();
 
