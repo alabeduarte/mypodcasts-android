@@ -97,10 +97,11 @@
     <orderEntry type="library" exported="" name="velocity-1.7" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="shadows-core-3.0-rc3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="commons-codec-1.6" level="project" />
+    <orderEntry type="library" exported="" name="eventbus-2.4.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="asm-tree-5.0.1" level="project" />
     <orderEntry type="library" exported="" name="commons-collections-3.2.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="asm-analysis-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-annotations-3.0-rc3" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="asm-analysis-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-utils-3.0-rc3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jetty-6.1.26" level="project" />
@@ -111,9 +112,9 @@
     <orderEntry type="library" exported="" scope="TEST" name="asm-util-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="json-smart-1.1.1" level="project" />
     <orderEntry type="library" exported="" name="roboguice-3.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="asm-5.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="jackson-databind-2.4.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jackson-core-2.4.2" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="jackson-databind-2.4.2" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="asm-5.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="commons-lang-2.6" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jsonassert-1.2.3" level="project" />
@@ -123,12 +124,12 @@
     <orderEntry type="library" exported="" scope="TEST" name="ant-1.8.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="httpclient-4.3.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-3.0-rc3" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="wiremock-1.51-standalone" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="accessibility-test-framework-1.0" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="wiremock-1.51-standalone" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="mockito-core-1.10.19" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="sqlite4java-0.282" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="maven-ant-tasks-2.1.3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jackson-annotations-2.4.2" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="sqlite4java-0.282" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="commons-logging-1.1.3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="mockable-android-21" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="json-20090211" level="project" />

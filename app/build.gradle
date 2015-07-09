@@ -41,6 +41,8 @@ dependencies {
   compile 'com.squareup.retrofit:retrofit:+'
   compile 'com.google.guava:guava:+'
 
+  compile 'de.greenrobot:eventbus:2.4.0'
+
   testCompile 'junit:junit:4.12'
   testCompile "org.mockito:mockito-core:1.+"
   testCompile 'org.robolectric:robolectric:3.0-rc3'

@@ -11,6 +11,7 @@ import com.mypodcasts.podcast.models.Episode;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -24,6 +25,9 @@ public class AudioPlayerActivity extends RoboActivity {
   Button playPauseButton;
 
   @Inject
+  private EventBus eventBus;
+
+  @Inject
   private ProgressDialog progressDialog;
 
   @Inject
@@ -32,6 +36,7 @@ public class AudioPlayerActivity extends RoboActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    eventBus.register(this);
 
     setupPlayPauseButton();
 
@@ -41,6 +46,8 @@ public class AudioPlayerActivity extends RoboActivity {
   @Override
   protected void onStop() {
     super.onStop();
+
+    eventBus.unregister(this);
   }
 
   class AudioPlayerAsyncTask extends AsyncTask<Void, Void, AudioPlayerMediator> {

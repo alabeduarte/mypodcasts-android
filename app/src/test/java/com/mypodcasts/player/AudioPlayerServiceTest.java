@@ -17,7 +17,10 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
+import de.greenrobot.event.EventBus;
+
 import static com.mypodcasts.player.AudioPlayerService.ONGOING_NOTIFICATION_ID;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -37,6 +40,7 @@ public class AudioPlayerServiceTest {
   AudioPlayerStreaming audioPlayerStreamingMock = mock(AudioPlayerStreaming.class);
   Notification.Builder notificationBuilderMock = mock(Notification.Builder.class);
   Notification notificationMock = mock(Notification.class);
+  private EventBus eventBusMock = mock(EventBus.class);
 
   @Before
   public void setup() {
@@ -86,6 +90,13 @@ public class AudioPlayerServiceTest {
   }
 
   @Test
+  public void itBroadcastsEventThatAudioIsPlaying() {
+    createService();
+
+    verify(eventBusMock).post(any(AudioPlayingEvent.class));
+  }
+
+  @Test
   public void itReleasesAudioPlayerOnDestroy() {
     Intent intent = getIntent();
     service = buildService(AudioPlayerService.class).withIntent(intent).create().destroy().get();
@@ -114,6 +125,7 @@ public class AudioPlayerServiceTest {
   public class MyTestModule extends AbstractModule {
     @Override
     protected void configure() {
+      bind(EventBus.class).toInstance(eventBusMock);
       bind(AudioPlayerStreaming.class).toInstance(audioPlayerStreamingMock);
       bind(Notification.Builder.class).toInstance(notificationBuilderMock);
     }

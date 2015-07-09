@@ -19,6 +19,8 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
+import de.greenrobot.event.EventBus;
+
 import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,6 +43,7 @@ public class AudioPlayerActivityTest {
 
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   AudioPlayerMediator audioPlayerMediatorMock = mock(AudioPlayerMediator.class);
+  private EventBus eventBusMock = mock(EventBus.class);
 
   @Before
   public void setup() {
@@ -50,6 +53,20 @@ public class AudioPlayerActivityTest {
   @After
   public void teardown() {
     reset();
+  }
+
+  @Test
+  public void itRegistersItselfToEventBusOnStart() {
+    activity = buildActivity(AudioPlayerActivity.class).create().get();
+
+    verify(eventBusMock).register(activity);
+  }
+
+  @Test
+  public void itUnregistersItselfToEventBusOnStop() {
+    activity = buildActivity(AudioPlayerActivity.class).create().stop().get();
+
+    verify(eventBusMock).unregister(activity);
   }
 
   @Test
@@ -156,6 +173,7 @@ public class AudioPlayerActivityTest {
   public class MyTestModule extends AbstractModule {
     @Override
     protected void configure() {
+      bind(EventBus.class).toInstance(eventBusMock);
       bind(ProgressDialog.class).toInstance(progressDialogMock);
       bind(AudioPlayerMediator.class).toInstance(audioPlayerMediatorMock);
     }

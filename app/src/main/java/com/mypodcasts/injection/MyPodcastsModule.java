@@ -9,6 +9,7 @@ import com.mypodcasts.player.AudioPlayer;
 import com.mypodcasts.player.AudioPlayerStreaming;
 import com.mypodcasts.podcast.models.Audio;
 
+import de.greenrobot.event.EventBus;
 import retrofit.RestAdapter;
 
 public class MyPodcastsModule implements Module {
@@ -23,5 +24,7 @@ public class MyPodcastsModule implements Module {
         .toProvider(ProgressDialogProvider.class);
     binder.bind(Notification.Builder.class)
         .toProvider(NotificationBuilderProvider.class);
+    binder.bind(EventBus.class)
+        .toProvider(EventBusProvider.class);
   }
 }
