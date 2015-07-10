@@ -63,15 +63,17 @@ public class AudioPlayerServiceTest {
   }
 
   @Test
-  @Ignore
   public void itSetsNotificationContentTitle() {
+    createService();
 
+    verify(notificationBuilderMock).setContentTitle("My Podcasts");
   }
 
   @Test
-  @Ignore
   public void itSetsNotificationContentText() {
+    createService();
 
+    verify(notificationBuilderMock).setContentText("Some awesome podcast!");
   }
 
   @Test
