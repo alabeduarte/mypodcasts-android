@@ -62,18 +62,6 @@ public class AudioPlayerService extends RoboService {
     audioPlayerStreaming.release();
   }
 
-  public boolean isPlaying() {
-    return audioPlayerStreaming.isPlaying();
-  }
-
-  public void togglePlayPauseFor(Episode episode) {
-    if (audioPlayerStreaming.isPlaying()) {
-      audioPlayerStreaming.pause();
-    } else {
-      audioPlayerStreaming.unPause(episode);
-    }
-  }
-
   class Player extends AsyncTask<Void, Void, MediaPlayer> {
     private final Episode episode;
 

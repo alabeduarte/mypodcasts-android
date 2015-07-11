@@ -2,7 +2,6 @@ package com.mypodcasts.player;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.widget.Button;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
@@ -21,7 +20,6 @@ import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
 
-import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.inOrder;
@@ -108,70 +106,6 @@ public class AudioPlayerActivityTest {
     );
   }
 
-  @Test
-  public void itShowsPlayButtonBeforeSTartPlayingAudio() {
-    when(audioPlayerServiceMock.isPlaying()).thenReturn(false);
-
-    createActivity();
-
-    Button button = playPauseButton();
-    String play = application.getResources().getString(R.string.play);
-
-    assertThat(valueOf(button.getText()), is(play));
-  }
-
-  @Test
-  public void itShowsPauseButtonWhenPlayingAudio() {
-    when(audioPlayerServiceMock.isPlaying()).thenReturn(true);
-
-    createActivity();
-
-    Button button = playPauseButton();
-    String pause = application.getResources().getString(R.string.pause);
-
-    assertThat(valueOf(button.getText()), is(pause));
-  }
-
-  @Test
-  public void itChangesButtonLabelToPlayOnTouchTheButton() {
-    when(audioPlayerServiceMock.isPlaying()).thenReturn(true);
-    createActivity();
-
-    Button button = playPauseButton();
-    when(audioPlayerServiceMock.isPlaying()).thenReturn(false);
-
-    button.performClick();
-
-    String play = application.getResources().getString(R.string.play);
-
-    assertThat(valueOf(button.getText()), is(play));
-  }
-
-  @Test
-  public void itChangesButtonLabelToPauseOnTouchTheButton() {
-    when(audioPlayerServiceMock.isPlaying()).thenReturn(false);
-    createActivity();
-
-    Button button = playPauseButton();
-    when(audioPlayerServiceMock.isPlaying()).thenReturn(true);
-
-    button.performClick();
-
-    String pause = application.getResources().getString(R.string.pause);
-
-    assertThat(valueOf(button.getText()), is(pause));
-  }
-
-  @Test
-  public void itTogglesPlayPauseForEpisodeOnTouchTheButton() {
-    createActivity();
-
-    Button button = playPauseButton();
-    button.performClick();
-
-    verify(audioPlayerServiceMock).togglePlayPauseFor(episode);
-  }
-
   private void createActivity() {
     Intent intent = getIntent();
 
@@ -183,10 +117,6 @@ public class AudioPlayerActivityTest {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.putExtra(Episode.class.toString(), episode);
     return intent;
-  }
-
-  private Button playPauseButton() {
-    return (Button) activity.findViewById(R.id.play_pause_button);
   }
 
   public class MyTestModule extends AbstractModule {
