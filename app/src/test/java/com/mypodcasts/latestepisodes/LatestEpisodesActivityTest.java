@@ -34,6 +34,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
@@ -66,6 +67,7 @@ public class LatestEpisodesActivityTest {
 
   @Test
   public void itShowsAndHideProgressDialog() {
+    when(progressDialogMock.isShowing()).thenReturn(true);
     String message = application.getString(R.string.loading_latest_episodes);
 
     createActivityWith(emptyList);
@@ -76,6 +78,18 @@ public class LatestEpisodesActivityTest {
     order.verify(progressDialogMock).setMessage(message);
 
     order.verify(progressDialogMock).cancel();
+  }
+
+  @Test
+  public void itDoNotCancelProgressDialogIfItIsNotShowing() {
+    when(progressDialogMock.isShowing()).thenReturn(false);
+
+    createActivityWith(emptyList);
+
+    InOrder order = inOrder(progressDialogMock);
+
+    order.verify(progressDialogMock).show();
+    order.verify(progressDialogMock, never()).cancel();
   }
 
   @Test
