@@ -69,7 +69,7 @@ public class AudioPlayerActivity extends RoboActivity {
 
     @Override
     protected void onPostExecute(Episode episode) {
-      if (progressDialog.isShowing()) {
+      if (progressDialog != null && progressDialog.isShowing()) {
         progressDialog.cancel();
       }
     }

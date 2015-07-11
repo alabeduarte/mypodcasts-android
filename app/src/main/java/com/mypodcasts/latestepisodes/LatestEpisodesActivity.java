@@ -72,7 +72,7 @@ public class LatestEpisodesActivity extends RoboActivity {
 
     @Override
     protected void onPostExecute(List<Episode> latestEpisodes) {
-      if (progressDialog.isShowing()) {
+      if (progressDialog != null && progressDialog.isShowing()) {
         progressDialog.cancel();
       }
 
