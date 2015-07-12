@@ -17,7 +17,7 @@
   },
   {
     "title": "Newest Episode from another podcast",
-    "pubDate": "Fri, 19 Jun 2015 03:10:01 +0000",
+    "publishedDate": "Fri, 19 Jun 2015 03:10:01 +0000",
     "description": "Another newest episode description",
     "audio": {
       "url": "http://www.podtrac.com/pts/redirect.mp3/media.devchat.tv/ruby-rogues/RR214RRC.mp3?rss=true",
