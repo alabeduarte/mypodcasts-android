@@ -1,3 +1,5 @@
+[![Build Status](https://snap-ci.com/alabeduarte/mypodcasts-android/branch/master/build_image)](https://snap-ci.com/alabeduarte/mypodcasts-android/branch/master)
+
 # My Podcasts
 
 Podcast client for android.
