@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.MediaController;
+import android.view.MotionEvent;
 
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
@@ -23,7 +23,7 @@ public class AudioPlayerActivity extends RoboActivity {
   private AudioPlayer audioPlayer;
 
   @Inject
-  private MediaController mediaController;
+  private AudioPlayerController mediaController;
 
   @Inject
   private ProgressDialog progressDialog;

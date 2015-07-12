@@ -22,7 +22,5 @@ public class MyPodcastsModule implements Module {
         .toProvider(NotificationBuilderProvider.class);
     binder.bind(EventBus.class)
         .toProvider(EventBusProvider.class);
-    binder.bind(MediaController.class)
-        .toProvider(MediaControllerProvider.class);
   }
 }
