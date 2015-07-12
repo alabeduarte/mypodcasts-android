@@ -2,6 +2,7 @@ package com.mypodcasts.player;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.widget.MediaController;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
@@ -43,6 +44,7 @@ public class AudioPlayerActivityTest {
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   AudioPlayerService audioPlayerServiceMock = mock(AudioPlayerService.class);
   private EventBus eventBusMock = mock(EventBus.class);
+  private MediaController mediaControllerMock = mock(MediaController.class);
 
   @Before
   public void setup() {
@@ -106,6 +108,13 @@ public class AudioPlayerActivityTest {
     );
   }
 
+  @Test
+  public void itShowsMediaControl() {
+    createActivity();
+
+    verify(mediaControllerMock).show();
+  }
+
   private void createActivity() {
     Intent intent = getIntent();
 
@@ -125,6 +134,7 @@ public class AudioPlayerActivityTest {
       bind(EventBus.class).toInstance(eventBusMock);
       bind(ProgressDialog.class).toInstance(progressDialogMock);
       bind(AudioPlayerService.class).toInstance(audioPlayerServiceMock);
+      bind(MediaController.class).toInstance(mediaControllerMock);
     }
   }
 }

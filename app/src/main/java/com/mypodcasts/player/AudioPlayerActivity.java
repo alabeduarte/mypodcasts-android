@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.MediaController;
 
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
@@ -20,6 +21,9 @@ public class AudioPlayerActivity extends RoboActivity {
   @Inject
   private EventBus eventBus;
   private AudioPlayerService audioPlayerService;
+
+  @Inject
+  private MediaController mediaController;
 
   @Inject
   private ProgressDialog progressDialog;
@@ -41,6 +45,7 @@ public class AudioPlayerActivity extends RoboActivity {
 
   public void onEvent(AudioPlayingEvent event){
     audioPlayerService = event.getAudioPlayerService();
+    mediaController.show();
   }
 
   class AudioPlayerAsyncTask extends AsyncTask<Void, Void, Episode> {

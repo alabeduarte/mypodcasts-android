@@ -2,12 +2,12 @@ package com.mypodcasts.injection;
 
 import android.app.Notification;
 import android.app.ProgressDialog;
+import android.widget.MediaController;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.mypodcasts.player.AudioPlayer;
 import com.mypodcasts.player.AudioPlayerStreaming;
-import com.mypodcasts.podcast.models.Audio;
 
 import de.greenrobot.event.EventBus;
 import retrofit.RestAdapter;
@@ -26,5 +26,7 @@ public class MyPodcastsModule implements Module {
         .toProvider(NotificationBuilderProvider.class);
     binder.bind(EventBus.class)
         .toProvider(EventBusProvider.class);
+    binder.bind(MediaController.class)
+        .toProvider(MediaControllerProvider.class);
   }
 }
