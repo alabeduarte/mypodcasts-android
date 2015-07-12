@@ -2,7 +2,6 @@ package com.mypodcasts.player;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
@@ -33,7 +32,8 @@ public class AudioPlayerActivity extends RoboActivity {
     super.onCreate(savedInstanceState);
     eventBus.register(this);
 
-    new AudioPlayerAsyncTask().execute();
+    showProgressDialog();
+    playAudio();
   }
 
   @Override
@@ -51,6 +51,8 @@ public class AudioPlayerActivity extends RoboActivity {
   }
 
   public void onEvent(AudioPlayingEvent event){
+    cancelProgressDialog();
+
     audioPlayer = event.getAudioPlayer();
 
     mediaController.setMediaPlayer(audioPlayer);
@@ -58,40 +60,29 @@ public class AudioPlayerActivity extends RoboActivity {
     mediaController.show();
   }
 
-  class AudioPlayerAsyncTask extends AsyncTask<Void, Void, Episode> {
+  private void showProgressDialog() {
+    progressDialog.show();
+    progressDialog.setMessage(getResources().getString(R.string.loading_episode));
+  }
 
-    @Override
-    protected void onPreExecute() {
-      progressDialog.show();
-      progressDialog.setMessage(getResources().getString(R.string.loading_episode));
-    }
-
-    @Override
-    protected Episode doInBackground(Void... params) {
-      return playAudio();
-    }
-
-    @Override
-    protected void onPostExecute(Episode episode) {
-      if (progressDialog != null && progressDialog.isShowing()) {
-        progressDialog.cancel();
-      }
+  private void cancelProgressDialog() {
+    if (progressDialog != null && progressDialog.isShowing()) {
+      progressDialog.cancel();
     }
   }
 
-  private Episode playAudio() {
-    final Episode episode = (Episode)
-        getIntent().getSerializableExtra(Episode.class.toString());
-
+  private void playAudio() {
     Intent intent = new Intent(
         AudioPlayerActivity.this,
         AudioPlayerService.class
     );
 
-    intent.putExtra(Episode.class.toString(), episode);
+    intent.putExtra(Episode.class.toString(), getEpisode());
     stopService(intent);
     startService(intent);
+  }
 
-    return episode;
+  private Episode getEpisode() {
+    return (Episode) getIntent().getSerializableExtra(Episode.class.toString());
   }
 }

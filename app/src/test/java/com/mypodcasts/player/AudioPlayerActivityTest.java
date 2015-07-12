@@ -79,6 +79,7 @@ public class AudioPlayerActivityTest {
     String message = application.getString(R.string.loading_episode);
 
     createActivity();
+    activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
 
     InOrder order = inOrder(progressDialogMock);
 
