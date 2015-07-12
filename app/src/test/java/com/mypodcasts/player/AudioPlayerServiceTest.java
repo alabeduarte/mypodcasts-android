@@ -34,7 +34,7 @@ public class AudioPlayerServiceTest {
   AudioPlayerService service;
   Episode episode = new Episode();
 
-  AudioPlayerStreaming audioPlayerStreamingMock = mock(AudioPlayerStreaming.class);
+  AudioPlayer audioPlayerMock = mock(AudioPlayer.class);
   Notification.Builder notificationBuilderMock = mock(Notification.Builder.class);
   Notification notificationMock = mock(Notification.class);
 
@@ -84,7 +84,7 @@ public class AudioPlayerServiceTest {
   public void itPlaysAudioStreamingGivenAnEpisode() throws IOException {
     createService();
 
-    verify(audioPlayerStreamingMock).play(episode);
+    verify(audioPlayerMock).play(episode);
   }
 
   @Test
@@ -92,7 +92,7 @@ public class AudioPlayerServiceTest {
     Intent intent = getIntent();
     service = buildService(AudioPlayerService.class).withIntent(intent).create().destroy().get();
 
-    verify(audioPlayerStreamingMock).release();
+    verify(audioPlayerMock).release();
   }
 
   private void createService() {
@@ -116,7 +116,7 @@ public class AudioPlayerServiceTest {
   public class MyTestModule extends AbstractModule {
     @Override
     protected void configure() {
-      bind(AudioPlayerStreaming.class).toInstance(audioPlayerStreamingMock);
+      bind(AudioPlayer.class).toInstance(audioPlayerMock);
       bind(Notification.Builder.class).toInstance(notificationBuilderMock);
     }
   }

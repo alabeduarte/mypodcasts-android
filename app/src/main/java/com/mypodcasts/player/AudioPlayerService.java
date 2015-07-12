@@ -23,7 +23,7 @@ public class AudioPlayerService extends RoboService {
   private Context context;
 
   @Inject
-  private AudioPlayerStreaming audioPlayerStreaming;
+  private AudioPlayer audioPlayer;
 
   @Inject
   private Notification.Builder notificationBuilder;
@@ -54,7 +54,7 @@ public class AudioPlayerService extends RoboService {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    audioPlayerStreaming.release();
+    audioPlayer.release();
   }
 
   class Player extends AsyncTask<Void, Void, MediaPlayer> {
@@ -67,7 +67,7 @@ public class AudioPlayerService extends RoboService {
     @Override
     protected MediaPlayer doInBackground(Void... params) {
       try {
-        return audioPlayerStreaming.play(episode);
+        return audioPlayer.play(episode);
       } catch (IOException e) {
         e.printStackTrace();
       }
