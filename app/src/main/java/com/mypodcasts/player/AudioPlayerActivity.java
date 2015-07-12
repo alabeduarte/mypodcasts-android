@@ -20,7 +20,7 @@ public class AudioPlayerActivity extends RoboActivity {
 
   @Inject
   private EventBus eventBus;
-  private AudioPlayerService audioPlayerService;
+  private AudioPlayer audioPlayer;
 
   @Inject
   private MediaController mediaController;
@@ -44,7 +44,10 @@ public class AudioPlayerActivity extends RoboActivity {
   }
 
   public void onEvent(AudioPlayingEvent event){
-    audioPlayerService = event.getAudioPlayerService();
+    audioPlayer = event.getAudioPlayer();
+
+    mediaController.setMediaPlayer(audioPlayer);
+    mediaController.setAnchorView(findViewById(R.id.audio_view));
     mediaController.show();
   }
 
@@ -79,6 +82,7 @@ public class AudioPlayerActivity extends RoboActivity {
     );
 
     intent.putExtra(Episode.class.toString(), episode);
+    stopService(intent);
     startService(intent);
 
     return episode;

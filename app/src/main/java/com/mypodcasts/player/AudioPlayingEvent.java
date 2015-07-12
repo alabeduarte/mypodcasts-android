@@ -1,13 +1,13 @@
 package com.mypodcasts.player;
 
 public class AudioPlayingEvent {
-  private final AudioPlayerService audioPlayerService;
+  private final AudioPlayer audioPlayer;
 
-  public AudioPlayingEvent(AudioPlayerService audioPlayerService) {
-    this.audioPlayerService = audioPlayerService;
+  public AudioPlayingEvent(AudioPlayer audioPlayer) {
+    this.audioPlayer = audioPlayer;
   }
 
-  public AudioPlayerService getAudioPlayerService() {
-    return audioPlayerService;
+  public AudioPlayer getAudioPlayer() {
+    return audioPlayer;
   }
 }

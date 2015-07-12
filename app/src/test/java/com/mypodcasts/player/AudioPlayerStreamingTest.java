@@ -12,11 +12,13 @@ import org.mockito.InOrder;
 
 import java.io.IOException;
 
+import de.greenrobot.event.EventBus;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,6 +27,7 @@ public class AudioPlayerStreamingTest {
   AudioPlayerStreaming audioPlayerStreaming;
 
   MediaPlayer mediaPlayerMock = mock(MediaPlayer.class);
+  EventBus eventBusMock = mock(EventBus.class);
 
   Episode episode = new Episode() {
     @Override
@@ -40,7 +43,7 @@ public class AudioPlayerStreamingTest {
 
   @Before
   public void setup() {
-    audioPlayerStreaming = new AudioPlayerStreaming(mediaPlayerMock);
+    audioPlayerStreaming = new AudioPlayerStreaming(mediaPlayerMock, eventBusMock);
   }
 
   @Test
@@ -49,14 +52,34 @@ public class AudioPlayerStreamingTest {
   }
 
   @Test
-  public void itPlaysGivenEpisodeUrl() throws IOException {
+  public void itSetsDataSourceAndPreparesMediaPlayerGivenEpisodeUrl() throws IOException {
     audioPlayerStreaming.play(episode);
 
     InOrder order = inOrder(mediaPlayerMock);
 
     order.verify(mediaPlayerMock).setDataSource(episode.getAudio().getUrl());
     order.verify(mediaPlayerMock).prepare();
-    order.verify(mediaPlayerMock).start();
+  }
+
+  @Test
+  public void itStartsMediaPlayerOnPrepared() {
+    audioPlayerStreaming.onPrepared(mediaPlayerMock);
+
+    verify(mediaPlayerMock).start();
+  }
+
+  @Test
+  public void itBroadcastsEventThatAudioIsPlaying() throws IOException {
+    audioPlayerStreaming.onPrepared(mediaPlayerMock);
+
+    verify(eventBusMock).post(any(AudioPlayingEvent.class));
+  }
+
+  @Test
+  public void itStartsMediaPlayer() throws IOException {
+    audioPlayerStreaming.start();
+
+    verify(mediaPlayerMock).start();
   }
 
   @Test
@@ -67,31 +90,47 @@ public class AudioPlayerStreamingTest {
   }
 
   @Test
-  public void itPlaysGivenEpisodeUrlAndSeekToMilliseconds() throws IOException {
-    int msec = 1000;
-    audioPlayerStreaming.play(episode, msec);
+  public void itReturnsDuration() {
+    audioPlayerStreaming.getDuration();
 
-    InOrder order = inOrder(mediaPlayerMock);
-
-    order.verify(mediaPlayerMock, never()).setDataSource(episode.getAudio().getUrl());
-    order.verify(mediaPlayerMock, never()).prepare();
-
-    order.verify(mediaPlayerMock).seekTo(msec);
-    order.verify(mediaPlayerMock).start();
+    verify(mediaPlayerMock).getDuration();
   }
 
   @Test
-  public void itUnPausesGivenCurrentPosition() throws IOException {
+  public void itReturnsCurrentPosition() {
+    audioPlayerStreaming.getCurrentPosition();
+
+    verify(mediaPlayerMock).getCurrentPosition();
+  }
+
+  @Test
+  public void itAppliesSeekTo() {
     int msec = 1000;
-    when(mediaPlayerMock.getCurrentPosition()).thenReturn(msec);
+    audioPlayerStreaming.seekTo(msec);
 
-    audioPlayerStreaming.unPause(episode);
+    verify(mediaPlayerMock).seekTo(msec);
+  }
 
-    InOrder order = inOrder(mediaPlayerMock);
-    order.verify(mediaPlayerMock, never()).setDataSource(episode.getAudio().getUrl());
-    order.verify(mediaPlayerMock, never()).prepare();
-    order.verify(mediaPlayerMock).seekTo(msec);
-    order.verify(mediaPlayerMock).start();
+  @Test
+  public void itAllowsPause() {
+    assertThat(audioPlayerStreaming.canPause(), is(true));
+  }
+
+  @Test
+  public void itAllowsSeekBackward() {
+    assertThat(audioPlayerStreaming.canSeekBackward(), is(true));
+  }
+
+  @Test
+  public void itAllowsSeekForward() {
+    assertThat(audioPlayerStreaming.canSeekForward(), is(true));
+  }
+
+  @Test
+  public void itReturnsAudioSessionId() {
+    audioPlayerStreaming.getAudioSessionId();
+
+    verify(mediaPlayerMock).getAudioSessionId();
   }
 
   @Test

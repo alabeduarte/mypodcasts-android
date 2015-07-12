@@ -13,7 +13,6 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import roboguice.service.RoboService;
 
 public class AudioPlayerService extends RoboService {
@@ -22,9 +21,6 @@ public class AudioPlayerService extends RoboService {
 
   @Inject
   private Context context;
-
-  @Inject
-  private EventBus eventBus;
 
   @Inject
   private AudioPlayerStreaming audioPlayerStreaming;
@@ -51,7 +47,6 @@ public class AudioPlayerService extends RoboService {
     startForeground(ONGOING_NOTIFICATION_ID, notification);
 
     new Player(episode).execute();
-    eventBus.post(new AudioPlayingEvent(this));
 
     return START_NOT_STICKY;
   }

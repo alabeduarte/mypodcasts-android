@@ -1,21 +1,16 @@
 package com.mypodcasts.player;
 
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
+import android.widget.MediaController;
+import android.widget.MediaController.MediaPlayerControl;
 
 import com.mypodcasts.podcast.models.Episode;
 
 import java.io.IOException;
 
-public interface AudioPlayer {
+public interface AudioPlayer extends MediaPlayerControl, OnPreparedListener {
   MediaPlayer play(Episode episode) throws IOException;
 
-  MediaPlayer pause();
-
-  MediaPlayer unPause(Episode episode);
-
-  MediaPlayer play(Episode episode, int seekTo);
-
   void release();
-
-  boolean isPlaying();
 }
