@@ -112,10 +112,20 @@ public class AudioPlayerActivityTest {
   }
 
   @Test
-  public void itShowsMediaControl() {
+  public void itShowsMediaControlWhenAudioStartToPlay() {
     createActivity();
 
     activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
+
+    verify(mediaControllerMock).show();
+  }
+
+  @Test
+  public void itShowsMediaControlOnTouchEvent() {
+    createActivity();
+
+    MotionEvent motionEvent = mock(MotionEvent.class);
+    activity.onTouchEvent(motionEvent);
 
     verify(mediaControllerMock).show();
   }

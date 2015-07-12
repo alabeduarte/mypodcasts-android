@@ -43,6 +43,13 @@ public class AudioPlayerActivity extends RoboActivity {
     eventBus.unregister(this);
   }
 
+  @Override
+  public boolean onTouchEvent(MotionEvent event) {
+    mediaController.show();
+
+    return super.onTouchEvent(event);
+  }
+
   public void onEvent(AudioPlayingEvent event){
     audioPlayer = event.getAudioPlayer();
 
