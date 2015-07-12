@@ -22,7 +22,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import roboguice.activity.RoboActionBarActivity;
-import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
