@@ -3,6 +3,7 @@ package com.mypodcasts.player;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 
 import com.mypodcasts.R;
@@ -33,8 +34,17 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     super.onCreate(savedInstanceState);
     eventBus.register(this);
 
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     showProgressDialog();
     playAudio();
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) { onBackPressed(); }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

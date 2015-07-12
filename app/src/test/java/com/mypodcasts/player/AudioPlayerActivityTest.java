@@ -1,7 +1,9 @@
 package com.mypodcasts.player;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -11,6 +13,7 @@ import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
@@ -148,6 +152,21 @@ public class AudioPlayerActivityTest {
     activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
 
     verify(mediaControllerMock).setAnchorView(audioView);
+  }
+
+  @Test
+  public void itReturnsToPreviousActivityOnPressHomeButton() {
+    MenuItem homeButton = mock(MenuItem.class);
+    when(homeButton.getItemId()).thenReturn(android.R.id.home);
+
+    Intent intent = getIntent();
+    activity = spy(
+        buildActivity(AudioPlayerActivity.class).withIntent(intent).create().get()
+    );
+
+    activity.onOptionsItemSelected(homeButton);
+
+    verify(activity).onBackPressed();
   }
 
   private void createActivity() {
