@@ -1,7 +1,6 @@
 package com.mypodcasts.injection;
 
 import android.app.Notification;
-import android.app.ProgressDialog;
 import android.content.Context;
 
 import javax.inject.Inject;

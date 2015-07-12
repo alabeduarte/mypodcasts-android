@@ -6,8 +6,6 @@ import android.content.Context;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import retrofit.RestAdapter;
-
 public class ProgressDialogProvider implements Provider<ProgressDialog> {
 
   @Inject

@@ -2,7 +2,6 @@ package com.mypodcasts.player;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 
 import com.mypodcasts.podcast.models.Episode;
