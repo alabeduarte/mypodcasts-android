@@ -73,14 +73,6 @@ public class AudioPlayerServiceTest {
   }
 
   @Test
-  @Ignore
-  public void itStartsOnForeground() {
-    createService();
-
-    verify(service).startForeground(ONGOING_NOTIFICATION_ID, notificationMock);
-  }
-
-  @Test
   public void itPlaysAudioStreamingGivenAnEpisode() throws IOException {
     createService();
 
@@ -98,13 +90,11 @@ public class AudioPlayerServiceTest {
   private void createService() {
     Intent intent = getIntent();
 
-    service = spy(
-        buildService(AudioPlayerService.class)
-            .withIntent(intent)
-            .create()
-            .startCommand(0, 1)
-            .get()
-    );
+    service = buildService(AudioPlayerService.class)
+      .withIntent(intent)
+      .create()
+      .startCommand(0, 1)
+      .get();
   }
 
   private Intent getIntent() {

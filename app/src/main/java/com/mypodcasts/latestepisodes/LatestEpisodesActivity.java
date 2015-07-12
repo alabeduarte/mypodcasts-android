@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -19,12 +21,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import roboguice.activity.RoboActionBarActivity;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 @ContentView(R.layout.latest_episodes)
-public class LatestEpisodesActivity extends RoboActivity {
+public class LatestEpisodesActivity extends RoboActionBarActivity {
 
   @InjectView(R.id.episodesListView)
   private ListView episodesListView;
@@ -34,6 +37,14 @@ public class LatestEpisodesActivity extends RoboActivity {
 
   @Inject
   private UserPodcasts userPodcasts;
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.menu_main, menu);
+
+    return super.onCreateOptionsMenu(menu);
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

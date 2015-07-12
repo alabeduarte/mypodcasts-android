@@ -11,11 +11,12 @@ import com.mypodcasts.podcast.models.Episode;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+import roboguice.activity.RoboActionBarActivity;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.audio_player)
-public class AudioPlayerActivity extends RoboActivity {
+public class AudioPlayerActivity extends RoboActionBarActivity {
 
   @Inject
   private EventBus eventBus;
