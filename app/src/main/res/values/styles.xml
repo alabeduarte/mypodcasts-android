@@ -1,12 +1,4 @@
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
     </style>
-
-    //<!-- Hack for Robolectric to run with appcompat.v7 -->
-    <style name="RoboAppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-    </style>
-
 </resources>

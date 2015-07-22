@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.mypodcasts.R;
@@ -25,8 +26,13 @@ import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
+import static com.mypodcasts.R.layout.drawer_list_item;
+
 @ContentView(R.layout.latest_episodes)
 public class LatestEpisodesActivity extends RoboActionBarActivity {
+
+  @InjectView(R.id.left_drawer)
+  private ListView leftDrawer;
 
   @InjectView(R.id.episodesListView)
   private ListView episodesListView;
@@ -61,7 +67,15 @@ public class LatestEpisodesActivity extends RoboActionBarActivity {
       }
     });
 
+    leftDrawer.setAdapter(navigationDrawerAdapter());
+
     new LatestEpisodesAsyncTask().execute();
+  }
+
+  private ArrayAdapter<String> navigationDrawerAdapter() {
+    String[] menuItems = {"Menu Item 1", "Menu Item 2"};
+
+    return new ArrayAdapter<>(this, drawer_list_item, menuItems);
   }
 
   private EpisodesAdapter emptyAdapter() {
