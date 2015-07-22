@@ -1,6 +1,7 @@
 package com.mypodcasts.latestepisodes;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,13 +12,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.common.base.Function;
 import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.podcast.EpisodesAdapter;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.podcast.models.Feed;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,6 +28,7 @@ import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
+import static com.google.common.collect.FluentIterable.from;
 import static com.mypodcasts.R.layout.drawer_list_item;
 
 @ContentView(R.layout.latest_episodes)
@@ -55,7 +58,6 @@ public class LatestEpisodesActivity extends RoboActionBarActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    episodesListView.setAdapter(emptyAdapter());
     episodesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -67,19 +69,8 @@ public class LatestEpisodesActivity extends RoboActionBarActivity {
       }
     });
 
-    leftDrawer.setAdapter(navigationDrawerAdapter());
-
+    new FeedsAsyncTask().execute();
     new LatestEpisodesAsyncTask().execute();
-  }
-
-  private ArrayAdapter<String> navigationDrawerAdapter() {
-    String[] menuItems = {"Menu Item 1", "Menu Item 2"};
-
-    return new ArrayAdapter<>(this, drawer_list_item, menuItems);
-  }
-
-  private EpisodesAdapter emptyAdapter() {
-    return new EpisodesAdapter(Collections.<Episode>emptyList(), getLayoutInflater());
   }
 
   class LatestEpisodesAsyncTask extends AsyncTask<Void, Void, List<Episode>> {
@@ -101,6 +92,31 @@ public class LatestEpisodesActivity extends RoboActionBarActivity {
       }
 
       episodesListView.setAdapter(new EpisodesAdapter(latestEpisodes, getLayoutInflater()));
+    }
+  }
+
+  private class FeedsAsyncTask extends AsyncTask<Void, Void, List<Feed>> {
+    private final Context context;
+
+    public FeedsAsyncTask() {
+      context = LatestEpisodesActivity.this;
+    }
+
+    @Override
+    protected List<Feed> doInBackground(Void... params) {
+      return userPodcasts.getFeeds();
+    }
+
+    @Override
+    protected void onPostExecute(List<Feed> feeds) {
+      String[] menuItems = from(feeds).transform(new Function<Feed, String>() {
+        @Override
+        public String apply(Feed feed) {
+          return feed.getTitle();
+        }
+      }).toArray(String.class);
+
+      leftDrawer.setAdapter(new ArrayAdapter<>(context, drawer_list_item, menuItems));
     }
   }
 }

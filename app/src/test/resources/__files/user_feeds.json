@@ -1,12 +1,12 @@
 [
   {
-    "title": "MyPodcasts",
+    "title": "Some podcast",
     "image":{
       "url": "http://example.com/feed_image.jpg"
     }
   },
   {
-    "title": "Another podcasts",
+    "title": "Another podcast",
     "image": {
       "url": "http://example.com/another_feed_image.jpg"
     }

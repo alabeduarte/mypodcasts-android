@@ -108,7 +108,7 @@ public class LatestEpisodesActivityTest {
   }
 
   @Test
-  public void itLoadsLatestEpisodesWhenThereIsEpisodesOnCreate() {
+  public void itLoadsLatestEpisodesWhenThereAreEpisodesOnCreate() {
    List<Episode> episodes = new ArrayList<Episode>() {{
       add(new Episode());
       add(new Episode());

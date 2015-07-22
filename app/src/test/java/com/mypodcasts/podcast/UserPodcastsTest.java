@@ -81,13 +81,13 @@ public class UserPodcastsTest {
     Feed firstFeed = new Feed() {
       @Override
       public String getTitle() {
-        return "MyPodcasts";
+        return "Some podcast";
       }
     };
     Feed secondFeed = new Feed() {
       @Override
       public String getTitle() {
-        return "Another podcasts";
+        return "Another podcast";
       }
     };
 

@@ -10,6 +10,7 @@ import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.podcast.models.Feed;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,6 +20,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,8 +44,6 @@ public class NavigationDrawerTest {
   UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
 
-  List<Episode> emptyList = Collections.<Episode>emptyList();
-
   @Before
   public void setup() {
     overrideApplicationInjector(application, new MyTestModule());
@@ -54,23 +55,44 @@ public class NavigationDrawerTest {
   }
 
   @Test
-  public void itShowsMenuItems() {
-    createActivity();
+  public void itReturnsEmptyListWhenThereAreNoFeedsAvailable() {
+    createActivityWith(Collections.<Feed>emptyList());
+
+    assertThat(leftDrawer.getCount(), is(0));
+  }
+
+  @Test
+  public void itLoadsUserFeedsOnCreate() {
+    List<Feed> feeds = new ArrayList<Feed>() {{
+      add(new Feed() {
+        @Override
+        public String getTitle() {
+          return "Feed 1";
+        }
+      });
+      add(new Feed() {
+        @Override
+        public String getTitle() {
+          return "Feed 2";
+        }
+      });
+    }};
+
+    createActivityWith(feeds);
 
     String menuItem1 = (String) leftDrawer.getAdapter().getItem(0);
     String menuItem2 = (String) leftDrawer.getAdapter().getItem(1);
 
-    assertThat(menuItem1, is("Menu Item 1"));
-    assertThat(menuItem2, is("Menu Item 2"));
+    assertThat(menuItem1, is(feeds.get(0).getTitle()));
+    assertThat(menuItem2, is(feeds.get(1).getTitle()));
   }
 
-  void createActivity() {
-    when(userPodcastsMock.getLatestEpisodes()).thenReturn(emptyList);
+  void createActivityWith(List<Feed> feeds) {
+    when(userPodcastsMock.getFeeds()).thenReturn(feeds);
 
     activity = buildActivity(LatestEpisodesActivity.class).create().get();
     leftDrawer = (ListView) activity.findViewById(R.id.left_drawer);
   }
-
 
   public class MyTestModule extends AbstractModule {
     @Override
