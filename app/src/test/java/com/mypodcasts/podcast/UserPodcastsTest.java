@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.podcast.models.Feed;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,14 +30,21 @@ public class UserPodcastsTest {
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(1111);
-  final String path = "/api/user/johndoe/latest_episodes";
+  final String latest_episodes_path = "/api/user/johndoe/latest_episodes";
+  final String feeds_path = "/api/user/johndoe/feeds";
 
   @Before
   public void setup() {
-    givenThat(get(urlEqualTo(path))
+    givenThat(get(urlEqualTo(latest_episodes_path))
         .willReturn(aResponse()
             .withStatus(200)
             .withBodyFile("user_podcasts.json")));
+    when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
+
+    givenThat(get(urlEqualTo(feeds_path))
+        .willReturn(aResponse()
+            .withStatus(200)
+            .withBodyFile("user_feeds.json")));
     when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
 
     userPodcasts = new UserPodcasts(resources, new RestAdapter.Builder());
@@ -65,6 +73,32 @@ public class UserPodcastsTest {
     assertThat(
         userPodcasts.getLatestEpisodes().get(1).getTitle(),
         is(anotherEpisode.getTitle())
+    );
+  }
+
+  @Test
+  public void itReturnsAllFeeds() {
+    Feed firstFeed = new Feed() {
+      @Override
+      public String getTitle() {
+        return "MyPodcasts";
+      }
+    };
+    Feed secondFeed = new Feed() {
+      @Override
+      public String getTitle() {
+        return "Another podcasts";
+      }
+    };
+
+    assertThat(
+        userPodcasts.getFeeds().get(0).getTitle(),
+        is(firstFeed.getTitle())
+    );
+
+    assertThat(
+        userPodcasts.getFeeds().get(1).getTitle(),
+        is(secondFeed.getTitle())
     );
   }
 }

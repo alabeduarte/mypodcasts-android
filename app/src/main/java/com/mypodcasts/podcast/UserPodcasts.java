@@ -4,6 +4,7 @@ import android.content.res.Resources;
 
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.podcast.models.Feed;
 
 import java.util.List;
 
@@ -24,6 +25,10 @@ public class UserPodcasts {
 
   public List<Episode> getLatestEpisodes() {
     return getHttpClient().getLatestEpisodes();
+  }
+
+  public List<Feed> getFeeds() {
+    return getHttpClient().getUserFeeds();
   }
 
   private HttpClient getHttpClient() {
