@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
-import com.mypodcasts.feedepisodes.FeedEpisodesActivity;
+import com.mypodcasts.feeds.episodes.FeedEpisodesActivity;
 import com.mypodcasts.latestepisodes.LatestEpisodesActivity;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Feed;

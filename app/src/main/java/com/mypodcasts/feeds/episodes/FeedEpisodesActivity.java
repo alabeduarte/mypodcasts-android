@@ -1,4 +1,4 @@
-package com.mypodcasts.feedepisodes;
+package com.mypodcasts.feeds.episodes;
 
 import com.mypodcasts.NavigationDrawerActivity;
 

@@ -1,4 +1,4 @@
-package com.mypodcasts.podcast;
+package com.mypodcasts.feeds;
 
 import android.view.LayoutInflater;
 import android.view.View;

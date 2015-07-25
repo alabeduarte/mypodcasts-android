@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mypodcasts.feedepisodes.FeedEpisodesActivity;
-import com.mypodcasts.podcast.FeedsAdapter;
+import com.mypodcasts.feeds.FeedsAdapter;
+import com.mypodcasts.feeds.episodes.FeedEpisodesActivity;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Feed;
 
