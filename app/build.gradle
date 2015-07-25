@@ -39,7 +39,7 @@ dependencies {
   provided 'org.roboguice:roboblender:3.+'
 
   compile 'com.squareup.retrofit:retrofit:+'
-  compile 'com.google.guava:guava:+'
+  compile 'com.google.guava:guava:18.0'
 
   compile 'de.greenrobot:eventbus:2.4.0'
 
