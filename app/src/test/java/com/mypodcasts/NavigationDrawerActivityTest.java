@@ -1,11 +1,10 @@
-package com.mypodcasts.latestepisodes;
+package com.mypodcasts;
 
 import android.app.ProgressDialog;
 import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
-import com.mypodcasts.BuildConfig;
-import com.mypodcasts.R;
+import com.mypodcasts.latestepisodes.LatestEpisodesActivity;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Feed;
 
@@ -31,9 +30,9 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class NavigationDrawerTest {
+public class NavigationDrawerActivityTest {
 
-  LatestEpisodesActivity activity;
+  NavigationDrawerActivity activity;
   ListView leftDrawer;
 
   UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
