@@ -9,7 +9,6 @@ import com.mypodcasts.podcast.models.Episode;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -17,10 +16,8 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
-import static com.mypodcasts.player.AudioPlayerService.ONGOING_NOTIFICATION_ID;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildService;

@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import roboguice.activity.RoboActionBarActivity;
-import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.audio_player)

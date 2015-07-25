@@ -1,27 +1,22 @@
 package com.mypodcasts.latestepisodes;
 
 import android.app.ProgressDialog;
-import android.support.v4.widget.DrawerLayout;
-import android.view.View;
 import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.UserPodcasts;
-import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Feed;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

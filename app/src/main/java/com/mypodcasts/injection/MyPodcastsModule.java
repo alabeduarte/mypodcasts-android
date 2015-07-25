@@ -2,7 +2,6 @@ package com.mypodcasts.injection;
 
 import android.app.Notification;
 import android.app.ProgressDialog;
-import android.widget.MediaController;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;

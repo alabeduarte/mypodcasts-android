@@ -5,7 +5,6 @@ import android.view.KeyEvent;
 
 import com.mypodcasts.BuildConfig;
 
-import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
