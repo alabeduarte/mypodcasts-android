@@ -1,13 +1,17 @@
 package com.mypodcasts;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
+import com.mypodcasts.feedepisodes.FeedEpisodesActivity;
 import com.mypodcasts.latestepisodes.LatestEpisodesActivity;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Feed;
 
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,16 +19,20 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.mypodcasts.util.ListViewHelper.performItemClickAtPosition;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.RuntimeEnvironment.application;
+import static org.robolectric.Shadows.shadowOf;
 import static roboguice.RoboGuice.Util.reset;
 import static roboguice.RoboGuice.overrideApplicationInjector;
 
@@ -58,30 +66,60 @@ public class NavigationDrawerActivityTest {
   @Test
   public void itLoadsUserFeedsOnCreate() {
     List<Feed> feeds = new ArrayList<Feed>() {{
-      add(new Feed() {
-        @Override
-        public String getTitle() {
-          return "Feed 1";
-        }
-      });
-      add(new Feed() {
-        @Override
-        public String getTitle() {
-          return "Feed 2";
-        }
-      });
+      add(aFeed("Feed 1"));
+      add(aFeed("Feed 2"));
     }};
 
     createActivityWith(feeds);
 
-    String menuItem1 = (String) leftDrawer.getAdapter().getItem(0);
-    String menuItem2 = (String) leftDrawer.getAdapter().getItem(1);
+    Feed menuItem1 = (Feed) leftDrawer.getAdapter().getItem(0);
+    Feed menuItem2 = (Feed) leftDrawer.getAdapter().getItem(1);
 
-    assertThat(menuItem1, is(feeds.get(0).getTitle()));
-    assertThat(menuItem2, is(feeds.get(1).getTitle()));
+    assertThat(menuItem1, is(feeds.get(0)));
+    assertThat(menuItem2, is(feeds.get(1)));
   }
 
-  void createActivityWith(List<Feed> feeds) {
+  @Test
+  public void itOpensFeedPodcastsOnItemClick() {
+    createActivityWith(asList(aFeed("Some feed")));
+
+    performItemClickAtPosition(leftDrawer, 0);
+
+    Intent intent = shadowOf(activity).peekNextStartedActivity();
+    assertThat(
+        FeedEpisodesActivity.class.getCanonicalName(),
+        is(intent.getComponent().getClassName())
+    );
+  }
+
+  @Test
+  public void itOpensFeedPodcastsOnItemClickPassingAnFeedToBeOpenned() {
+    Feed someFeed = aFeed("Some feed");
+    createActivityWith(asList(someFeed));
+
+    Matcher<Serializable> serializedFeed = CoreMatchers.<Serializable>is(someFeed);
+
+    performItemClickAtPosition(leftDrawer, 0);
+
+    Intent intent = shadowOf(activity).peekNextStartedActivity();
+
+    assertThat(
+        intent.getSerializableExtra(Feed.class.toString()),
+        serializedFeed
+    );
+  }
+
+
+  private Feed aFeed(final String title) {
+    return new Feed() {
+      @Override
+      public String getTitle() {
+        return title;
+      }
+    };
+  }
+
+  private void createActivityWith(List<Feed> feeds) {
     when(userPodcastsMock.getFeeds()).thenReturn(feeds);
 
     activity = buildActivity(LatestEpisodesActivity.class).create().get();

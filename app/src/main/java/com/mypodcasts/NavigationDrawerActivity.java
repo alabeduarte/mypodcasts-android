@@ -1,14 +1,16 @@
 package com.mypodcasts;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.common.base.Function;
+import com.mypodcasts.feedepisodes.FeedEpisodesActivity;
+import com.mypodcasts.podcast.FeedsAdapter;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Feed;
 
@@ -19,9 +21,6 @@ import javax.inject.Inject;
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
-
-import static com.google.common.collect.FluentIterable.from;
-import static com.mypodcasts.R.layout.drawer_list_item;
 
 @ContentView(R.layout.navigation_drawer)
 public class NavigationDrawerActivity extends RoboActionBarActivity {
@@ -44,15 +43,21 @@ public class NavigationDrawerActivity extends RoboActionBarActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Feed feed = (Feed) leftDrawer.getAdapter().getItem(position);
+        Intent intent = new Intent(view.getContext(), FeedEpisodesActivity.class);
+        intent.putExtra(Feed.class.toString(), feed);
+
+        startActivity(intent);
+      }
+    });
+
     new FeedsAsyncTask().execute();
   }
 
   private class FeedsAsyncTask extends AsyncTask<Void, Void, List<Feed>> {
-    private final Context context;
-
-    public FeedsAsyncTask() {
-      context = NavigationDrawerActivity.this;
-    }
 
     @Override
     protected List<Feed> doInBackground(Void... params) {
@@ -61,14 +66,7 @@ public class NavigationDrawerActivity extends RoboActionBarActivity {
 
     @Override
     protected void onPostExecute(List<Feed> feeds) {
-      String[] menuItems = from(feeds).transform(new Function<Feed, String>() {
-        @Override
-        public String apply(Feed feed) {
-          return feed.getTitle();
-        }
-      }).toArray(String.class);
-
-      leftDrawer.setAdapter(new ArrayAdapter<>(context, drawer_list_item, menuItems));
+      leftDrawer.setAdapter(new FeedsAdapter(feeds, getLayoutInflater()));
     }
   }
 }

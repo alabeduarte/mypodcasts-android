@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.mypodcasts.util.ListViewHelper.performItemClickAtPosition;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -112,8 +113,8 @@ public class LatestEpisodesFragmentTest {
   @Test
   public void itLoadsLatestEpisodesWhenThereAreEpisodesOnCreate() {
    List<Episode> episodes = new ArrayList<Episode>() {{
-      add(new Episode());
-      add(new Episode());
+      add(anEpisode());
+      add(anEpisode());
     }};
 
     createFragmentWith(episodes);
@@ -123,9 +124,9 @@ public class LatestEpisodesFragmentTest {
 
   @Test
   public void itOpensAPlayerOnItemClick() {
-    createFragmentWith(asList(new Episode()));
+    createFragmentWith(asList(anEpisode()));
 
-    performItemClickAtPosition(0);
+    performItemClickAtPosition(listView, 0);
 
     Intent intent = peekNextStartedActivity();
     assertThat(AudioPlayerActivity.class.getCanonicalName(), is(intent.getComponent().getClassName()));
@@ -133,14 +134,15 @@ public class LatestEpisodesFragmentTest {
 
   @Test
   public void itOpensAPlayerOnItemClickPassingAnEpisodeToBeOpenned() {
-    Episode episode1 = new Episode();
-    Episode episode2 = new Episode();
+    Episode episode1 = anEpisode();
+    Episode episode2 = anEpisode();
     createFragmentWith(asList(episode1, episode2));
 
     int secondPosition = 1;
     Matcher<Serializable> serializedEpisode2 = CoreMatchers.<Serializable>is(episode2);
 
-    performItemClickAtPosition(secondPosition);
+    performItemClickAtPosition(listView, secondPosition);
+
     Intent intent = peekNextStartedActivity();
 
     assertThat(
@@ -163,12 +165,8 @@ public class LatestEpisodesFragmentTest {
     return shadowOf(activity).peekNextStartedActivity();
   }
 
-  private void performItemClickAtPosition(int position) {
-    listView.performItemClick(
-        listView.getAdapter().getView(position, null, null),
-        position,
-        position
-    );
+  private Episode anEpisode() {
+    return new Episode();
   }
 
   private View getView() {
