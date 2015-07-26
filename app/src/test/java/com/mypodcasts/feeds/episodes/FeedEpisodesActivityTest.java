@@ -3,6 +3,7 @@ package com.mypodcasts.feeds.episodes;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.inject.AbstractModule;
@@ -26,6 +27,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;
@@ -48,9 +50,6 @@ public class FeedEpisodesActivityTest {
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   FragmentManager fragmentManager = mock(FragmentManager.class);
   FragmentTransaction transaction = mock(FragmentTransaction.class);
-
-  List<Episode> emptyList = Collections.<Episode>emptyList();
-  Feed feed = aFeed("Awesome Podcast");
 
   @Before
   public void setup() {
@@ -78,7 +77,7 @@ public class FeedEpisodesActivityTest {
     when(progressDialogMock.isShowing()).thenReturn(true);
     String message = application.getString(R.string.loading_latest_episodes);
 
-    activity = createActivityWith(feed, emptyList);
+    activity = createActivityWith(aFeed());
 
     InOrder order = inOrder(progressDialogMock);
 
@@ -92,7 +91,7 @@ public class FeedEpisodesActivityTest {
   public void itDoNotCancelProgressDialogIfItIsNotShowing() {
     when(progressDialogMock.isShowing()).thenReturn(false);
 
-    activity = createActivityWith(feed, emptyList);
+    activity = createActivityWith(aFeed());
 
     InOrder order = inOrder(progressDialogMock);
 
@@ -102,52 +101,82 @@ public class FeedEpisodesActivityTest {
 
   @Test
   public void itSetsFragmentTitle() {
-    activity = createActivityWith(feed);
+    String expectedTitle = "Some title";
+    activity = createActivityWith(aFeed(expectedTitle));
 
     assertThat(
         episodeListFragment.getArguments().getString(EpisodeList.TITLE),
-        is(feed.getTitle())
+        is(expectedTitle)
     );
   }
 
   @Test
   public void itSetsFragmentEpisodeList() {
-    activity = createActivityWith(feed, emptyList);
+    List<Episode> episodes = asList(anEpisode());
+    activity = createActivityWith(aFeedWith(episodes));
 
     Bundle arguments = episodeListFragment.getArguments();
     Serializable serializable = arguments.getSerializable(EpisodeList.LIST);
     EpisodeList episodeList = (EpisodeList) serializable;
 
-    assertThat(episodeList.getEpisodes(), is(emptyList));
+    assertThat(episodeList.getEpisodes(), is(episodes));
   }
 
   private FeedEpisodesActivity createActivityWith(Feed feed) {
-    return createActivityWith(feed, emptyList);
-  }
-
-  private FeedEpisodesActivity createActivityWith(Feed feed, List<Episode> episodes) {
     when(fragmentManager.beginTransaction())
         .thenReturn(transaction);
 
     when(transaction.replace(R.id.content_frame, episodeListFragment))
         .thenReturn(transaction);
 
-    when(userPodcastsMock.getLatestEpisodes()).thenReturn(episodes);
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.putExtra(Feed.class.toString(), feed);
 
-    return buildActivity(FeedEpisodesActivity.class).create().get();
+    when(userPodcastsMock.getFeed(feed.getId())).thenReturn(feed);
+
+    return buildActivity(FeedEpisodesActivity.class)
+        .withIntent(intent)
+        .create()
+        .get();
   }
 
   private FeedEpisodesActivity createActivity() {
-    return createActivityWith(feed, emptyList);
+    return createActivityWith(aFeed());
   }
 
   private Feed aFeed(final String title) {
+    return aFeed(title, Collections.<Episode>emptyList());
+  }
+
+  private Feed aFeedWith(final List<Episode> episodes) {
+    return aFeed(null, episodes);
+  }
+
+  private Feed aFeed() {
+    return aFeed("Awesome Podcast");
+  }
+
+  private Feed aFeed(final String title, final List<Episode> episodes) {
     return new Feed() {
+      @Override
+      public String getId() {
+        return "123";
+      }
+
       @Override
       public String getTitle() {
         return title;
       }
+
+      @Override
+      public List<Episode> getEpisodes() {
+        return episodes;
+      }
     };
+  }
+
+  private Episode anEpisode() {
+    return new Episode();
   }
 
   public class MyTestModule extends AbstractModule {

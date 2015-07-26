@@ -31,6 +31,10 @@ public class UserPodcasts {
     return getHttpClient().getUserFeeds();
   }
 
+  public Feed getFeed(String id) {
+    return getHttpClient().getFeed(id);
+  }
+
   private HttpClient getHttpClient() {
     String endPoint = resources.getString(R.string.base_url);
     return restAdapterBuilder

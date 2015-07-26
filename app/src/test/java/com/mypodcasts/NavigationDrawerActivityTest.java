@@ -109,7 +109,6 @@ public class NavigationDrawerActivityTest {
     );
   }
 
-
   private Feed aFeed(final String title) {
     return new Feed() {
       @Override

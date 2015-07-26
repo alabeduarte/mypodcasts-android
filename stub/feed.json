@@ -1,0 +1,41 @@
+{
+  "id": "123456",
+  "title": "Some podcast",
+  "image":{
+    "url": "http://example.com/feed_image.jpg"
+  },
+  "episodes": [
+    {
+      "title": "Newest Episode!",
+      "publishedDate": "Sat, 20 Jun 2015 03:10:01 +0000",
+      "description": "Newest episode description",
+      "audio": {
+        "url": "http://example.com/newest_episode.mp3",
+        "length": "60000000",
+        "type": "audio/mpeg"
+      },
+      "podcast":{
+        "tittle": "MyPodcasts",
+        "image":{
+          "url": "http://example.com/feed_image.jpg"
+        }
+      }
+    },
+    {
+      "title": "Newest Episode from another podcast",
+      "publishedDate": "Fri, 19 Jun 2015 03:10:01 +0000",
+      "description": "Another newest episode description",
+      "enclosure": {
+        "url": "http://example.com/another_newest_episode.mp3",
+        "length": "52417026",
+        "type": "audio/mpeg"
+      },
+      "podcast": {
+        "tittle": "Another podcasts",
+        "image": {
+          "url": "http://example.com/another_feed_image.jpg"
+        }
+      }
+    }
+  ]
+}

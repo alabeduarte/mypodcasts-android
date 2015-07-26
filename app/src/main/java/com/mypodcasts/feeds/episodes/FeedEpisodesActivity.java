@@ -10,9 +10,7 @@ import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
 import com.mypodcasts.podcast.UserPodcasts;
-import com.mypodcasts.podcast.models.Episode;
-
-import java.util.List;
+import com.mypodcasts.podcast.models.Feed;
 
 import javax.inject.Inject;
 
@@ -37,10 +35,12 @@ public class FeedEpisodesActivity extends NavigationDrawerActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    new FeedEpisodesAsyncTask().execute();
+    Feed feed = (Feed) getIntent().getSerializableExtra(Feed.class.toString());
+
+    new FeedEpisodesAsyncTask().execute(feed.getId());
   }
 
-  class FeedEpisodesAsyncTask extends AsyncTask<Void, Void, List<Episode>> {
+  class FeedEpisodesAsyncTask extends AsyncTask<String, Void, Feed> {
     @Override
     protected void onPreExecute() {
       progressDialog.show();
@@ -48,20 +48,20 @@ public class FeedEpisodesActivity extends NavigationDrawerActivity {
     }
 
     @Override
-    protected List<Episode> doInBackground(Void... params) {
-      return userPodcasts.getLatestEpisodes();
+    protected Feed doInBackground(String... params) {
+      return userPodcasts.getFeed(params[0]);
     }
 
     @Override
-    protected void onPostExecute(List<Episode> latestEpisodes) {
+    protected void onPostExecute(Feed feed) {
       if (progressDialog != null && progressDialog.isShowing()) {
         progressDialog.cancel();
       }
 
-      arguments.putString(EpisodeList.TITLE, "Awesome Podcast");
+      arguments.putString(EpisodeList.TITLE, feed.getTitle());
       arguments.putSerializable(
           EpisodeList.LIST,
-          new EpisodeList(latestEpisodes)
+          new EpisodeList(feed.getEpisodes())
       );
 
       episodeListFragment.setArguments(arguments);
