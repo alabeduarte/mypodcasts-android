@@ -122,7 +122,7 @@ public class NavigationDrawerActivityTest {
   private void createActivityWith(List<Feed> feeds) {
     when(userPodcastsMock.getFeeds()).thenReturn(feeds);
 
-    activity = buildActivity(LatestEpisodesActivity.class).create().get();
+    activity = buildActivity(NavigationDrawerActivity.class).create().get();
     leftDrawer = (ListView) activity.findViewById(R.id.left_drawer);
   }
 

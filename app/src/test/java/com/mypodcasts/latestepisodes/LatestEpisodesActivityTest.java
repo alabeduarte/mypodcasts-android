@@ -3,22 +3,26 @@ package com.mypodcasts.latestepisodes;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.os.Bundle;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
+import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Episode;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,11 +43,11 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 public class LatestEpisodesActivityTest {
 
   LatestEpisodesActivity activity;
+  EpisodeListFragment episodeListFragment = new EpisodeListFragment();
 
   UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   FragmentManager fragmentManager = mock(FragmentManager.class);
-  EpisodeListFragment episodeListFragment = mock(EpisodeListFragment.class);
   FragmentTransaction transaction = mock(FragmentTransaction.class);
 
   List<Episode> emptyList = Collections.<Episode>emptyList();
@@ -70,6 +74,27 @@ public class LatestEpisodesActivityTest {
   }
 
   @Test
+  public void itSetsFragmentTitle() {
+    activity = createActivity();
+
+    assertThat(
+        episodeListFragment.getArguments().getString(EpisodeList.TITLE),
+        is(application.getString(R.string.latest_episodes))
+    );
+  }
+
+  @Test
+  public void itSetsFragmentEpisodeList() {
+    activity = createActivityWith(emptyList);
+
+    Bundle arguments = episodeListFragment.getArguments();
+    Serializable serializable = arguments.getSerializable(EpisodeList.LIST);
+    EpisodeList episodeList = (EpisodeList) serializable;
+
+    assertThat(episodeList.getEpisodes(), is(emptyList));
+  }
+
+  @Test
   public void itShowsAndHideProgressDialog() {
     when(progressDialogMock.isShowing()).thenReturn(true);
     String message = application.getString(R.string.loading_latest_episodes);
@@ -85,7 +110,7 @@ public class LatestEpisodesActivityTest {
   }
 
   @Test
-  public void itDoNotCancelProgressDialogIfItIsNotShowing() {
+  public void itDoesNotCancelProgressDialogIfItIsNotShowing() {
     when(progressDialogMock.isShowing()).thenReturn(false);
 
     activity = createActivityWith(emptyList);

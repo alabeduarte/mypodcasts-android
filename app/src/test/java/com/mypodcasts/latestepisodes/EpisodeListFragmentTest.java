@@ -22,13 +22,12 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.mypodcasts.util.ListViewHelper.performItemClickAtPosition;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Shadows.shadowOf;
@@ -41,33 +40,29 @@ public class EpisodeListFragmentTest {
   EpisodeListFragment fragment;
   ListView listView;
 
-  List<Episode> emptyList = Collections.<Episode>emptyList();
+  List<Episode> emptyList = emptyList();
 
   @Test
   public void itShowsListTitle() {
-    createFragmentWith(emptyList);
+    String expectedTitle = "Episode list title";
+    createFragmentWith(expectedTitle);
 
-    TextView textView = (TextView) getView().findViewById(R.id.latest_episodes_title);
+    TextView textView = (TextView) getView().findViewById(R.id.episodes_list_title);
     String listTitle = valueOf(textView.getText());
 
-    assertThat(listTitle, is("Latest Episodes"));
+    assertThat(listTitle, is(expectedTitle));
   }
 
   @Test
   public void itLoadsLatestEpisodesOnCreate() {
-    createFragmentWith(emptyList);
+    createFragment();
 
     assertThat(listView.getCount(), is(0));
   }
 
   @Test
   public void itLoadsLatestEpisodesWhenThereAreEpisodesOnCreate() {
-   List<Episode> episodes = new ArrayList<Episode>() {{
-      add(anEpisode());
-      add(anEpisode());
-    }};
-
-    createFragmentWith(episodes);
+    createFragmentWith(asList(anEpisode(), anEpisode()));
 
     assertThat(listView.getCount(), is(2));
   }
@@ -79,7 +74,10 @@ public class EpisodeListFragmentTest {
     performItemClickAtPosition(listView, 0);
 
     Intent intent = peekNextStartedActivity();
-    assertThat(AudioPlayerActivity.class.getCanonicalName(), is(intent.getComponent().getClassName()));
+    assertThat(
+        AudioPlayerActivity.class.getCanonicalName(),
+        is(intent.getComponent().getClassName())
+    );
   }
 
   @Test
@@ -101,10 +99,23 @@ public class EpisodeListFragmentTest {
     );
   }
 
+  private void createFragment() {
+    createFragmentWith(emptyList);
+  }
+
   void createFragmentWith(List<Episode> episodes) {
+    createFragmentWith(null, episodes);
+  }
+
+  void createFragmentWith(String title) {
+    createFragmentWith(title, emptyList);
+  }
+
+  void createFragmentWith(String title, List<Episode> episodes) {
     Bundle arguments = new Bundle();
+    arguments.putString(EpisodeList.TITLE, title);
     arguments.putSerializable(
-        EpisodeList.class.toString(),
+        EpisodeList.LIST,
         new EpisodeList(episodes)
     );
 
@@ -113,7 +124,7 @@ public class EpisodeListFragmentTest {
 
     startFragment(fragment);
 
-    listView = (ListView) getView().findViewById(R.id.episodesListView);
+    listView = (ListView) getView().findViewById(R.id.episodes_list_view);
   }
 
   private Intent peekNextStartedActivity() {

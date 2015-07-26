@@ -22,6 +22,9 @@ public class LatestEpisodesActivity extends NavigationDrawerActivity {
   private FragmentManager fragmentManager;
 
   @Inject
+  private Bundle arguments;
+
+  @Inject
   private EpisodeListFragment episodeListFragment;
 
   @Inject
@@ -55,9 +58,12 @@ public class LatestEpisodesActivity extends NavigationDrawerActivity {
         progressDialog.cancel();
       }
 
-      Bundle arguments = new Bundle();
+      arguments.putString(
+          EpisodeList.TITLE,
+          getResources().getString(R.string.latest_episodes)
+      );
       arguments.putSerializable(
-          EpisodeList.class.toString(),
+          EpisodeList.LIST,
           new EpisodeList(latestEpisodes)
       );
 
