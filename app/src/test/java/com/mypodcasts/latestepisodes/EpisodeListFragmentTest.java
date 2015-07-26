@@ -1,26 +1,23 @@
 package com.mypodcasts.latestepisodes;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
-import com.mypodcasts.podcast.UserPodcasts;
+import com.mypodcasts.podcast.EpisodeList;
+import com.mypodcasts.podcast.EpisodeListFragment;
 import com.mypodcasts.podcast.models.Episode;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -34,64 +31,17 @@ import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.when;
-import static org.robolectric.RuntimeEnvironment.application;
 import static org.robolectric.Shadows.shadowOf;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
-import static roboguice.RoboGuice.Util.reset;
-import static roboguice.RoboGuice.overrideApplicationInjector;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class LatestEpisodesFragmentTest {
+public class EpisodeListFragmentTest {
 
-  LatestEpisodesFragment fragment;
+  EpisodeListFragment fragment;
   ListView listView;
 
-  ProgressDialog progressDialogMock = mock(ProgressDialog.class);
-  UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
-
   List<Episode> emptyList = Collections.<Episode>emptyList();
-
-  @Before
-  public void setup() {
-    overrideApplicationInjector(application, new MyTestModule());
-  }
-
-  @After
-  public void teardown() {
-    reset();
-  }
-
-  @Test
-  public void itShowsAndHideProgressDialog() {
-    when(progressDialogMock.isShowing()).thenReturn(true);
-    String message = application.getString(R.string.loading_latest_episodes);
-
-    createFragmentWith(emptyList);
-
-    InOrder order = inOrder(progressDialogMock);
-
-    order.verify(progressDialogMock).show();
-    order.verify(progressDialogMock).setMessage(message);
-
-    order.verify(progressDialogMock).cancel();
-  }
-
-  @Test
-  public void itDoNotCancelProgressDialogIfItIsNotShowing() {
-    when(progressDialogMock.isShowing()).thenReturn(false);
-
-    createFragmentWith(emptyList);
-
-    InOrder order = inOrder(progressDialogMock);
-
-    order.verify(progressDialogMock).show();
-    order.verify(progressDialogMock, never()).cancel();
-  }
 
   @Test
   public void itShowsListTitle() {
@@ -152,9 +102,15 @@ public class LatestEpisodesFragmentTest {
   }
 
   void createFragmentWith(List<Episode> episodes) {
-    when(userPodcastsMock.getLatestEpisodes()).thenReturn(episodes);
+    Bundle arguments = new Bundle();
+    arguments.putSerializable(
+        EpisodeList.class.toString(),
+        new EpisodeList(episodes)
+    );
 
-    fragment = new LatestEpisodesFragment();
+    fragment = new EpisodeListFragment();
+    fragment.setArguments(arguments);
+
     startFragment(fragment);
 
     listView = (ListView) getView().findViewById(R.id.episodesListView);
@@ -171,13 +127,5 @@ public class LatestEpisodesFragmentTest {
 
   private View getView() {
     return fragment.getView();
-  }
-
-  public class MyTestModule extends AbstractModule {
-    @Override
-    protected void configure() {
-      bind(ProgressDialog.class).toInstance(progressDialogMock);
-      bind(UserPodcasts.class).toInstance(userPodcastsMock);
-    }
   }
 }

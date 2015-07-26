@@ -11,12 +11,12 @@ import com.mypodcasts.podcast.models.Episode;
 
 import java.util.List;
 
-public class EpisodesAdapter extends BaseAdapter {
+public class EpisodeListAdapter extends BaseAdapter {
 
   private final List<Episode> episodes;
   private final LayoutInflater inflater;
 
-  public EpisodesAdapter(List<Episode> episodes, LayoutInflater inflater) {
+  public EpisodeListAdapter(List<Episode> episodes, LayoutInflater inflater) {
     this.episodes = episodes;
     this.inflater = inflater;
   }
@@ -38,7 +38,7 @@ public class EpisodesAdapter extends BaseAdapter {
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
-    View row = inflater.inflate(R.layout.episode_item, parent, false);
+    View row = inflater.inflate(R.layout.episode_list_item, parent, false);
     TextView textView = (TextView) row.findViewById(R.id.episode_title);
     textView.setText(getItem(position).getTitle());
 

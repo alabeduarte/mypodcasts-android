@@ -25,9 +25,9 @@ import static org.robolectric.Robolectric.buildActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class EpisodesAdapterTest {
+public class EpisodeListAdapterTest {
 
-  EpisodesAdapter episodesAdapter;
+  EpisodeListAdapter episodeListAdapter;
 
   Activity activity;
   View convertView;
@@ -62,19 +62,19 @@ public class EpisodesAdapterTest {
       });
     }};
 
-    episodesAdapter = new EpisodesAdapter(episodes, activity.getLayoutInflater());
+    episodeListAdapter = new EpisodeListAdapter(episodes, activity.getLayoutInflater());
   }
 
   @Test
   public void itReturnsEpisodesCount() {
-    assertThat(episodesAdapter.getCount(), is(episodes.size()));
+    assertThat(episodeListAdapter.getCount(), is(episodes.size()));
   }
 
   @Test
   public void itInflatesEachRow() {
     int position = 0;
 
-    View row = episodesAdapter.getView(position, convertView, parent);
+    View row = episodeListAdapter.getView(position, convertView, parent);
 
     assertThat(row.getVisibility(), is(View.VISIBLE));
   }
@@ -83,7 +83,7 @@ public class EpisodesAdapterTest {
   public void itShowsFirstEpisodeTitle() {
     int position = 0;
 
-    View row = episodesAdapter.getView(position, convertView, parent);
+    View row = episodeListAdapter.getView(position, convertView, parent);
     TextView textView = (TextView) row.findViewById(R.id.episode_title);
     String title = valueOf(textView.getText());
 
@@ -94,7 +94,7 @@ public class EpisodesAdapterTest {
   public void itShowsSecondEpisodeTitle() {
     int position = 1;
 
-    View row = episodesAdapter.getView(position, convertView, parent);
+    View row = episodeListAdapter.getView(position, convertView, parent);
     TextView textView = (TextView) row.findViewById(R.id.episode_title);
     String title = valueOf(textView.getText());
 

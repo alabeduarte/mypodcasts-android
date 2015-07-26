@@ -1,4 +1,4 @@
-package com.mypodcasts.latestepisodes;
+package com.mypodcasts.feeds.episodes;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -22,9 +22,6 @@ import org.robolectric.annotation.Config;
 import java.util.Collections;
 import java.util.List;
 
-import static java.lang.String.valueOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -36,9 +33,9 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class LatestEpisodesActivityTest {
+public class FeedEpisodesActivityTest {
 
-  LatestEpisodesActivity activity;
+  FeedEpisodesActivity activity;
 
   UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
@@ -96,7 +93,7 @@ public class LatestEpisodesActivityTest {
     order.verify(progressDialogMock, never()).cancel();
   }
 
-  LatestEpisodesActivity createActivityWith(List<Episode> episodes) {
+  FeedEpisodesActivity createActivityWith(List<Episode> episodes) {
     when(fragmentManager.beginTransaction())
         .thenReturn(transaction);
 
@@ -105,10 +102,10 @@ public class LatestEpisodesActivityTest {
 
     when(userPodcastsMock.getLatestEpisodes()).thenReturn(episodes);
 
-    return buildActivity(LatestEpisodesActivity.class).create().get();
+    return buildActivity(FeedEpisodesActivity.class).create().get();
   }
 
-  private LatestEpisodesActivity createActivity() {
+  private FeedEpisodesActivity createActivity() {
     return createActivityWith(emptyList);
   }
 

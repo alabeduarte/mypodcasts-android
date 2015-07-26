@@ -1,10 +1,18 @@
 package com.mypodcasts.latestepisodes;
 
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.mypodcasts.NavigationDrawerActivity;
 import com.mypodcasts.R;
+import com.mypodcasts.podcast.EpisodeList;
+import com.mypodcasts.podcast.EpisodeListFragment;
+import com.mypodcasts.podcast.UserPodcasts;
+import com.mypodcasts.podcast.models.Episode;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -14,15 +22,50 @@ public class LatestEpisodesActivity extends NavigationDrawerActivity {
   private FragmentManager fragmentManager;
 
   @Inject
-  private LatestEpisodesFragment latestEpisodesFragment;
+  private EpisodeListFragment episodeListFragment;
+
+  @Inject
+  private ProgressDialog progressDialog;
+
+  @Inject
+  private UserPodcasts userPodcasts;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    fragmentManager.beginTransaction()
-        .replace(R.id.content_frame, latestEpisodesFragment)
-        .commit();
+    new LatestEpisodesAsyncTask().execute();
   }
 
+  class LatestEpisodesAsyncTask extends AsyncTask<Void, Void, List<Episode>> {
+    @Override
+    protected void onPreExecute() {
+      progressDialog.show();
+      progressDialog.setMessage(getResources().getString(R.string.loading_latest_episodes));
+    }
+
+    @Override
+    protected List<Episode> doInBackground(Void... params) {
+      return userPodcasts.getLatestEpisodes();
+    }
+
+    @Override
+    protected void onPostExecute(List<Episode> latestEpisodes) {
+      if (progressDialog != null && progressDialog.isShowing()) {
+        progressDialog.cancel();
+      }
+
+      Bundle arguments = new Bundle();
+      arguments.putSerializable(
+          EpisodeList.class.toString(),
+          new EpisodeList(latestEpisodes)
+      );
+
+      episodeListFragment.setArguments(arguments);
+
+      fragmentManager.beginTransaction()
+          .replace(R.id.content_frame, episodeListFragment)
+          .commit();
+    }
+  }
 }
