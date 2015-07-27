@@ -11,6 +11,7 @@ import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
+import com.mypodcasts.podcast.FeedPodcasts;
 import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Feed;
@@ -47,6 +48,7 @@ public class FeedEpisodesActivityTest {
   EpisodeListFragment episodeListFragment = new EpisodeListFragment();
 
   UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
+  FeedPodcasts feedPodcastsMock = mock(FeedPodcasts.class);
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   FragmentManager fragmentManager = mock(FragmentManager.class);
   FragmentTransaction transaction = mock(FragmentTransaction.class);
@@ -132,7 +134,7 @@ public class FeedEpisodesActivityTest {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.putExtra(Feed.class.toString(), feed);
 
-    when(userPodcastsMock.getFeed(feed.getId())).thenReturn(feed);
+    when(feedPodcastsMock.getFeed(feed.getId())).thenReturn(feed);
 
     return buildActivity(FeedEpisodesActivity.class)
         .withIntent(intent)
@@ -184,6 +186,7 @@ public class FeedEpisodesActivityTest {
     protected void configure() {
       bind(ProgressDialog.class).toInstance(progressDialogMock);
       bind(UserPodcasts.class).toInstance(userPodcastsMock);
+      bind(FeedPodcasts.class).toInstance(feedPodcastsMock);
       bind(FragmentManager.class).toInstance(fragmentManager);
       bind(EpisodeListFragment.class).toInstance(episodeListFragment);
     }

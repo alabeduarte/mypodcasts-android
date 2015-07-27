@@ -27,6 +27,12 @@ app.get('/api/user/johndoe/feeds', function(req, res) {
   simulateHighLatency(res, json);
 });
 
+app.get('/api/feeds/:id', function(req, res) {
+  var json = jsonParse(fromFile('/feed.json'));
+
+  simulateHighLatency(res, json);
+});
+
 var server = app.listen(3000, function () {
 
   var host = server.address().address;

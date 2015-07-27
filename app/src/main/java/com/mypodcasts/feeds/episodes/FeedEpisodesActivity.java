@@ -9,7 +9,7 @@ import com.mypodcasts.NavigationDrawerActivity;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
-import com.mypodcasts.podcast.UserPodcasts;
+import com.mypodcasts.podcast.FeedPodcasts;
 import com.mypodcasts.podcast.models.Feed;
 
 import javax.inject.Inject;
@@ -29,7 +29,7 @@ public class FeedEpisodesActivity extends NavigationDrawerActivity {
   private ProgressDialog progressDialog;
 
   @Inject
-  private UserPodcasts userPodcasts;
+  private FeedPodcasts feedPodcasts;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class FeedEpisodesActivity extends NavigationDrawerActivity {
 
     @Override
     protected Feed doInBackground(String... params) {
-      return userPodcasts.getFeed(params[0]);
+      return feedPodcasts.getFeed(params[0]);
     }
 
     @Override
