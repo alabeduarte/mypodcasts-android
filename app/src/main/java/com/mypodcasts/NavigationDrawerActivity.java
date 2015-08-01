@@ -3,6 +3,7 @@ package com.mypodcasts;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -25,6 +26,9 @@ import roboguice.inject.InjectView;
 @ContentView(R.layout.navigation_drawer)
 public class NavigationDrawerActivity extends RoboActionBarActivity {
 
+  @InjectView(R.id.drawer_layout)
+  private DrawerLayout drawerLayout;
+
   @InjectView(R.id.left_drawer)
   private ListView leftDrawer;
 
@@ -42,6 +46,9 @@ public class NavigationDrawerActivity extends RoboActionBarActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    getSupportActionBar().setDisplayShowHomeEnabled(true);
+    getSupportActionBar().setIcon(R.drawable.ic_drawer);
 
     leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
