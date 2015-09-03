@@ -14,14 +14,9 @@ $ ./gradlew test
 As we don't have any API live yet, there is a stub that return some feeds for local tests purposes.
 
 - Install [nodejs](https://nodejs.org/)
-- Setup dependencies:
-```
-$ npm install
-```
-
 - Run stub:
 ```
-$ node stub/index.js
+$ ./stub.sh
 ```
 
 Once the server is up, you can run your app normally as a regular android project.
