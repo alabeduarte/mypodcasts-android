@@ -10,12 +10,11 @@ import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
-import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.podcast.repositories.UserPodcasts;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -26,7 +25,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;

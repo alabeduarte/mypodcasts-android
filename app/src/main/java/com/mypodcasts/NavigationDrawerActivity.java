@@ -12,8 +12,8 @@ import android.widget.ListView;
 
 import com.mypodcasts.feeds.FeedsAdapter;
 import com.mypodcasts.feeds.episodes.FeedEpisodesActivity;
-import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Feed;
+import com.mypodcasts.podcast.repositories.UserPodcasts;
 
 import java.util.List;
 

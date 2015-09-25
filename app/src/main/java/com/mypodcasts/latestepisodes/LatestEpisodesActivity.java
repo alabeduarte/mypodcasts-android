@@ -9,8 +9,8 @@ import com.mypodcasts.NavigationDrawerActivity;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
-import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.podcast.repositories.UserPodcasts;
 
 import java.util.List;
 

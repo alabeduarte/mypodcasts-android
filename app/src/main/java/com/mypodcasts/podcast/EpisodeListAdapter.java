@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
 
@@ -15,10 +17,12 @@ public class EpisodeListAdapter extends BaseAdapter {
 
   private final List<Episode> episodes;
   private final LayoutInflater inflater;
+  private ImageLoader imageLoader;
 
-  public EpisodeListAdapter(List<Episode> episodes, LayoutInflater inflater) {
+  public EpisodeListAdapter(List<Episode> episodes, LayoutInflater inflater, ImageLoader imageLoader) {
     this.episodes = episodes;
     this.inflater = inflater;
+    this.imageLoader = imageLoader;
   }
 
   @Override
@@ -38,9 +42,17 @@ public class EpisodeListAdapter extends BaseAdapter {
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
+    Episode episode = getItem(position);
+
     View row = inflater.inflate(R.layout.episode_list_item, parent, false);
+
     TextView textView = (TextView) row.findViewById(R.id.episode_title);
-    textView.setText(getItem(position).getTitle());
+    textView.setText(episode.getTitle());
+
+    if (episode.getImage() != null) {
+      NetworkImageView networkImageView = (NetworkImageView) row.findViewById(R.id.episode_thumbnail);
+      networkImageView.setImageUrl(episode.getImage().getUrl(), imageLoader);
+    }
 
     return row;
   }

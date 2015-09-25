@@ -5,9 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.podcast.models.Image;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +35,7 @@ public class EpisodeListAdapterTest {
   Activity activity;
   View convertView;
   ViewGroup parent;
+  ImageLoader imageLoader;
 
   List<Episode> episodes;
 
@@ -49,6 +53,16 @@ public class EpisodeListAdapterTest {
     episodes = new ArrayList<Episode>() {{
       add(new Episode() {
         @Override
+        public Image getImage() {
+          return new Image() {
+            @Override
+            public String getUrl() {
+              return "http://images.com/photo.jpeg";
+            }
+          };
+        }
+
+        @Override
         public String getTitle() {
           return "123 - Podcast Episode";
         }
@@ -62,7 +76,7 @@ public class EpisodeListAdapterTest {
       });
     }};
 
-    episodeListAdapter = new EpisodeListAdapter(episodes, activity.getLayoutInflater());
+    episodeListAdapter = new EpisodeListAdapter(episodes, activity.getLayoutInflater(), imageLoader);
   }
 
   @Test
@@ -88,6 +102,17 @@ public class EpisodeListAdapterTest {
     String title = valueOf(textView.getText());
 
     assertThat(title, is("123 - Podcast Episode"));
+  }
+
+  @Test
+  public void itShowsFirstEpisodeImageUrl() {
+    int position = 0;
+
+    Image image = episodes.get(position).getImage();
+    View row = episodeListAdapter.getView(position, convertView, parent);
+    NetworkImageView networkImageView = (NetworkImageView) row.findViewById(R.id.episode_thumbnail);
+
+    assertThat(networkImageView.getImageURL(), is(image.getUrl()));
   }
 
   @Test

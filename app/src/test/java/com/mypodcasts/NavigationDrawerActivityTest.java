@@ -6,9 +6,8 @@ import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.feeds.episodes.FeedEpisodesActivity;
-import com.mypodcasts.latestepisodes.LatestEpisodesActivity;
-import com.mypodcasts.podcast.UserPodcasts;
 import com.mypodcasts.podcast.models.Feed;
+import com.mypodcasts.podcast.repositories.UserPodcasts;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;

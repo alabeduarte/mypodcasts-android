@@ -1,4 +1,4 @@
-package com.mypodcasts.injection;
+package com.mypodcasts.support.injection;
 
 import android.app.ProgressDialog;
 import android.content.Context;

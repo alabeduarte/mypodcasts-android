@@ -9,6 +9,11 @@ public class Episode implements Serializable {
   private String description;
   private Audio audio;
   private Podcast podcast;
+  private Image image;
+
+  public Image getImage() {
+    return image;
+  }
 
   public String getTitle() {
     return title;

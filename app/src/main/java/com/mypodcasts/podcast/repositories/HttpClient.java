@@ -1,4 +1,4 @@
-package com.mypodcasts.podcast;
+package com.mypodcasts.podcast.repositories;
 
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Feed;

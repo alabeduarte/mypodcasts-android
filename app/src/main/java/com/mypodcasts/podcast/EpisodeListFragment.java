@@ -10,11 +10,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.podcast.models.Episode;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import roboguice.fragment.provided.RoboFragment;
 import roboguice.inject.InjectView;
@@ -26,6 +29,9 @@ public class EpisodeListFragment extends RoboFragment {
 
   @InjectView(R.id.episodes_list_view)
   private ListView episodesListView;
+
+  @Inject
+  private ImageLoader imageLoader;
 
   @Override
   public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -52,7 +58,7 @@ public class EpisodeListFragment extends RoboFragment {
 
     List<Episode> latestEpisodes = getEpisodeList().getEpisodes();
 
-    episodesListView.setAdapter(new EpisodeListAdapter(latestEpisodes, inflater));
+    episodesListView.setAdapter(new EpisodeListAdapter(latestEpisodes, inflater, imageLoader));
   }
 
   private EpisodeList getEpisodeList() {

@@ -9,8 +9,8 @@ import com.mypodcasts.NavigationDrawerActivity;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
-import com.mypodcasts.podcast.FeedPodcasts;
 import com.mypodcasts.podcast.models.Feed;
+import com.mypodcasts.podcast.repositories.FeedPodcasts;
 
 import javax.inject.Inject;
 
