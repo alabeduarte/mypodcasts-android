@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Feed;
+import com.mypodcasts.podcast.models.Image;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -77,6 +78,28 @@ public class UserPodcastsTest {
   }
 
   @Test
+  public void itReturnsAllEpisodesImageUrl() {
+    int firstPosition = 0;
+
+    Episode episode = new Episode() {
+      @Override
+      public Image getImage() {
+        return new Image() {
+          @Override
+          public String getUrl() {
+            return "http://example.com/episode_image.png";
+          }
+        };
+      }
+    };
+
+    assertThat(
+        userPodcasts.getLatestEpisodes().get(firstPosition).getImage().getUrl(),
+        is(episode.getImage().getUrl())
+    );
+  }
+
+  @Test
   public void itReturnsAllFeedsId() {
     int firstPosition = 0;
 
@@ -107,6 +130,28 @@ public class UserPodcastsTest {
     assertThat(
         userPodcasts.getFeeds().get(firstPosition).getTitle(),
         is(firstFeed.getTitle())
+    );
+  }
+
+  @Test
+  public void itReturnsAllFeedsImageUrl() {
+    int firstPosition = 0;
+
+    Feed firstFeed = new Feed() {
+      @Override
+      public Image getImage() {
+        return new Image() {
+          @Override
+          public String getUrl() {
+            return "http://example.com/feed_image.jpg";
+          }
+        };
+      }
+    };
+
+    assertThat(
+        userPodcasts.getFeeds().get(firstPosition).getImage().getUrl(),
+        is(firstFeed.getImage().getUrl())
     );
   }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 public class Feed implements Serializable {
   private String id;
   private String title;
+  private Image image;
   private List<Episode> episodes;
 
   public String getId() {
@@ -14,6 +15,10 @@ public class Feed implements Serializable {
 
   public String getTitle() {
     return title;
+  }
+
+  public Image getImage() {
+    return image;
   }
 
   public List<Episode> getEpisodes() {
