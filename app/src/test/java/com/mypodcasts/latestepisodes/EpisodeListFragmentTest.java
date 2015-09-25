@@ -7,15 +7,21 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
+import com.mypodcasts.podcast.EpisodeListHeaderInfo;
 import com.mypodcasts.podcast.models.Episode;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -30,8 +36,12 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.robolectric.RuntimeEnvironment.application;
 import static org.robolectric.Shadows.shadowOf;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
+import static roboguice.RoboGuice.Util.reset;
+import static roboguice.RoboGuice.overrideApplicationInjector;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
@@ -42,10 +52,48 @@ public class EpisodeListFragmentTest {
 
   List<Episode> emptyList = emptyList();
 
+  ImageLoader imageLoaderMock = mock(ImageLoader.class);
+
+  @Before
+  public void setup() {
+    overrideApplicationInjector(application, new MyTestModule());
+  }
+
+  @After
+  public void teardown() {
+    reset();
+  }
+
+  @Test
+  public void itShowsListImage() {
+    String expectedImageUrl = "http://example.com/feed.png";
+    createFragmentWith(new EpisodeListHeaderInfo("Episode list title", expectedImageUrl));
+
+    NetworkImageView networkImageView = (NetworkImageView) getView().findViewById(
+        R.id.episode_list_thumbnail
+    );
+
+    assertThat(networkImageView.getImageURL(), is(expectedImageUrl));
+  }
+
+  @Test
+  public void itDoesNotShowListImageWhenItIsNull() {
+    String noImageUrl = null;
+    createFragmentWith(new EpisodeListHeaderInfo("Episode list title", noImageUrl));
+
+    NetworkImageView networkImageView = (NetworkImageView) getView().findViewById(
+        R.id.episode_list_thumbnail
+    );
+
+    assertThat(networkImageView.getImageURL(), is(noImageUrl));
+  }
+
   @Test
   public void itShowsListTitle() {
     String expectedTitle = "Episode list title";
-    createFragmentWith(expectedTitle);
+    String noImageUrl = null;
+
+    createFragmentWith(new EpisodeListHeaderInfo(expectedTitle, noImageUrl));
 
     TextView textView = (TextView) getView().findViewById(R.id.episodes_list_title);
     String listTitle = valueOf(textView.getText());
@@ -104,16 +152,16 @@ public class EpisodeListFragmentTest {
   }
 
   void createFragmentWith(List<Episode> episodes) {
-    createFragmentWith(null, episodes);
+    createFragmentWith(new EpisodeListHeaderInfo(null), episodes);
   }
 
-  void createFragmentWith(String title) {
-    createFragmentWith(title, emptyList);
+  void createFragmentWith(EpisodeListHeaderInfo headerInfo) {
+    createFragmentWith(headerInfo, emptyList);
   }
 
-  void createFragmentWith(String title, List<Episode> episodes) {
+  void createFragmentWith(EpisodeListHeaderInfo headerInfo, List<Episode> episodes) {
     Bundle arguments = new Bundle();
-    arguments.putString(EpisodeList.TITLE, title);
+    arguments.putSerializable(EpisodeList.HEADER, headerInfo);
     arguments.putSerializable(
         EpisodeList.LIST,
         new EpisodeList(episodes)
@@ -138,5 +186,12 @@ public class EpisodeListFragmentTest {
 
   private View getView() {
     return fragment.getView();
+  }
+
+  public class MyTestModule extends AbstractModule {
+    @Override
+    protected void configure() {
+      bind(ImageLoader.class).toInstance(imageLoaderMock);
+    }
   }
 }

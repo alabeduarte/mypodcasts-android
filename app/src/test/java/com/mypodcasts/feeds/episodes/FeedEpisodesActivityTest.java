@@ -11,8 +11,10 @@ import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
+import com.mypodcasts.podcast.EpisodeListHeaderInfo;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Feed;
+import com.mypodcasts.podcast.models.Image;
 import com.mypodcasts.podcast.repositories.FeedPodcasts;
 import com.mypodcasts.podcast.repositories.UserPodcasts;
 
@@ -102,14 +104,17 @@ public class FeedEpisodesActivityTest {
   }
 
   @Test
-  public void itSetsFragmentTitle() {
+  public void itSetsFragmentHeader() {
     String expectedTitle = "Some title";
+    String expectedImageUrl = "http://example.com/feed.png";
+
     activity = createActivityWith(aFeed(expectedTitle));
 
-    assertThat(
-        episodeListFragment.getArguments().getString(EpisodeList.TITLE),
-        is(expectedTitle)
-    );
+    EpisodeListHeaderInfo headerInfo = (EpisodeListHeaderInfo) episodeListFragment.getArguments()
+        .getSerializable(EpisodeList.HEADER);
+
+    assertThat(headerInfo.getTitle(), is(expectedTitle));
+    assertThat(headerInfo.getImageUrl(), is(expectedImageUrl));
   }
 
   @Test
@@ -163,6 +168,16 @@ public class FeedEpisodesActivityTest {
       @Override
       public String getId() {
         return "123";
+      }
+
+      @Override
+      public Image getImage() {
+        return new Image() {
+          @Override
+          public String getUrl() {
+            return "http://example.com/feed.png";
+          }
+        };
       }
 
       @Override

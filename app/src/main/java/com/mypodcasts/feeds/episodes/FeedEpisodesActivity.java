@@ -9,6 +9,7 @@ import com.mypodcasts.NavigationDrawerActivity;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
+import com.mypodcasts.podcast.EpisodeListHeaderInfo;
 import com.mypodcasts.podcast.models.Feed;
 import com.mypodcasts.podcast.repositories.FeedPodcasts;
 
@@ -58,7 +59,11 @@ public class FeedEpisodesActivity extends NavigationDrawerActivity {
         progressDialog.cancel();
       }
 
-      arguments.putString(EpisodeList.TITLE, feed.getTitle());
+      arguments.putSerializable(
+          EpisodeList.HEADER,
+          new EpisodeListHeaderInfo(feed.getTitle(), feed.getImage())
+      );
+
       arguments.putSerializable(
           EpisodeList.LIST,
           new EpisodeList(feed.getEpisodes())

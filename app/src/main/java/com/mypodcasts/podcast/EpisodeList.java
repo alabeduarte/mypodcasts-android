@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class EpisodeList implements Serializable {
-  public static final String TITLE = "EpisodeList#title";
+  public static final String HEADER = "EpisodeList#header";
   public static final String LIST = "EpisodeList#list";
 
   private final List<Episode> episodes;

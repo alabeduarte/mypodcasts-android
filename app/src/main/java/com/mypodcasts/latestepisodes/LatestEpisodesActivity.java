@@ -9,6 +9,7 @@ import com.mypodcasts.NavigationDrawerActivity;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
+import com.mypodcasts.podcast.EpisodeListHeaderInfo;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.repositories.UserPodcasts;
 
@@ -58,9 +59,9 @@ public class LatestEpisodesActivity extends NavigationDrawerActivity {
         progressDialog.cancel();
       }
 
-      arguments.putString(
-          EpisodeList.TITLE,
-          getResources().getString(R.string.latest_episodes)
+      arguments.putSerializable(
+          EpisodeList.HEADER,
+          new EpisodeListHeaderInfo(getResources().getString(R.string.latest_episodes))
       );
       arguments.putSerializable(
           EpisodeList.LIST,

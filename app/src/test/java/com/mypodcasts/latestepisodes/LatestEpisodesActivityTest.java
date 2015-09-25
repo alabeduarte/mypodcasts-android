@@ -10,6 +10,7 @@ import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
+import com.mypodcasts.podcast.EpisodeListHeaderInfo;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.repositories.UserPodcasts;
 
@@ -72,13 +73,13 @@ public class LatestEpisodesActivityTest {
   }
 
   @Test
-  public void itSetsFragmentTitle() {
+  public void itSetsFragmentHeader() {
     activity = createActivity();
 
-    assertThat(
-        episodeListFragment.getArguments().getString(EpisodeList.TITLE),
-        is(application.getString(R.string.latest_episodes))
-    );
+    EpisodeListHeaderInfo headerInfo = (EpisodeListHeaderInfo) episodeListFragment.getArguments()
+        .getSerializable(EpisodeList.HEADER);
+
+    assertThat(headerInfo.getTitle(), is(application.getString(R.string.latest_episodes)));
   }
 
   @Test

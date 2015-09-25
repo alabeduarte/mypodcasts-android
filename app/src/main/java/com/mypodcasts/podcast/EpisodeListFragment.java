@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.podcast.models.Episode;
@@ -23,6 +24,9 @@ import roboguice.fragment.provided.RoboFragment;
 import roboguice.inject.InjectView;
 
 public class EpisodeListFragment extends RoboFragment {
+
+  @InjectView(R.id.episode_list_thumbnail)
+  private NetworkImageView episodeListImageView;
 
   @InjectView(R.id.episodes_list_title)
   private TextView episodesListTitle;
@@ -42,7 +46,10 @@ public class EpisodeListFragment extends RoboFragment {
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    episodesListTitle.setText(getTitle());
+    EpisodeListHeaderInfo headerInfo = getHeaderInfo();
+
+    episodeListImageView.setImageUrl(headerInfo.getImageUrl(), imageLoader);
+    episodesListTitle.setText(headerInfo.getTitle());
     episodesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -65,8 +72,8 @@ public class EpisodeListFragment extends RoboFragment {
     return (EpisodeList) getArguments().getSerializable(EpisodeList.LIST);
   }
 
-  private String getTitle() {
-    return getArguments().getString(EpisodeList.TITLE);
+  private EpisodeListHeaderInfo getHeaderInfo() {
+    return (EpisodeListHeaderInfo) getArguments().getSerializable(EpisodeList.HEADER);
   }
 
   private LayoutInflater getLayoutInflater(View view) {
