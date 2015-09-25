@@ -24,6 +24,7 @@ import java.util.List;
 import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.robolectric.Robolectric.buildActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -35,7 +36,7 @@ public class EpisodeListAdapterTest {
   Activity activity;
   View convertView;
   ViewGroup parent;
-  ImageLoader imageLoader;
+  ImageLoader imageLoaderMock = mock(ImageLoader.class);
 
   List<Episode> episodes;
 
@@ -76,7 +77,7 @@ public class EpisodeListAdapterTest {
       });
     }};
 
-    episodeListAdapter = new EpisodeListAdapter(episodes, activity.getLayoutInflater(), imageLoader);
+    episodeListAdapter = new EpisodeListAdapter(episodes, activity.getLayoutInflater(), imageLoaderMock);
   }
 
   @Test
