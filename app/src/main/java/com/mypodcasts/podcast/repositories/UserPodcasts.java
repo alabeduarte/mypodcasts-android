@@ -14,28 +14,18 @@ import retrofit.RestAdapter;
 
 public class UserPodcasts {
 
-  private final Resources resources;
-  private final RestAdapter.Builder restAdapterBuilder;
+  private final HttpClient httpClient;
 
   @Inject
-  public UserPodcasts(Resources resources, RestAdapter.Builder restAdapterBuilder) {
-    this.resources = resources;
-    this.restAdapterBuilder = restAdapterBuilder;
+  public UserPodcasts(HttpClient httpClient) {
+    this.httpClient = httpClient;
   }
 
   public List<Episode> getLatestEpisodes() {
-    return getHttpClient().getLatestEpisodes();
+    return httpClient.getApi().getLatestEpisodes();
   }
 
   public List<Feed> getFeeds() {
-    return getHttpClient().getUserFeeds();
-  }
-
-  private HttpClient getHttpClient() {
-    String endPoint = resources.getString(R.string.base_url);
-    return restAdapterBuilder
-        .setEndpoint(endPoint)
-        .build()
-        .create(HttpClient.class);
+    return httpClient.getApi().getUserFeeds();
   }
 }

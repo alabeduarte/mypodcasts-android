@@ -11,24 +11,14 @@ import retrofit.RestAdapter;
 
 public class FeedPodcasts {
 
-  private final Resources resources;
-  private final RestAdapter.Builder restAdapterBuilder;
+  private final HttpClient httpClient;
 
   @Inject
-  public FeedPodcasts(Resources resources, RestAdapter.Builder restAdapterBuilder) {
-    this.resources = resources;
-    this.restAdapterBuilder = restAdapterBuilder;
+  public FeedPodcasts(HttpClient httpClient) {
+    this.httpClient = httpClient;
   }
 
   public Feed getFeed(String id) {
-    return getHttpClient().getFeed(id);
-  }
-
-  private HttpClient getHttpClient() {
-    String endPoint = resources.getString(R.string.base_url);
-    return restAdapterBuilder
-        .setEndpoint(endPoint)
-        .build()
-        .create(HttpClient.class);
+    return httpClient.getApi().getFeed(id);
   }
 }

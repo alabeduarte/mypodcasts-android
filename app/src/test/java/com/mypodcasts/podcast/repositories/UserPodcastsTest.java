@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 public class UserPodcastsTest {
 
   UserPodcasts userPodcasts;
+  HttpClient httpClient;
 
   Resources resources = mock(Resources.class);
 
@@ -48,7 +49,8 @@ public class UserPodcastsTest {
             .withBodyFile("user_feeds.json")));
     when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
 
-    userPodcasts = new UserPodcasts(resources, new RestAdapter.Builder());
+    httpClient = new HttpClient(resources, new RestAdapter.Builder());
+    userPodcasts = new UserPodcasts(httpClient);
   }
 
   @Test

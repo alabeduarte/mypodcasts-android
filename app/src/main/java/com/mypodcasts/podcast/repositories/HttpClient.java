@@ -1,20 +1,29 @@
 package com.mypodcasts.podcast.repositories;
 
-import com.mypodcasts.podcast.models.Episode;
-import com.mypodcasts.podcast.models.Feed;
+import android.content.res.Resources;
 
-import java.util.List;
+import com.mypodcasts.R;
 
-import retrofit.http.GET;
-import retrofit.http.Path;
+import javax.inject.Inject;
 
-public interface HttpClient {
-  @GET("/api/user/johndoe/latest_episodes")
-  List<Episode> getLatestEpisodes();
+import retrofit.RestAdapter;
 
-  @GET("/api/user/johndoe/feeds")
-  List<Feed> getUserFeeds();
+public class HttpClient {
 
-  @GET("/api/feeds/{id}")
-  Feed getFeed(@Path("id") String id);
+  private final Resources resources;
+  private final RestAdapter.Builder restAdapterBuilder;
+
+  @Inject
+  public HttpClient(Resources resources, RestAdapter.Builder restAdapterBuilder) {
+    this.resources = resources;
+    this.restAdapterBuilder = restAdapterBuilder;
+  }
+
+  public Api getApi() {
+    String endPoint = resources.getString(R.string.base_url);
+    return restAdapterBuilder
+        .setEndpoint(endPoint)
+        .build()
+        .create(Api.class);
+  }
 }
