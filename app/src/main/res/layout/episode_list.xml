@@ -17,13 +17,15 @@
         android:layout_height="60dp"/>
     <TextView
         android:id="@+id/episodes_list_title"
-        android:gravity="center_vertical"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        style="@style/EpisodeTitle"
+        />
   </LinearLayout>
   <ListView
+      android:id="@+id/episodes_list_view"
+      style="@style/EpisodeList"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:id="@+id/episodes_list_view"
       android:layout_below="@+id/episode_list_header" />
 </RelativeLayout>
