@@ -144,4 +144,14 @@ public class EpisodeListAdapterTest {
 
     assertThat(mediaPlayButton.isFocusable(), is(false));
   }
+
+  @Test
+  public void itDisablesFocusFromEpisodeDownloadButton() {
+    EpisodeListAdapter episodeListAdapter = givenAdapaterWithSomeEpisodes();
+
+    View row = someRowOf(episodeListAdapter);
+    ImageButton downloadButton = (ImageButton) row.findViewById(R.id.episode_download_button);
+
+    assertThat(downloadButton.isFocusable(), is(false));
+  }
 }

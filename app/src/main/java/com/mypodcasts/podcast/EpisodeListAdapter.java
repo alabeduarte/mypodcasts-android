@@ -51,6 +51,7 @@ public class EpisodeListAdapter extends BaseAdapter {
     setTitle(episode, row);
     setImageUrl(episode, row);
     disableMediaPlayButtonFocus(row);
+    disableDownloadButtonFocus(row);
 
     return row;
   }
@@ -69,6 +70,10 @@ public class EpisodeListAdapter extends BaseAdapter {
 
   private void disableMediaPlayButtonFocus(View row) {
     row.findViewById(R.id.media_play_button).setFocusable(false);
+  }
+
+  private void disableDownloadButtonFocus(View row) {
+    row.findViewById(R.id.episode_download_button).setFocusable(false);
   }
 
   @NonNull

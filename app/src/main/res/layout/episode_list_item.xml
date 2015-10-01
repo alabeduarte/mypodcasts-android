@@ -55,6 +55,11 @@
           style="@style/EpisodeLength"
           android:text="60 MB"
           />
+      <ImageButton
+          android:id="@+id/episode_download_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@android:drawable/stat_sys_download" />
     </LinearLayout>
   </LinearLayout>
 </LinearLayout>
