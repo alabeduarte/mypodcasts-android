@@ -49,9 +49,13 @@ public class FeedPodcastsTest {
     feedPodcasts = new FeedPodcasts(httpClient);
   }
 
+  private Feed getFeed() {
+    return feedPodcasts.getFeed(expectedId);
+  }
+
   @Test
   public void itReturnsFeedId() {
-    assertThat(feedPodcasts.getFeed(expectedId).getId(), is(expectedId));
+    assertThat(getFeed().getId(), is(expectedId));
   }
 
   @Test
@@ -69,7 +73,7 @@ public class FeedPodcastsTest {
       }
     };
 
-    Feed feed = new Feed() {
+    Feed expectedFeed = new Feed() {
       @Override
       public List<Episode> getEpisodes() {
         return asList(newestEpisode, anotherEpisode);
@@ -77,13 +81,13 @@ public class FeedPodcastsTest {
     };
 
     assertThat(
-        feedPodcasts.getFeed(expectedId).getEpisodes().get(0).getTitle(),
-        is(feed.getEpisodes().get(0).getTitle())
+        getFeed().getEpisodes().get(0).getTitle(),
+        is(expectedFeed.getEpisodes().get(0).getTitle())
     );
 
     assertThat(
-        feedPodcasts.getFeed(expectedId).getEpisodes().get(1).getTitle(),
-        is(feed.getEpisodes().get(1).getTitle())
+        getFeed().getEpisodes().get(1).getTitle(),
+        is(expectedFeed.getEpisodes().get(1).getTitle())
     );
   }
 }
