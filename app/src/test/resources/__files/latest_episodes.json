@@ -7,7 +7,7 @@
       "url": "http://example.com/episode_image.png"
     },
     "audio": {
-      "url": "http://example.com/newest_episode.mp3",
+      "url": "http://example.com/episode_audio.mp3",
       "length": "60000000",
       "type": "audio/mpeg"
     },

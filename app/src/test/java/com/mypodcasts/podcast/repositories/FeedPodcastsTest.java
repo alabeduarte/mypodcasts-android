@@ -4,14 +4,14 @@ import android.content.res.Resources;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.mypodcasts.R;
+import com.mypodcasts.podcast.models.Audio;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Feed;
+import com.mypodcasts.podcast.models.Image;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.List;
 
 import retrofit.RestAdapter;
 
@@ -19,7 +19,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.givenThat;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -36,6 +35,7 @@ public class FeedPodcastsTest {
   public WireMockRule wireMockRule = new WireMockRule(1111);
   final String feed_path = "/api/feeds/123456";
   final String expectedId = "123456";
+  private int firstPosition = 0;
 
   @Before
   public void setup() {
@@ -49,45 +49,65 @@ public class FeedPodcastsTest {
     feedPodcasts = new FeedPodcasts(httpClient);
   }
 
-  private Feed getFeed() {
-    return feedPodcasts.getFeed(expectedId);
-  }
-
   @Test
   public void itReturnsFeedId() {
-    assertThat(getFeed().getId(), is(expectedId));
+    Feed feed = feedPodcasts.getFeed(expectedId);
+
+    assertThat(feed.getId(), is(expectedId));
   }
 
   @Test
-  public void itReturnsFeedEpisodes() {
-    final Episode newestEpisode = new Episode() {
+  public void itReturnsTitleWhenGetFeeds() {
+    Feed feed = feedPodcasts.getFeed(expectedId);
+    Episode episode = feed.getEpisodes().get(firstPosition);
+
+    Episode expectedEpisode = new Episode() {
       @Override
       public String getTitle() {
         return "Newest Episode!";
       }
     };
-    final Episode anotherEpisode = new Episode() {
+
+    assertThat(episode.getTitle(), is(expectedEpisode.getTitle()));
+  }
+
+  @Test
+  public void itReturnsAudioUrlWhenGetFeeds() {
+    Feed feed = feedPodcasts.getFeed(expectedId);
+    Episode episode = feed.getEpisodes().get(firstPosition);
+
+    Episode expectedEpisode = new Episode() {
       @Override
-      public String getTitle() {
-        return "Newest Episode from another podcast";
+      public Audio getAudio() {
+        return new Audio() {
+          @Override
+          public String getUrl() {
+            return "http://example.com/newest_episode.mp3";
+          }
+        };
       }
     };
 
-    Feed expectedFeed = new Feed() {
+    assertThat(episode.getAudio().getUrl(), is(expectedEpisode.getAudio().getUrl()) );
+  }
+
+  @Test
+  public void itReturnsImageUrlWhenGetFeeds() {
+    Feed feed = feedPodcasts.getFeed(expectedId);
+    Episode episode = feed.getEpisodes().get(firstPosition);
+
+    Episode expectedEpisode = new Episode() {
       @Override
-      public List<Episode> getEpisodes() {
-        return asList(newestEpisode, anotherEpisode);
+      public Image getImage() {
+        return new Image() {
+          @Override
+          public String getUrl() {
+            return "http://example.com/episode_image.png";
+          }
+        };
       }
     };
 
-    assertThat(
-        getFeed().getEpisodes().get(0).getTitle(),
-        is(expectedFeed.getEpisodes().get(0).getTitle())
-    );
-
-    assertThat(
-        getFeed().getEpisodes().get(1).getTitle(),
-        is(expectedFeed.getEpisodes().get(1).getTitle())
-    );
+    assertThat(episode.getImage().getUrl(), is(expectedEpisode.getImage().getUrl()) );
   }
 }

@@ -4,6 +4,7 @@ import android.content.res.Resources;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.mypodcasts.R;
+import com.mypodcasts.podcast.models.Audio;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Feed;
 import com.mypodcasts.podcast.models.Image;
@@ -41,7 +42,7 @@ public class UserPodcastsTest {
     givenThat(get(urlEqualTo(latest_episodes_path))
         .willReturn(aResponse()
             .withStatus(200)
-            .withBodyFile("user_podcasts.json")));
+            .withBodyFile("latest_episodes.json")));
     when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
 
     givenThat(get(urlEqualTo(feeds_path))
@@ -54,29 +55,44 @@ public class UserPodcastsTest {
     userPodcasts = new UserPodcasts(httpClient);
   }
 
-  private Episode getEpisode() {
-    return userPodcasts.getLatestEpisodes().get(firstPosition);
-  }
-
-  private Feed getFeed() {
-    return userPodcasts.getFeeds().get(firstPosition);
-  }
-
   @Test
-  public void itReturnsTitle() {
-    Episode episode = new Episode() {
+  public void itReturnsTitleWhenGetLatestEpisodes() {
+    Episode episode = userPodcasts.getLatestEpisodes().get(firstPosition);
+
+    Episode expectedEpisode = new Episode() {
       @Override
       public String getTitle() {
         return "Newest Episode!";
       }
     };
 
-    assertThat(getEpisode().getTitle(), is(episode.getTitle()));
+    assertThat(episode.getTitle(), is(expectedEpisode.getTitle()));
   }
 
   @Test
-  public void itReturnsImageUrl() {
-    Episode episode = new Episode() {
+  public void itReturnsAudioUrlWhenGetLatestEpisodes() {
+    Episode episode = userPodcasts.getLatestEpisodes().get(firstPosition);
+
+    Episode expectedEpisode = new Episode() {
+      @Override
+      public Audio getAudio() {
+        return new Audio() {
+          @Override
+          public String getUrl() {
+            return "http://example.com/episode_audio.mp3";
+          }
+        };
+      }
+    };
+
+    assertThat(episode.getAudio().getUrl(), is(expectedEpisode.getAudio().getUrl()) );
+  }
+
+  @Test
+  public void itReturnsImageUrlWhenGetLatestEpisodes() {
+    Episode episode = userPodcasts.getLatestEpisodes().get(firstPosition);
+
+    Episode expectedEpisode = new Episode() {
       @Override
       public Image getImage() {
         return new Image() {
@@ -88,36 +104,42 @@ public class UserPodcastsTest {
       }
     };
 
-    assertThat(getEpisode().getImage().getUrl(), is(episode.getImage().getUrl()) );
+    assertThat(episode.getImage().getUrl(), is(expectedEpisode.getImage().getUrl()) );
   }
 
   @Test
-  public void itReturnsFeedId() {
-    Feed feed = new Feed() {
+  public void itReturnsFeedIdWhenGetFeeds() {
+    Feed feed = userPodcasts.getFeeds().get(firstPosition);
+
+    Feed expectedFeed = new Feed() {
       @Override
       public String getId() {
         return "123456";
       }
     };
 
-    assertThat(getFeed().getId(), is(feed.getId()));
+    assertThat(feed.getId(), is(expectedFeed.getId()));
   }
 
   @Test
-  public void itReturnsFeedTitle() {
-    Feed feed = new Feed() {
+  public void itReturnsFeedTitleWhenGetFeeds() {
+    Feed feed = userPodcasts.getFeeds().get(firstPosition);
+
+    Feed expectedFeed = new Feed() {
       @Override
       public String getTitle() {
         return "Some podcast";
       }
     };
 
-    assertThat(getFeed().getTitle(), is(feed.getTitle()));
+    assertThat(feed.getTitle(), is(expectedFeed.getTitle()));
   }
 
   @Test
-  public void itReturnsFeedImageUrl() {
-    Feed firstFeed = new Feed() {
+  public void itReturnsFeedImageUrlWhenGetFeeds() {
+    Feed feed = userPodcasts.getFeeds().get(firstPosition);
+
+    Feed expectedFeed = new Feed() {
       @Override
       public Image getImage() {
         return new Image() {
@@ -129,6 +151,6 @@ public class UserPodcastsTest {
       }
     };
 
-    assertThat(getFeed().getImage().getUrl(), is(firstFeed.getImage().getUrl()));
+    assertThat(feed.getImage().getUrl(), is(expectedFeed.getImage().getUrl()));
   }
 }

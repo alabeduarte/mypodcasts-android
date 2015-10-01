@@ -2,12 +2,12 @@
   {
     "id": "123456",
     "title": "Some podcast",
-    "image":{
+    "image": {
       "url": "http://example.com/feed_image.jpg"
     }
   },
   {
-    "id": "987654",
+    "id": "98765",
     "title": "Another podcast",
     "image": {
       "url": "http://example.com/another_feed_image.jpg"
