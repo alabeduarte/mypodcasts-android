@@ -3,6 +3,7 @@ package com.mypodcasts.podcast;
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -114,6 +115,16 @@ public class EpisodeListAdapterTest {
     NetworkImageView networkImageView = (NetworkImageView) row.findViewById(R.id.episode_thumbnail);
 
     assertThat(networkImageView.getImageURL(), is(image.getUrl()));
+  }
+
+  @Test
+  public void itDisablesFocusFromMediaPlayButton() {
+    int position = 0;
+
+    View row = episodeListAdapter.getView(position, convertView, parent);
+    ImageButton mediaPlayButton = (ImageButton) row.findViewById(R.id.media_play_button);
+
+    assertThat(mediaPlayButton.isFocusable(), is(false));
   }
 
   @Test

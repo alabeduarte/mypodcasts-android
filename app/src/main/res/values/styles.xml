@@ -2,22 +2,34 @@
   <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
   </style>
 
+  <style name="EpisodeList">
+    <item name="android:divider">@color/link_text_material_dark</item>
+    <item name="android:dividerHeight">2dp</item>
+  </style>
+
   <style name="EpisodeTitle">
     <item name="android:gravity">center_vertical</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">match_parent</item>
     <item name="android:textStyle">bold</item>
-    <item name="android:layout_marginLeft">10dp</item>
+    <item name="android:textSize">16sp</item>
   </style>
 
   <style name="EpisodeDescription">
     <item name="android:gravity">center_vertical</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">match_parent</item>
+    <item name="android:textSize">14sp</item>
   </style>
 
-  <style name="EpisodeList">
-    <item name="android:divider">#FFBBCC</item>
-    <item name="android:dividerHeight">2dp</item>
+  <style name="EpisodeLength">
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:textSize">12sp</item>
+  </style>
+
+  <style name="EpisodePublishedDate">
+    <item name="android:textSize">12sp</item>
   </style>
 </resources>

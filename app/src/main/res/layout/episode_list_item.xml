@@ -4,15 +4,31 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
   <LinearLayout
+      android:orientation="horizontal"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+      android:layout_marginTop="10dp">
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/episode_thumbnail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <TextView android:id="@+id/episode_title" style="@style/EpisodeTitle" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp">
+      <TextView
+          android:id="@+id/episode_published_date"
+          android:layout_height="wrap_content"
+          android:layout_width="match_parent"
+          style="@style/EpisodePublishedDate"
+          android:text="SEP 23"
+          />
+      <TextView android:id="@+id/episode_title" style="@style/EpisodeTitle" />
+    </LinearLayout>
   </LinearLayout>
   <LinearLayout
+      android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
     <TextView
@@ -22,5 +38,23 @@
         style="EpisodeDescription"
         android:text="@string/lorem_ipsum"
         />
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+      <ImageButton
+          android:id="@+id/media_play_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@android:drawable/ic_media_play" />
+      <TextView
+          android:id="@+id/episode_length"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content"
+          style="@style/EpisodeLength"
+          android:text="60 MB"
+          />
+    </LinearLayout>
   </LinearLayout>
 </LinearLayout>
