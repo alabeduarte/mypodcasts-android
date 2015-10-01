@@ -1,4 +1,4 @@
-package com.mypodcasts.latestepisodes;
+package com.mypodcasts.podcast;
 
 import android.app.Activity;
 import android.content.Intent;
