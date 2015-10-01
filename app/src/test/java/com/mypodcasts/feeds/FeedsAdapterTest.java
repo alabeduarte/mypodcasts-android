@@ -15,10 +15,10 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
@@ -27,13 +27,11 @@ import static org.robolectric.Robolectric.buildActivity;
 @Config(constants = BuildConfig.class)
 public class FeedsAdapterTest {
 
-  FeedsAdapter feedsAdapter;
-
   Activity activity;
   View convertView;
   ViewGroup parent;
 
-  List<Feed> feeds;
+  int firstPosition = 0;
 
   @Before
   public void setup() {
@@ -45,57 +43,52 @@ public class FeedsAdapterTest {
       protected void onLayout(boolean changed, int l, int t, int r, int b) {
       }
     };
+  }
 
-    feeds = new ArrayList<Feed>() {{
-      add(aFeed("Some Feed"));
-      add(aFeed("Another Feed"));
-    }};
+  private FeedsAdapter givenAdapaterWith(List<Feed> feeds) {
+    return new FeedsAdapter(feeds, activity.getLayoutInflater());
+  }
 
-    feedsAdapter = new FeedsAdapter(feeds, activity.getLayoutInflater());
+  private List<Feed> givenFeeds(Feed... feeds) {
+    return asList(feeds);
+  }
+
+  private View someRowOf(FeedsAdapter feedsAdapter) {
+    return feedsAdapter.getView(firstPosition, convertView, parent);
   }
 
   @Test
   public void itReturnsEpisodesCount() {
+    List<Feed> feeds = givenFeeds(new Feed());
+    FeedsAdapter feedsAdapter = givenAdapaterWith(feeds);
+
     assertThat(feedsAdapter.getCount(), is(feeds.size()));
   }
 
   @Test
   public void itInflatesEachRow() {
-    int position = 0;
+    List<Feed> feeds = givenFeeds(new Feed());
+    FeedsAdapter feedsAdapter = givenAdapaterWith(feeds);
 
-    View row = feedsAdapter.getView(position, convertView, parent);
+    View row = someRowOf(feedsAdapter);
 
     assertThat(row.getVisibility(), is(View.VISIBLE));
   }
 
   @Test
-  public void itShowsFirstEpisodeTitle() {
-    int position = 0;
+  public void itSetsFeedTitle() {
+    List<Feed> feeds = givenFeeds(new Feed() {
+      @Override
+      public String getTitle() {
+        return "Some Feed";
+      }
+    });
+    FeedsAdapter feedsAdapter = givenAdapaterWith(feeds);
 
-    View row = feedsAdapter.getView(position, convertView, parent);
+    View row = someRowOf(feedsAdapter);
     TextView textView = (TextView) row.findViewById(R.id.feed_title);
     String title = valueOf(textView.getText());
 
     assertThat(title, is("Some Feed"));
-  }
-
-  @Test
-  public void itShowsSecondEpisodeTitle() {
-    int position = 1;
-
-    View row = feedsAdapter.getView(position, convertView, parent);
-    TextView textView = (TextView) row.findViewById(R.id.feed_title);
-    String title = valueOf(textView.getText());
-
-    assertThat(title, is("Another Feed"));
-  }
-
-  private Feed aFeed(final String title) {
-    return new Feed() {
-      @Override
-      public String getTitle() {
-        return title;
-      }
-    };
   }
 }

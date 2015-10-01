@@ -1,5 +1,6 @@
 package com.mypodcasts.podcast;
 
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,13 +61,18 @@ public class EpisodeListAdapter extends BaseAdapter {
   }
 
   private void setImageUrl(Episode episode, View row) {
-    if (episode.getImage() != null) {
-      NetworkImageView networkImageView = (NetworkImageView) row.findViewById(R.id.episode_thumbnail);
-      networkImageView.setImageUrl(episode.getImage().getUrl(), imageLoader);
-    }
+    NetworkImageView networkImageView = (NetworkImageView) row.findViewById(R.id.episode_thumbnail);
+    String imageUrl = episode.getImage() == null ? episodeDefaultImageUrl() : episode.getImage().getUrl();
+
+    networkImageView.setImageUrl(imageUrl, imageLoader);
   }
 
   private void disableMediaPlayButtonFocus(View row) {
     row.findViewById(R.id.media_play_button).setFocusable(false);
+  }
+
+  @NonNull
+  private String episodeDefaultImageUrl() {
+    return inflater.getContext().getResources().getString(R.string.episode_default_image);
   }
 }

@@ -17,29 +17,29 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.robolectric.Robolectric.buildActivity;
+import static org.robolectric.RuntimeEnvironment.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class EpisodeListAdapterTest {
-
-  EpisodeListAdapter episodeListAdapter;
 
   Activity activity;
   View convertView;
   ViewGroup parent;
   ImageLoader imageLoaderMock = mock(ImageLoader.class);
 
-  List<Episode> episodes;
+  int firstPosition = 0;
 
   @Before
   public void setup() {
@@ -51,55 +51,52 @@ public class EpisodeListAdapterTest {
       protected void onLayout(boolean changed, int l, int t, int r, int b) {
       }
     };
+  }
 
-    episodes = new ArrayList<Episode>() {{
-      add(new Episode() {
-        @Override
-        public Image getImage() {
-          return new Image() {
-            @Override
-            public String getUrl() {
-              return "http://images.com/photo.jpeg";
-            }
-          };
-        }
+  private EpisodeListAdapter givenAdapaterWith(List<Episode> episodes) {
+    return new EpisodeListAdapter(episodes, activity.getLayoutInflater(), imageLoaderMock);
+  }
 
-        @Override
-        public String getTitle() {
-          return "123 - Podcast Episode";
-        }
-      });
+  private EpisodeListAdapter givenAdapaterWithSomeEpisodes() {
+    return givenAdapaterWith(givenEpisodes(new Episode(), new Episode()));
+  }
 
-      add(new Episode() {
-        @Override
-        public String getTitle() {
-          return "456 - Another Podcast Episode";
-        }
-      });
-    }};
+  private List<Episode> givenEpisodes(Episode... episodes) {
+    return asList(episodes);
+  }
 
-    episodeListAdapter = new EpisodeListAdapter(episodes, activity.getLayoutInflater(), imageLoaderMock);
+  private View someRowOf(EpisodeListAdapter episodeListAdapter) {
+    return episodeListAdapter.getView(firstPosition, convertView, parent);
   }
 
   @Test
   public void itReturnsEpisodesCount() {
+    List<Episode> episodes = givenEpisodes(new Episode());
+    EpisodeListAdapter episodeListAdapter = givenAdapaterWith(episodes);
+
     assertThat(episodeListAdapter.getCount(), is(episodes.size()));
   }
 
   @Test
   public void itInflatesEachRow() {
-    int position = 0;
+    EpisodeListAdapter episodeListAdapter = givenAdapaterWithSomeEpisodes();
 
-    View row = episodeListAdapter.getView(position, convertView, parent);
+    View row = someRowOf(episodeListAdapter);
 
     assertThat(row.getVisibility(), is(View.VISIBLE));
   }
 
   @Test
-  public void itShowsFirstEpisodeTitle() {
-    int position = 0;
+  public void itSetsEpisodeTitle() {
+    List<Episode> episodes = givenEpisodes(new Episode() {
+      @Override
+      public String getTitle() {
+        return "123 - Podcast Episode";
+      }
+    });
+    EpisodeListAdapter episodeListAdapter = givenAdapaterWith(episodes);
 
-    View row = episodeListAdapter.getView(position, convertView, parent);
+    View row = someRowOf(episodeListAdapter);
     TextView textView = (TextView) row.findViewById(R.id.episode_title);
     String title = valueOf(textView.getText());
 
@@ -107,34 +104,44 @@ public class EpisodeListAdapterTest {
   }
 
   @Test
-  public void itShowsFirstEpisodeImageUrl() {
-    int position = 0;
+  public void itSetsEpisodeImageUrl() {
+    List<Episode> episodes = givenEpisodes(new Episode() {
+      @Override
+      public Image getImage() {
+        return new Image() {
+          @Override
+          public String getUrl() {
+            return "http://images.com/photo.jpeg";
+          }
+        };
+      }
+    });
+    EpisodeListAdapter episodeListAdapter = givenAdapaterWith(episodes);
 
-    Image image = episodes.get(position).getImage();
-    View row = episodeListAdapter.getView(position, convertView, parent);
+    View row = someRowOf(episodeListAdapter);
     NetworkImageView networkImageView = (NetworkImageView) row.findViewById(R.id.episode_thumbnail);
 
-    assertThat(networkImageView.getImageURL(), is(image.getUrl()));
+    assertThat(networkImageView.getImageURL(), is("http://images.com/photo.jpeg"));
+  }
+
+  @Test
+  public void itSetsDefaultEpisodeImageUrlWhenImageIsNull() {
+    List<Episode> episodes = givenEpisodes(new Episode());
+    EpisodeListAdapter episodeListAdapter = givenAdapaterWith(episodes);
+
+    View row = someRowOf(episodeListAdapter);
+    NetworkImageView networkImageView = (NetworkImageView) row.findViewById(R.id.episode_thumbnail);
+
+    assertThat(networkImageView.getImageURL(), is(application.getResources().getString(R.string.episode_default_image)));
   }
 
   @Test
   public void itDisablesFocusFromMediaPlayButton() {
-    int position = 0;
+    EpisodeListAdapter episodeListAdapter = givenAdapaterWithSomeEpisodes();
 
-    View row = episodeListAdapter.getView(position, convertView, parent);
+    View row = someRowOf(episodeListAdapter);
     ImageButton mediaPlayButton = (ImageButton) row.findViewById(R.id.media_play_button);
 
     assertThat(mediaPlayButton.isFocusable(), is(false));
-  }
-
-  @Test
-  public void itShowsSecondEpisodeTitle() {
-    int position = 1;
-
-    View row = episodeListAdapter.getView(position, convertView, parent);
-    TextView textView = (TextView) row.findViewById(R.id.episode_title);
-    String title = valueOf(textView.getText());
-
-    assertThat(title, is("456 - Another Podcast Episode"));
   }
 }
