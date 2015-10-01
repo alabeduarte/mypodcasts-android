@@ -4,11 +4,9 @@
 
 Podcast client for android.
 
-![alt latest_episodes](screenshots/latest_episodes.png)
-
-![alt menu](screenshots/menu.png)
-
-![alt player](screenshots/player.png)
+<img src="screenshots/latest_episodes.png" width="200" height="400" />
+<img src="screenshots/menu.png" width="200" height="400" />
+<img src="screenshots/player.png" width="200" height="400" />
 
 ## Running tests:
 ```
