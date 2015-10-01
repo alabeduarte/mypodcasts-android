@@ -4,6 +4,12 @@
 
 Podcast client for android.
 
+![alt latest_episodes](screenshots/latest_episodes.png)
+
+![alt menu](screenshots/menu.png)
+
+![alt player](screenshots/player.png)
+
 ## Running tests:
 ```
 $ ./gradlew test
