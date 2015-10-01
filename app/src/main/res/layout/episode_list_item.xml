@@ -50,7 +50,7 @@
           android:src="@android:drawable/ic_media_play" />
       <TextView
           android:id="@+id/episode_length"
-          android:layout_height="wrap_content"
+          android:layout_height="match_parent"
           android:layout_width="wrap_content"
           style="@style/EpisodeLength"
           android:text="60 MB"
