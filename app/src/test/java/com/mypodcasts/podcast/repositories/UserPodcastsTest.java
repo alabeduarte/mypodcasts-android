@@ -29,6 +29,7 @@ public class UserPodcastsTest {
   HttpClient httpClient;
 
   Resources resources = mock(Resources.class);
+  int firstPosition = 0;
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(1111);
@@ -53,36 +54,28 @@ public class UserPodcastsTest {
     userPodcasts = new UserPodcasts(httpClient);
   }
 
+  private Episode getEpisode() {
+    return userPodcasts.getLatestEpisodes().get(firstPosition);
+  }
+
+  private Feed getFeed() {
+    return userPodcasts.getFeeds().get(firstPosition);
+  }
+
   @Test
-  public void itReturnsLatestEpisodes() {
-    Episode newestEpisode = new Episode() {
+  public void itReturnsTitle() {
+    Episode episode = new Episode() {
       @Override
       public String getTitle() {
         return "Newest Episode!";
       }
     };
-    Episode anotherEpisode = new Episode() {
-      @Override
-      public String getTitle() {
-        return "Newest Episode from another podcast";
-      }
-    };
 
-    assertThat(
-        userPodcasts.getLatestEpisodes().get(0).getTitle(),
-        is(newestEpisode.getTitle())
-    );
-
-    assertThat(
-        userPodcasts.getLatestEpisodes().get(1).getTitle(),
-        is(anotherEpisode.getTitle())
-    );
+    assertThat(getEpisode().getTitle(), is(episode.getTitle()));
   }
 
   @Test
-  public void itReturnsAllEpisodesImageUrl() {
-    int firstPosition = 0;
-
+  public void itReturnsImageUrl() {
     Episode episode = new Episode() {
       @Override
       public Image getImage() {
@@ -95,50 +88,35 @@ public class UserPodcastsTest {
       }
     };
 
-    assertThat(
-        userPodcasts.getLatestEpisodes().get(firstPosition).getImage().getUrl(),
-        is(episode.getImage().getUrl())
-    );
+    assertThat(getEpisode().getImage().getUrl(), is(episode.getImage().getUrl()) );
   }
 
   @Test
-  public void itReturnsAllFeedsId() {
-    int firstPosition = 0;
-
-    Feed firstFeed = new Feed() {
+  public void itReturnsFeedId() {
+    Feed feed = new Feed() {
       @Override
       public String getId() {
         return "123456";
       }
     };
 
-    assertThat(
-        userPodcasts.getFeeds().get(firstPosition).getId(),
-        is(firstFeed.getId())
-    );
+    assertThat(getFeed().getId(), is(feed.getId()));
   }
 
   @Test
-  public void itReturnsAllFeedsTitle() {
-    int firstPosition = 0;
-
-    Feed firstFeed = new Feed() {
+  public void itReturnsFeedTitle() {
+    Feed feed = new Feed() {
       @Override
       public String getTitle() {
         return "Some podcast";
       }
     };
 
-    assertThat(
-        userPodcasts.getFeeds().get(firstPosition).getTitle(),
-        is(firstFeed.getTitle())
-    );
+    assertThat(getFeed().getTitle(), is(feed.getTitle()));
   }
 
   @Test
-  public void itReturnsAllFeedsImageUrl() {
-    int firstPosition = 0;
-
+  public void itReturnsFeedImageUrl() {
     Feed firstFeed = new Feed() {
       @Override
       public Image getImage() {
@@ -151,9 +129,6 @@ public class UserPodcastsTest {
       }
     };
 
-    assertThat(
-        userPodcasts.getFeeds().get(firstPosition).getImage().getUrl(),
-        is(firstFeed.getImage().getUrl())
-    );
+    assertThat(getFeed().getImage().getUrl(), is(firstFeed.getImage().getUrl()));
   }
 }
