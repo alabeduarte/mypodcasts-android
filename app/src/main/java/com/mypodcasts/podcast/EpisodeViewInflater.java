@@ -92,12 +92,10 @@ public class EpisodeViewInflater {
       downloadButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          String filePath = episode.getPodcast().getId() + "/" + episode.getTitle() + ".mp3";
-
           fileDownloadManager.enqueue(
               Uri.parse(episode.getAudio().getUrl()),
               Environment.DIRECTORY_PODCASTS,
-              filePath
+              episode.getAudioFilePath()
           );
         }
       });

@@ -15,10 +15,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
-import com.mypodcasts.podcast.models.Audio;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Image;
-import com.mypodcasts.podcast.models.Podcast;
 import com.mypodcasts.support.FileDownloadManager;
 
 import org.junit.Before;
@@ -181,33 +179,8 @@ public class EpisodeViewInflaterTest {
   public void itDownloadsEpisodeAudioOnDownloadButtonClick() {
     Episode episode = new Episode() {
       @Override
-      public String getTitle() {
-        return "Newest episode";
-      }
-
-      @Override
-      public Podcast getPodcast() {
-        return new Podcast() {
-          @Override
-          public String getId() {
-            return "123";
-          }
-
-          @Override
-          public String getTitle() {
-            return "Awesome podcast";
-          }
-        };
-      }
-
-      @Override
-      public Audio getAudio() {
-        return new Audio() {
-          @Override
-          public String getUrl() {
-            return "audio.mp3";
-          }
-        };
+      public String getAudioFilePath() {
+        return "audio.mp3";
       }
     };
 
@@ -216,48 +189,16 @@ public class EpisodeViewInflaterTest {
 
     downloadButton.performClick();
 
-    String expectedFilePath = episode.getPodcast().getId() + "/" + episode.getTitle() + ".mp3";
-
     verify(downloadManagerMock).enqueue(
         Uri.parse(episode.getAudio().getUrl()),
         Environment.DIRECTORY_PODCASTS,
-        expectedFilePath
+        episode.getAudioFilePath()
     );
   }
 
   @Test
   public void itDoesNotDownloadEpisodeAudioWhenDownloadButtonIsNotClicked() {
-    Episode episode = new Episode() {
-      @Override
-      public String getTitle() {
-        return "Newest episode";
-      }
-
-      @Override
-      public Podcast getPodcast() {
-        return new Podcast() {
-          @Override
-          public String getId() {
-            return "123";
-          }
-
-          @Override
-          public String getTitle() {
-            return "Awesome podcast";
-          }
-        };
-      }
-
-      @Override
-      public Audio getAudio() {
-        return new Audio() {
-          @Override
-          public String getUrl() {
-            return "audio.mp3";
-          }
-        };
-      }
-    };
+    Episode episode = new Episode();
 
     episodeViewInflater.inflate(episode);
 

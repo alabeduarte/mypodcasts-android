@@ -47,4 +47,8 @@ public class Episode implements Serializable {
       return podcast;
     }
   }
+
+  public String getAudioFilePath() {
+    return getPodcast().getId() + "/" + getTitle() + ".mp3";
+  }
 }
