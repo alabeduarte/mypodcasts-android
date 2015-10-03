@@ -2,13 +2,19 @@ package com.mypodcasts.player;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Environment;
 
+import com.mypodcasts.BuildConfig;
 import com.mypodcasts.podcast.models.Audio;
 import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.support.ExternalPublicFileLookup;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
@@ -22,12 +28,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class)
 public class AudioPlayerTest {
 
   AudioPlayer audioPlayer;
 
   MediaPlayer mediaPlayerMock = mock(MediaPlayer.class);
   EventBus eventBusMock = mock(EventBus.class);
+  ExternalPublicFileLookup externalPublicFileLookupMock = mock(ExternalPublicFileLookup.class);
 
   Episode episode = new Episode() {
     @Override
@@ -39,11 +48,16 @@ public class AudioPlayerTest {
         }
       };
     }
+
+    @Override
+    public String getAudioFilePath() {
+      return "audio.mp3";
+    }
   };
 
   @Before
   public void setup() {
-    audioPlayer = new AudioPlayer(mediaPlayerMock, eventBusMock);
+    audioPlayer = new AudioPlayer(mediaPlayerMock, eventBusMock, externalPublicFileLookupMock);
   }
 
   @Test
@@ -60,6 +74,18 @@ public class AudioPlayerTest {
     InOrder order = inOrder(mediaPlayerMock);
 
     order.verify(mediaPlayerMock).setDataSource(episode.getAudio().getUrl());
+    order.verify(mediaPlayerMock).prepare();
+  }
+
+  @Test
+  public void itSetsDataSourceWithLocalFilePathAndPreparesMediaPlayerWhenAlreadyDownloadedEpisode() throws IOException {
+    when(externalPublicFileLookupMock.exists(Environment.DIRECTORY_PODCASTS, episode.getAudioFilePath())).thenReturn(true);
+
+    audioPlayer.play(episode);
+
+    InOrder order = inOrder(mediaPlayerMock);
+
+    order.verify(mediaPlayerMock).setDataSource(Environment.DIRECTORY_PODCASTS + "/" + episode.getAudioFilePath());
     order.verify(mediaPlayerMock).prepare();
   }
 
