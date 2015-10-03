@@ -1,6 +1,7 @@
 package com.mypodcasts.podcast;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -10,6 +11,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
+import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Image;
 
@@ -17,7 +19,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.List;
@@ -29,6 +30,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.RuntimeEnvironment.application;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
@@ -143,6 +145,23 @@ public class EpisodeListAdapterTest {
     ImageButton mediaPlayButton = (ImageButton) row.findViewById(R.id.media_play_button);
 
     assertThat(mediaPlayButton.isFocusable(), is(false));
+  }
+
+  @Test
+  public void itOpensAPlayerOnMediaPlayButtonClick() {
+    EpisodeListAdapter episodeListAdapter = givenAdapaterWithSomeEpisodes();
+
+    View row = someRowOf(episodeListAdapter);
+    ImageButton mediaPlayButton = (ImageButton) row.findViewById(R.id.media_play_button);
+
+    mediaPlayButton.performClick();
+
+    Activity activity = (Activity) mediaPlayButton.getContext();
+    Intent intent = shadowOf(activity).peekNextStartedActivity();
+    assertThat(
+        AudioPlayerActivity.class.getCanonicalName(),
+        is(intent.getComponent().getClassName())
+    );
   }
 
   @Test

@@ -1,16 +1,18 @@
 package com.mypodcasts.podcast;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mypodcasts.R;
+import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.podcast.models.Episode;
 
 import java.util.List;
@@ -50,10 +52,26 @@ public class EpisodeListAdapter extends BaseAdapter {
 
     setTitle(episode, row);
     setImageUrl(episode, row);
-    disableMediaPlayButtonFocus(row);
-    disableDownloadButtonFocus(row);
+    row.findViewById(R.id.episode_download_button).setFocusable(false);
+
+    View mediaPlayButton = row.findViewById(R.id.media_play_button);
+    mediaPlayButton.setFocusable(false);
+    addClickListenerToMediaPlayButton(episode, mediaPlayButton);
 
     return row;
+  }
+
+  private void addClickListenerToMediaPlayButton(final Episode episode, View mediaPlayButton) {
+    mediaPlayButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(context, AudioPlayerActivity.class);
+        intent.putExtra(Episode.class.toString(), episode);
+
+        context.startActivity(intent);
+      }
+    });
   }
 
   private void setTitle(Episode episode, View row) {
@@ -66,14 +84,6 @@ public class EpisodeListAdapter extends BaseAdapter {
     String imageUrl = episode.getImage() == null ? episodeDefaultImageUrl() : episode.getImage().getUrl();
 
     networkImageView.setImageUrl(imageUrl, imageLoader);
-  }
-
-  private void disableMediaPlayButtonFocus(View row) {
-    row.findViewById(R.id.media_play_button).setFocusable(false);
-  }
-
-  private void disableDownloadButtonFocus(View row) {
-    row.findViewById(R.id.episode_download_button).setFocusable(false);
   }
 
   @NonNull
