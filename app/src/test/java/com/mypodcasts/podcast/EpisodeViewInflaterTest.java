@@ -2,6 +2,7 @@ package com.mypodcasts.podcast;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +29,12 @@ import org.robolectric.annotation.Config;
 
 import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.RuntimeEnvironment.application;
@@ -44,7 +49,7 @@ public class EpisodeViewInflaterTest {
   ViewGroup parent;
 
   ImageLoader imageLoaderMock = mock(ImageLoader.class);
-  private FileDownloadManager downloadManagerMock = mock(FileDownloadManager.class);
+  FileDownloadManager downloadManagerMock = mock(FileDownloadManager.class);
 
   @Before
   public void setup() {
@@ -144,9 +149,22 @@ public class EpisodeViewInflaterTest {
     Activity context = (Activity) mediaPlayButton.getContext();
     Intent intent = shadowOf(context).peekNextStartedActivity();
     assertThat(
-        AudioPlayerActivity.class.getCanonicalName(),
-        is(intent.getComponent().getClassName())
+        intent.getComponent().getClassName(),
+        is(AudioPlayerActivity.class.getCanonicalName())
     );
+  }
+
+  @Test
+  public void itDoesNotOpenAPlayerWhenMediaPlayButtonIsNotClicked() {
+    Episode episode = new Episode();
+
+    View inflatedView = episodeViewInflater.inflate(episode);
+    ImageButton mediaPlayButton = (ImageButton) inflatedView.findViewById(R.id.media_play_button);
+
+    Activity context = (Activity) mediaPlayButton.getContext();
+    Intent intent = shadowOf(context).peekNextStartedActivity();
+
+    assertThat(intent, is(nullValue()));
   }
 
   @Test
@@ -198,12 +216,51 @@ public class EpisodeViewInflaterTest {
 
     downloadButton.performClick();
 
-    String expectedFileName = Environment.DIRECTORY_PODCASTS + "/" +
-        episode.getPodcast().getId() + "/" +
-        episode.getTitle() + ".mp3";
+    String expectedFilePath = episode.getPodcast().getId() + "/" + episode.getTitle() + ".mp3";
 
-    String expectedUrl = episode.getAudio().getUrl();
+    verify(downloadManagerMock).enqueue(
+        Uri.parse(episode.getAudio().getUrl()),
+        Environment.DIRECTORY_PODCASTS,
+        expectedFilePath
+    );
+  }
 
-    verify(downloadManagerMock).enqueue(expectedUrl, expectedFileName);
+  @Test
+  public void itDoesNotDownloadEpisodeAudioWhenDownloadButtonIsNotClicked() {
+    Episode episode = new Episode() {
+      @Override
+      public String getTitle() {
+        return "Newest episode";
+      }
+
+      @Override
+      public Podcast getPodcast() {
+        return new Podcast() {
+          @Override
+          public String getId() {
+            return "123";
+          }
+
+          @Override
+          public String getTitle() {
+            return "Awesome podcast";
+          }
+        };
+      }
+
+      @Override
+      public Audio getAudio() {
+        return new Audio() {
+          @Override
+          public String getUrl() {
+            return "audio.mp3";
+          }
+        };
+      }
+    };
+
+    episodeViewInflater.inflate(episode);
+
+    verify(downloadManagerMock, never()).enqueue((Uri) anyObject(), anyString(), anyString());
   }
 }

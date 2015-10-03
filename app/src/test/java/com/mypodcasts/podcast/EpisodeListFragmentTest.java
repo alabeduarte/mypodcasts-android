@@ -14,6 +14,7 @@ import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.support.FileDownloadManager;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
@@ -50,6 +51,7 @@ public class EpisodeListFragmentTest {
   List<Episode> emptyList = emptyList();
 
   ImageLoader imageLoaderMock = mock(ImageLoader.class);
+  FileDownloadManager fileDownloadManagerMock = mock(FileDownloadManager.class);
 
   @Before
   public void setup() {
@@ -189,6 +191,7 @@ public class EpisodeListFragmentTest {
     @Override
     protected void configure() {
       bind(ImageLoader.class).toInstance(imageLoaderMock);
+      bind(FileDownloadManager.class).toInstance(fileDownloadManagerMock);
     }
   }
 }

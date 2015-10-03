@@ -29,7 +29,12 @@ public class Episode implements Serializable {
 
   public Audio getAudio() {
     if (audio == null) {
-      return new Audio();
+      return new Audio() {
+        @Override
+        public String getUrl() {
+          return "";
+        }
+      };
     } else {
       return audio;
     }

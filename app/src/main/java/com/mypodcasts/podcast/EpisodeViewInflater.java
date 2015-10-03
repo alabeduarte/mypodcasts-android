@@ -2,6 +2,7 @@ package com.mypodcasts.podcast;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -84,15 +85,22 @@ public class EpisodeViewInflater {
       });
     }
 
-    private void setDownloadButton(Episode episode) {
+    private void setDownloadButton(final Episode episode) {
       downloadButton = (ImageButton) view.findViewById(R.id.episode_download_button);
       downloadButton.setFocusable(false);
 
-      String fileName = Environment.DIRECTORY_PODCASTS + "/" +
-          episode.getPodcast().getId() + "/" +
-          episode.getTitle() + ".mp3";
+      downloadButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          String filePath = episode.getPodcast().getId() + "/" + episode.getTitle() + ".mp3";
 
-      fileDownloadManager.enqueue(episode.getAudio().getUrl(), fileName);
+          fileDownloadManager.enqueue(
+              Uri.parse(episode.getAudio().getUrl()),
+              Environment.DIRECTORY_PODCASTS,
+              filePath
+          );
+        }
+      });
     }
 
     @NonNull
