@@ -1,16 +1,11 @@
 package com.mypodcasts.podcast.repositories;
 
-import android.content.res.Resources;
-
-import com.mypodcasts.R;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Feed;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import retrofit.RestAdapter;
 
 public class UserPodcasts {
 

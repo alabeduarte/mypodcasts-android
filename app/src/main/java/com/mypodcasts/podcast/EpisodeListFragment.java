@@ -15,6 +15,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.support.FileDownloadManager;
 
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class EpisodeListFragment extends RoboFragment {
 
   @Inject
   private ImageLoader imageLoader;
+
+  @Inject
+  private FileDownloadManager fileDownloadManager;
 
   @Override
   public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +69,8 @@ public class EpisodeListFragment extends RoboFragment {
 
     List<Episode> latestEpisodes = getEpisodeList().getEpisodes();
 
-    episodesListView.setAdapter(new EpisodeListAdapter(latestEpisodes, inflater, imageLoader));
+    EpisodeViewInflater episodeViewInflater = new EpisodeViewInflater(inflater, episodesListView, imageLoader, fileDownloadManager);
+    episodesListView.setAdapter(new EpisodeListAdapter(latestEpisodes, episodeViewInflater));
   }
 
   private EpisodeList getEpisodeList() {

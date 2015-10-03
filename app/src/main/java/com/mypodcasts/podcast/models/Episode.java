@@ -28,10 +28,18 @@ public class Episode implements Serializable {
   }
 
   public Audio getAudio() {
-    return audio;
+    if (audio == null) {
+      return new Audio();
+    } else {
+      return audio;
+    }
   }
 
   public Podcast getPodcast() {
-    return podcast;
+    if (podcast == null) {
+      return new Podcast();
+    } else {
+      return podcast;
+    }
   }
 }
