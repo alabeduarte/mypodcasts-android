@@ -4,7 +4,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.widget.MediaController.MediaPlayerControl;
 
-import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.support.ExternalPublicFileLookup;
 
 import java.io.File;

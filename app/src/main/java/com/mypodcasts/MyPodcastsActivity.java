@@ -10,10 +10,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mypodcasts.feeds.FeedsAdapter;
-import com.mypodcasts.feeds.episodes.FeedEpisodesActivity;
-import com.mypodcasts.podcast.models.Feed;
-import com.mypodcasts.podcast.repositories.UserPodcasts;
+import com.mypodcasts.episodes.feeds.FeedsAdapter;
+import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
+import com.mypodcasts.repositories.models.Feed;
+import com.mypodcasts.repositories.UserPodcasts;
 
 import java.util.List;
 

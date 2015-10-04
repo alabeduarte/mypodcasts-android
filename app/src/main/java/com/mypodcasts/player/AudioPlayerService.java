@@ -7,7 +7,7 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.IBinder;
 
-import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.repositories.models.Episode;
 
 import java.io.IOException;
 

@@ -5,8 +5,8 @@ import android.media.MediaPlayer;
 import android.os.Environment;
 
 import com.mypodcasts.BuildConfig;
-import com.mypodcasts.podcast.models.Audio;
-import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.repositories.models.Audio;
+import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.support.ExternalPublicFileLookup;
 
 import org.junit.Before;

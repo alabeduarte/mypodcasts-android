@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 
 import com.mypodcasts.R;
-import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.repositories.models.Episode;
 
 import javax.inject.Inject;
 

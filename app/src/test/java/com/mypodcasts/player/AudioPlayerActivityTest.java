@@ -9,7 +9,7 @@ import android.view.View;
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
-import com.mypodcasts.podcast.models.Episode;
+import com.mypodcasts.repositories.models.Episode;
 
 import org.junit.After;
 import org.junit.Before;

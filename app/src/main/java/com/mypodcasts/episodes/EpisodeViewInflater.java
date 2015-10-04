@@ -1,0 +1,144 @@
+package com.mypodcasts.episodes;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.mypodcasts.R;
+import com.mypodcasts.player.AudioPlayerActivity;
+import com.mypodcasts.repositories.models.Episode;
+import com.mypodcasts.repositories.models.Image;
+import com.mypodcasts.support.FileDownloadManager;
+
+import javax.inject.Inject;
+
+public class EpisodeViewInflater {
+  private final LayoutInflater layoutInflater;
+  private final ImageLoader imageLoader;
+  private final FileDownloadManager fileDownloadManager;
+
+  @Inject
+  public EpisodeViewInflater(Activity activity, ImageLoader imageLoader, FileDownloadManager fileDownloadManager) {
+    this.layoutInflater = activity.getLayoutInflater();
+    this.imageLoader = imageLoader;
+    this.fileDownloadManager = fileDownloadManager;
+  }
+
+  protected InflaterWith inflate(View view) {
+    return new InflaterWith(view);
+  }
+
+  protected class InflaterWith {
+    private final View view;
+    public InflaterWith(View view) {
+      this.view = view;
+    }
+
+    public InflaterFrom with(Episode episode) {
+      return new InflaterFrom(view, episode);
+    }
+  }
+  protected class InflaterFrom {
+    private final View view;
+    private final Episode episode;
+    public InflaterFrom(View view, Episode episode) {
+      this.view = view;
+      this.episode = episode;
+    }
+
+    public View from(ViewGroup parent) {
+      return inflate(view, parent, episode);
+    }
+  }
+
+  private View inflate(View recycledView, ViewGroup parent, Episode episode) {
+    View view;
+    if (recycledView == null) {
+      view = layoutInflater.inflate(R.layout.episode_list_item, parent, false);
+    } else {
+      view = recycledView;
+    }
+
+    return new EpisodeView(view, episode).getView();
+  }
+
+  private class EpisodeView {
+    private final View view;
+    private TextView titleTextView;
+    private NetworkImageView networkImageView;
+    private ImageButton mediaPlayButton;
+    private ImageButton downloadButton;
+
+    protected EpisodeView(View view, Episode episode) {
+      this.view = view;
+
+      this.setTitle(episode.getTitle());
+      this.setImageUrl(episode.getImage());
+      this.setMediaPlayButton(episode);
+      this.setDownloadButton(episode);
+    }
+
+    protected View getView() {
+      return view;
+    }
+
+    private void setTitle(String title) {
+      titleTextView = (TextView) view.findViewById(R.id.episode_title);
+      titleTextView.setText(title);
+    }
+
+    private void setImageUrl(Image image) {
+      networkImageView = (NetworkImageView) view.findViewById(R.id.episode_thumbnail);
+      String imageUrl = image == null ? episodeDefaultImageUrl() : image.getUrl();
+
+      networkImageView.setImageUrl(imageUrl, imageLoader);
+    }
+
+    private void setMediaPlayButton(final Episode episode) {
+      mediaPlayButton = (ImageButton) view.findViewById(R.id.media_play_button);
+      mediaPlayButton.setFocusable(false);
+
+      mediaPlayButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          Context context = view.getContext();
+          Intent intent = new Intent(context, AudioPlayerActivity.class);
+          intent.putExtra(Episode.class.toString(), episode);
+
+          context.startActivity(intent);
+        }
+      });
+    }
+
+    private void setDownloadButton(final Episode episode) {
+      downloadButton = (ImageButton) view.findViewById(R.id.episode_download_button);
+      downloadButton.setFocusable(false);
+
+      downloadButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          fileDownloadManager.enqueue(
+              Uri.parse(episode.getAudio().getUrl()),
+              Environment.DIRECTORY_PODCASTS,
+              episode.getAudioFilePath()
+          );
+        }
+      });
+    }
+
+    @NonNull
+    private String episodeDefaultImageUrl() {
+      return view.getContext().getResources().getString(R.string.episode_default_image);
+    }
+  }
+}
