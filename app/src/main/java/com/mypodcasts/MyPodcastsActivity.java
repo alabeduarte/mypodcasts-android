@@ -24,7 +24,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 @ContentView(R.layout.navigation_drawer)
-public class NavigationDrawerActivity extends RoboActionBarActivity {
+public class MyPodcastsActivity extends RoboActionBarActivity {
 
   @InjectView(R.id.drawer_layout)
   private DrawerLayout drawerLayout;

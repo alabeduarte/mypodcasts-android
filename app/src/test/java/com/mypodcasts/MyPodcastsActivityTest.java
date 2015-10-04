@@ -37,9 +37,9 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class NavigationDrawerActivityTest {
+public class MyPodcastsActivityTest {
 
-  NavigationDrawerActivity activity;
+  MyPodcastsActivity activity;
   ListView leftDrawer;
 
   UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
@@ -120,7 +120,7 @@ public class NavigationDrawerActivityTest {
   private void createActivityWith(List<Feed> feeds) {
     when(userPodcastsMock.getFeeds()).thenReturn(feeds);
 
-    activity = buildActivity(NavigationDrawerActivity.class).create().get();
+    activity = buildActivity(MyPodcastsActivity.class).create().get();
     leftDrawer = (ListView) activity.findViewById(R.id.left_drawer);
   }
 

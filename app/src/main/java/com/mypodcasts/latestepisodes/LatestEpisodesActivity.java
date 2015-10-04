@@ -5,7 +5,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.mypodcasts.NavigationDrawerActivity;
+import com.mypodcasts.MyPodcastsActivity;
 import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class LatestEpisodesActivity extends NavigationDrawerActivity {
+public class LatestEpisodesActivity extends MyPodcastsActivity {
 
   @Inject
   private FragmentManager fragmentManager;
