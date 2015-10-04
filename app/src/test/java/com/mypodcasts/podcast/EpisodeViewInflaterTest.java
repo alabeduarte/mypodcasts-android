@@ -70,7 +70,7 @@ public class EpisodeViewInflaterTest {
   }
 
   private View inflateView(View view, Episode episode) {
-    return episodeViewInflater.inflate(view, parent, episode);
+    return episodeViewInflater.inflate(view).with(episode).from(parent);
   }
 
   private View inflateView(Episode episode) {

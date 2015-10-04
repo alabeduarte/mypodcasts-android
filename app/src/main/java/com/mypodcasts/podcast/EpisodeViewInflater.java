@@ -34,7 +34,34 @@ public class EpisodeViewInflater {
     this.fileDownloadManager = fileDownloadManager;
   }
 
-  public View inflate(View recycledView, ViewGroup parent, Episode episode) {
+  protected InflaterWith inflate(View view) {
+    return new InflaterWith(view);
+  }
+
+  protected class InflaterWith {
+    private final View view;
+    public InflaterWith(View view) {
+      this.view = view;
+    }
+
+    public InflaterFrom with(Episode episode) {
+      return new InflaterFrom(view, episode);
+    }
+  }
+  protected class InflaterFrom {
+    private final View view;
+    private final Episode episode;
+    public InflaterFrom(View view, Episode episode) {
+      this.view = view;
+      this.episode = episode;
+    }
+
+    public View from(ViewGroup parent) {
+      return inflate(view, parent, episode);
+    }
+  }
+
+  private View inflate(View recycledView, ViewGroup parent, Episode episode) {
     View view;
     if (recycledView == null) {
       view = layoutInflater.inflate(R.layout.episode_list_item, parent, false);
