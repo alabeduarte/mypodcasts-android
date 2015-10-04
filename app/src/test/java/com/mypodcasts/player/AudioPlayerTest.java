@@ -20,6 +20,8 @@ import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
 
+import static android.os.Environment.DIRECTORY_PODCASTS;
+import static android.os.Environment.getExternalStoragePublicDirectory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
@@ -36,6 +38,7 @@ public class AudioPlayerTest {
 
   MediaPlayer mediaPlayerMock = mock(MediaPlayer.class);
   EventBus eventBusMock = mock(EventBus.class);
+
   ExternalPublicFileLookup externalPublicFileLookupMock = mock(ExternalPublicFileLookup.class);
 
   Episode episode = new Episode() {
@@ -79,13 +82,15 @@ public class AudioPlayerTest {
 
   @Test
   public void itSetsDataSourceWithLocalFilePathAndPreparesMediaPlayerWhenAlreadyDownloadedEpisode() throws IOException {
-    when(externalPublicFileLookupMock.exists(Environment.DIRECTORY_PODCASTS, episode.getAudioFilePath())).thenReturn(true);
+    when(externalPublicFileLookupMock.exists(Environment.getExternalStoragePublicDirectory(DIRECTORY_PODCASTS), episode.getAudioFilePath())).thenReturn(true);
 
     audioPlayer.play(episode);
 
     InOrder order = inOrder(mediaPlayerMock);
 
-    order.verify(mediaPlayerMock).setDataSource(Environment.DIRECTORY_PODCASTS + "/" + episode.getAudioFilePath());
+    String fileLocalPath = getExternalStoragePublicDirectory(DIRECTORY_PODCASTS) + "/" + episode.getAudioFilePath();
+
+    order.verify(mediaPlayerMock).setDataSource(fileLocalPath);
     order.verify(mediaPlayerMock).prepare();
   }
 

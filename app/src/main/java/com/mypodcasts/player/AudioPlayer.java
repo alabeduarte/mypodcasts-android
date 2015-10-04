@@ -2,21 +2,21 @@ package com.mypodcasts.player;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.os.Environment;
-import android.util.Log;
 import android.widget.MediaController.MediaPlayerControl;
 
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.support.ExternalPublicFileLookup;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
 import static android.media.AudioManager.STREAM_MUSIC;
+import static android.os.Environment.DIRECTORY_PODCASTS;
+import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class AudioPlayer implements MediaPlayerControl, OnPreparedListener {
 
@@ -33,14 +33,7 @@ public class AudioPlayer implements MediaPlayerControl, OnPreparedListener {
 
   public MediaPlayer play(Episode episode) throws IOException {
     mediaPlayer.setAudioStreamType(STREAM_MUSIC);
-
-    String audioFilePath = externalPublicFileLookup.exists(Environment.DIRECTORY_PODCASTS, episode.getAudioFilePath()) ?
-        Environment.DIRECTORY_PODCASTS + "/" + episode.getAudioFilePath() :
-        episode.getAudio().getUrl();
-
-    mediaPlayer.setDataSource(audioFilePath);
-
-    Log.i("Streaming audio from", audioFilePath);
+    mediaPlayer.setDataSource(getAudioFilePath(episode));
 
     mediaPlayer.prepare();
     mediaPlayer.setOnPreparedListener(this);
@@ -112,5 +105,14 @@ public class AudioPlayer implements MediaPlayerControl, OnPreparedListener {
   public void onPrepared(MediaPlayer mediaPlayer) {
     mediaPlayer.start();
     eventBus.post(new AudioPlayingEvent(this));
+  }
+
+  private String getAudioFilePath(Episode episode) {
+    File directory = getExternalStoragePublicDirectory(DIRECTORY_PODCASTS);
+    if (externalPublicFileLookup.exists(directory, episode.getAudioFilePath())) {
+      return directory + "/" + episode.getAudioFilePath();
+    }
+
+    return episode.getAudio().getUrl();
   }
 }
