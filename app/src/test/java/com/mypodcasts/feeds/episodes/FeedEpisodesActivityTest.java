@@ -73,7 +73,7 @@ public class FeedEpisodesActivityTest {
 
     order.verify(fragmentManager).beginTransaction();
     order.verify(transaction).replace(R.id.content_frame, episodeListFragment);
-    order.verify(transaction).commit();
+    order.verify(transaction).commitAllowingStateLoss();
   }
 
   @Test

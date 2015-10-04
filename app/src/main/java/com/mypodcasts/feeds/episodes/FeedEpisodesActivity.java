@@ -73,7 +73,7 @@ public class FeedEpisodesActivity extends NavigationDrawerActivity {
 
       fragmentManager.beginTransaction()
           .replace(R.id.content_frame, episodeListFragment)
-          .commit();
+          .commitAllowingStateLoss();
     }
   }
 }
