@@ -32,9 +32,15 @@ public class EpisodeViewInflater {
     this.fileDownloadManager = fileDownloadManager;
   }
 
-  public View inflate(Episode episode) {
-    View view = layoutInflater.inflate(R.layout.episode_list_item, parent, false);
-    return new EpisodeView(episode, view).getView();
+  public View inflate(View recycledView, Episode episode) {
+    View view;
+    if (recycledView == null) {
+      view = layoutInflater.inflate(R.layout.episode_list_item, parent, false);
+    } else {
+      view = recycledView;
+    }
+
+    return new EpisodeView(view, episode).getView();
   }
 
   private class EpisodeView {
@@ -44,7 +50,7 @@ public class EpisodeViewInflater {
     private ImageButton mediaPlayButton;
     private ImageButton downloadButton;
 
-    protected EpisodeView(Episode episode, View view) {
+    protected EpisodeView(View view, Episode episode) {
       this.view = view;
 
       this.setTitle(episode.getTitle());

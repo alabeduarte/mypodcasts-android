@@ -60,6 +60,6 @@ public class EpisodeListAdapterTest {
 
     episodeListAdapter.getView(firstPosition, convertView, parent);
 
-    verify(episodeViewInflaterMock).inflate(episodes.get(firstPosition));
+    verify(episodeViewInflaterMock).inflate(convertView, episodes.get(firstPosition));
   }
 }

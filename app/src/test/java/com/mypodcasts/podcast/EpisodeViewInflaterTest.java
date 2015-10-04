@@ -33,6 +33,8 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.RuntimeEnvironment.application;
@@ -43,31 +45,52 @@ import static org.robolectric.Shadows.shadowOf;
 public class EpisodeViewInflaterTest {
   EpisodeViewInflater episodeViewInflater;
 
-  LayoutInflater layoutInflater;
-  ViewGroup parent;
+  LayoutInflater spiedLayoutInflater;
 
+  ViewGroup parent;
   ImageLoader imageLoaderMock = mock(ImageLoader.class);
   FileDownloadManager downloadManagerMock = mock(FileDownloadManager.class);
+  View recycledView;
 
   @Before
   public void setup() {
     Activity context = buildActivity(Activity.class).create().get();
 
-    layoutInflater = context.getLayoutInflater();
+    spiedLayoutInflater = spy(context.getLayoutInflater());
     parent = new ViewGroup(context) {
       @Override
       protected void onLayout(boolean changed, int l, int t, int r, int b) {
       }
     };
 
+    recycledView = null;
+
     episodeViewInflater = new EpisodeViewInflater(
-        layoutInflater, parent, imageLoaderMock, downloadManagerMock
+        spiedLayoutInflater, parent, imageLoaderMock, downloadManagerMock
     );
   }
 
   @Test
   public void itIsVisible() {
-    assertThat(episodeViewInflater.inflate(new Episode()).getVisibility(), is(View.VISIBLE));
+    assertThat(episodeViewInflater.inflate(recycledView, new Episode()).getVisibility(), is(View.VISIBLE));
+  }
+
+  @Test
+  public void itInflatesView() {
+    episodeViewInflater.inflate(recycledView, new Episode());
+
+    verify(spiedLayoutInflater).inflate(R.layout.episode_list_item, parent, false);
+  }
+
+  @Test
+  public void itDoesNotInflateViewWhenViewIsAlreadySet() {
+    recycledView = spiedLayoutInflater.inflate(R.layout.episode_list_item, parent, false);
+
+    episodeViewInflater.inflate(recycledView, new Episode());
+    episodeViewInflater.inflate(recycledView, new Episode());
+    episodeViewInflater.inflate(recycledView, new Episode());
+
+    verify(spiedLayoutInflater, times(1)).inflate(R.layout.episode_list_item, parent, false);
   }
 
   @Test
@@ -79,7 +102,7 @@ public class EpisodeViewInflaterTest {
       }
     };
 
-    View inflatedView = episodeViewInflater.inflate(episode);
+    View inflatedView = episodeViewInflater.inflate(recycledView, episode);
 
     TextView textView = (TextView) inflatedView.findViewById(R.id.episode_title);
     String title = valueOf(textView.getText());
@@ -101,7 +124,7 @@ public class EpisodeViewInflaterTest {
       }
     };
 
-    View inflatedView = episodeViewInflater.inflate(episode);
+    View inflatedView = episodeViewInflater.inflate(recycledView, episode);
 
     NetworkImageView networkImageView = (NetworkImageView) inflatedView.findViewById(
         R.id.episode_thumbnail
@@ -114,7 +137,7 @@ public class EpisodeViewInflaterTest {
   public void itSetsDefaultEpisodeImageUrlWhenImageIsNull() {
     Episode episode = new Episode();
 
-    View inflatedView = episodeViewInflater.inflate(episode);
+    View inflatedView = episodeViewInflater.inflate(recycledView, episode);
 
     NetworkImageView networkImageView = (NetworkImageView) inflatedView.findViewById(R.id.episode_thumbnail);
 
@@ -128,7 +151,7 @@ public class EpisodeViewInflaterTest {
   public void itDisablesFocusFromMediaPlayButton() {
     Episode episode = new Episode();
 
-    View inflatedView = episodeViewInflater.inflate(episode);
+    View inflatedView = episodeViewInflater.inflate(recycledView, episode);
 
     ImageButton mediaPlayButton = (ImageButton) inflatedView.findViewById(R.id.media_play_button);
 
@@ -139,7 +162,7 @@ public class EpisodeViewInflaterTest {
   public void itOpensAPlayerOnMediaPlayButtonClick() {
     Episode episode = new Episode();
 
-    View inflatedView = episodeViewInflater.inflate(episode);
+    View inflatedView = episodeViewInflater.inflate(recycledView, episode);
     ImageButton mediaPlayButton = (ImageButton) inflatedView.findViewById(R.id.media_play_button);
 
     mediaPlayButton.performClick();
@@ -156,7 +179,7 @@ public class EpisodeViewInflaterTest {
   public void itDoesNotOpenAPlayerWhenMediaPlayButtonIsNotClicked() {
     Episode episode = new Episode();
 
-    View inflatedView = episodeViewInflater.inflate(episode);
+    View inflatedView = episodeViewInflater.inflate(recycledView, episode);
     ImageButton mediaPlayButton = (ImageButton) inflatedView.findViewById(R.id.media_play_button);
 
     Activity context = (Activity) mediaPlayButton.getContext();
@@ -169,7 +192,7 @@ public class EpisodeViewInflaterTest {
   public void itDisablesFocusFromEpisodeDownloadButton() {
     Episode episode = new Episode();
 
-    View inflatedView = episodeViewInflater.inflate(episode);
+    View inflatedView = episodeViewInflater.inflate(recycledView, episode);
     ImageButton downloadButton = (ImageButton) inflatedView.findViewById(R.id.episode_download_button);
 
     assertThat(downloadButton.isFocusable(), is(false));
@@ -184,7 +207,7 @@ public class EpisodeViewInflaterTest {
       }
     };
 
-    View inflatedView = episodeViewInflater.inflate(episode);
+    View inflatedView = episodeViewInflater.inflate(recycledView, episode);
     ImageButton downloadButton = (ImageButton) inflatedView.findViewById(R.id.episode_download_button);
 
     downloadButton.performClick();
@@ -200,7 +223,7 @@ public class EpisodeViewInflaterTest {
   public void itDoesNotDownloadEpisodeAudioWhenDownloadButtonIsNotClicked() {
     Episode episode = new Episode();
 
-    episodeViewInflater.inflate(episode);
+    episodeViewInflater.inflate(recycledView, episode);
 
     verify(downloadManagerMock, never()).enqueue((Uri) anyObject(), anyString(), anyString());
   }

@@ -1,6 +1,7 @@
 package com.mypodcasts.feeds;
 
 import android.app.Activity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,24 +22,28 @@ import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.robolectric.Robolectric.buildActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class FeedsAdapterTest {
 
-  Activity activity;
-  View convertView;
-  ViewGroup parent;
+  LayoutInflater spiedLayoutInflater;
+  View recycledView;
 
+  ViewGroup parent;
   int firstPosition = 0;
 
   @Before
   public void setup() {
-    activity = buildActivity(Activity.class).create().get();
+    Activity context = buildActivity(Activity.class).create().get();
+    spiedLayoutInflater = spy(context.getLayoutInflater());
 
-    convertView = new View(activity);
-    parent = new ViewGroup(activity) {
+    recycledView = null;
+    parent = new ViewGroup(context) {
       @Override
       protected void onLayout(boolean changed, int l, int t, int r, int b) {
       }
@@ -46,7 +51,7 @@ public class FeedsAdapterTest {
   }
 
   private FeedsAdapter givenAdapaterWith(List<Feed> feeds) {
-    return new FeedsAdapter(feeds, activity.getLayoutInflater());
+    return new FeedsAdapter(feeds, spiedLayoutInflater);
   }
 
   private List<Feed> givenFeeds(Feed... feeds) {
@@ -54,7 +59,7 @@ public class FeedsAdapterTest {
   }
 
   private View someRowOf(FeedsAdapter feedsAdapter) {
-    return feedsAdapter.getView(firstPosition, convertView, parent);
+    return feedsAdapter.getView(firstPosition, recycledView, parent);
   }
 
   @Test
@@ -73,6 +78,30 @@ public class FeedsAdapterTest {
     View row = someRowOf(feedsAdapter);
 
     assertThat(row.getVisibility(), is(View.VISIBLE));
+  }
+
+  @Test
+  public void itInflatesView() {
+    List<Feed> feeds = givenFeeds(new Feed());
+    FeedsAdapter feedsAdapter = givenAdapaterWith(feeds);
+
+    feedsAdapter.getView(firstPosition, recycledView, parent);
+
+    verify(spiedLayoutInflater).inflate(R.layout.drawer_list_item, parent, false);
+  }
+
+  @Test
+  public void itDoesNotInflateViewWhenViewIsAlreadySet() {
+    List<Feed> feeds = givenFeeds(new Feed());
+    FeedsAdapter feedsAdapter = givenAdapaterWith(feeds);
+
+    recycledView = spiedLayoutInflater.inflate(R.layout.drawer_list_item, parent, false);
+
+    feedsAdapter.getView(firstPosition, recycledView, parent);
+    feedsAdapter.getView(firstPosition, recycledView, parent);
+    feedsAdapter.getView(firstPosition, recycledView, parent);
+
+    verify(spiedLayoutInflater, times(1)).inflate(R.layout.drawer_list_item, parent, false);
   }
 
   @Test

@@ -34,9 +34,9 @@ public class EpisodeListAdapter extends BaseAdapter {
   }
 
   @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
+  public View getView(int position, View recycledView, ViewGroup parent) {
     final Episode episode = getItem(position);
 
-    return episodeViewInflater.inflate(episode);
+    return episodeViewInflater.inflate(recycledView, episode);
   }
 }

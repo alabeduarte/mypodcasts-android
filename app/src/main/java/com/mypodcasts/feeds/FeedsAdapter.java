@@ -36,11 +36,14 @@ public class FeedsAdapter extends BaseAdapter {
   }
 
   @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
-    View row = inflater.inflate(R.layout.drawer_list_item, parent, false);
-    TextView textView = (TextView) row.findViewById(R.id.feed_title);
+  public View getView(int position, View recycledView, ViewGroup parent) {
+    if (recycledView == null) {
+      recycledView = inflater.inflate(R.layout.drawer_list_item, parent, false);
+    }
+
+    TextView textView = (TextView) recycledView.findViewById(R.id.feed_title);
     textView.setText(getItem(position).getTitle());
 
-    return row;
+    return recycledView;
   }
 }
