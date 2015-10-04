@@ -1,5 +1,6 @@
 package com.mypodcasts.podcast;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,20 +20,21 @@ import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Image;
 import com.mypodcasts.support.FileDownloadManager;
 
+import javax.inject.Inject;
+
 public class EpisodeViewInflater {
   private final LayoutInflater layoutInflater;
-  private final ViewGroup parent;
   private final ImageLoader imageLoader;
   private final FileDownloadManager fileDownloadManager;
 
-  public EpisodeViewInflater(LayoutInflater layoutInflater, ViewGroup parent, ImageLoader imageLoader, FileDownloadManager fileDownloadManager) {
-    this.layoutInflater = layoutInflater;
-    this.parent = parent;
+  @Inject
+  public EpisodeViewInflater(Activity activity, ImageLoader imageLoader, FileDownloadManager fileDownloadManager) {
+    this.layoutInflater = activity.getLayoutInflater();
     this.imageLoader = imageLoader;
     this.fileDownloadManager = fileDownloadManager;
   }
 
-  public View inflate(View recycledView, Episode episode) {
+  public View inflate(View recycledView, ViewGroup parent, Episode episode) {
     View view;
     if (recycledView == null) {
       view = layoutInflater.inflate(R.layout.episode_list_item, parent, false);

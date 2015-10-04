@@ -12,6 +12,7 @@ import com.mypodcasts.R;
 import com.mypodcasts.podcast.EpisodeList;
 import com.mypodcasts.podcast.EpisodeListFragment;
 import com.mypodcasts.podcast.EpisodeListHeaderInfo;
+import com.mypodcasts.podcast.EpisodeViewInflater;
 import com.mypodcasts.podcast.models.Episode;
 import com.mypodcasts.podcast.models.Feed;
 import com.mypodcasts.podcast.models.Image;
@@ -49,6 +50,7 @@ public class FeedEpisodesActivityTest {
   FeedEpisodesActivity activity;
   EpisodeListFragment episodeListFragment = new EpisodeListFragment();
 
+  EpisodeViewInflater episodeViewInflaterMock = mock(EpisodeViewInflater.class);
   UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
   FeedPodcasts feedPodcastsMock = mock(FeedPodcasts.class);
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
@@ -204,6 +206,7 @@ public class FeedEpisodesActivityTest {
       bind(FeedPodcasts.class).toInstance(feedPodcastsMock);
       bind(FragmentManager.class).toInstance(fragmentManager);
       bind(EpisodeListFragment.class).toInstance(episodeListFragment);
+      bind(EpisodeViewInflater.class).toInstance(episodeViewInflaterMock);
     }
   }
 }
