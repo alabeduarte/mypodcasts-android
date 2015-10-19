@@ -99,17 +99,25 @@ public class EpisodeListFragmentTest {
   }
 
   @Test
-  public void itLoadsLatestEpisodesOnCreate() {
+  public void itLoadsEpisodesOnCreate() {
     createFragment();
 
     assertThat(listView.getCount(), is(0));
   }
 
   @Test
-  public void itLoadsLatestEpisodesWhenThereAreEpisodesOnCreate() {
+  public void itLoadsEpisodesWhenThereAreEpisodesOnCreate() {
     createFragmentWith(asList(anEpisode(), anEpisode()));
 
     assertThat(listView.getCount(), is(2));
+  }
+
+  @Test
+  public void itDoesNotShowEpisodesWhenEpisodesAreNotGiven() {
+    List<Episode> nullEpisodeList = null;
+    createFragmentWith(nullEpisodeList);
+
+    assertThat(listView.getCount(), is(0));
   }
 
   @Test

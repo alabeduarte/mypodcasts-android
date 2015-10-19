@@ -33,7 +33,7 @@ public class FeedPodcastsTest {
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(1111);
-  final String feed_path = "/api/feeds/123456";
+  final String feed_path = "/api/user/johndoe/feeds/123456/episodes";
   final String expectedId = "123456";
   private int firstPosition = 0;
 

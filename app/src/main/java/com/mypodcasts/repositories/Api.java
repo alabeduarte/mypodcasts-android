@@ -15,6 +15,6 @@ public interface Api {
   @GET("/api/user/johndoe/feeds")
   List<Feed> getUserFeeds();
 
-  @GET("/api/feeds/{id}")
+  @GET("/api/user/johndoe/feeds/{id}/episodes")
   Feed getFeed(@Path("id") String id);
 }

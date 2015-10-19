@@ -3,7 +3,10 @@ package com.mypodcasts.episodes;
 import com.mypodcasts.repositories.models.Episode;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 public class EpisodeList implements Serializable {
   public static final String HEADER = "EpisodeList#header";
@@ -16,6 +19,10 @@ public class EpisodeList implements Serializable {
   }
 
   public List<Episode> getEpisodes() {
-    return episodes;
+    if (episodes == null) {
+      return emptyList();
+    } else {
+      return episodes;
+    }
   }
 }
