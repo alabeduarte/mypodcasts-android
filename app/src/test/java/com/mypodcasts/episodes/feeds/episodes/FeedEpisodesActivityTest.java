@@ -14,11 +14,11 @@ import com.mypodcasts.episodes.EpisodeListFragment;
 import com.mypodcasts.episodes.EpisodeListHeaderInfo;
 import com.mypodcasts.episodes.EpisodeViewInflater;
 import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
+import com.mypodcasts.repositories.UserFeedsRepository;
+import com.mypodcasts.repositories.UserLatestEpisodesRepository;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Feed;
 import com.mypodcasts.repositories.models.Image;
-import com.mypodcasts.repositories.FeedPodcasts;
-import com.mypodcasts.repositories.UserPodcasts;
 
 import org.junit.After;
 import org.junit.Before;
@@ -52,8 +52,8 @@ public class FeedEpisodesActivityTest {
   EpisodeListFragment episodeListFragment = new EpisodeListFragment();
 
   EpisodeViewInflater episodeViewInflaterMock = mock(EpisodeViewInflater.class);
-  UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
-  FeedPodcasts feedPodcastsMock = mock(FeedPodcasts.class);
+  UserLatestEpisodesRepository userLatestEpisodesRepositoryMock = mock(UserLatestEpisodesRepository.class);
+  UserFeedsRepository userFeedsRepositoryMock = mock(UserFeedsRepository.class);
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   FragmentManager fragmentManager = mock(FragmentManager.class);
   FragmentTransaction transaction = mock(FragmentTransaction.class);
@@ -142,7 +142,7 @@ public class FeedEpisodesActivityTest {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.putExtra(Feed.class.toString(), feed);
 
-    when(feedPodcastsMock.getFeed(feed.getId())).thenReturn(feed);
+    when(userFeedsRepositoryMock.getFeed(feed.getId())).thenReturn(feed);
 
     return buildActivity(FeedEpisodesActivity.class)
         .withIntent(intent)
@@ -203,8 +203,8 @@ public class FeedEpisodesActivityTest {
     @Override
     protected void configure() {
       bind(ProgressDialog.class).toInstance(progressDialogMock);
-      bind(UserPodcasts.class).toInstance(userPodcastsMock);
-      bind(FeedPodcasts.class).toInstance(feedPodcastsMock);
+      bind(UserLatestEpisodesRepository.class).toInstance(userLatestEpisodesRepositoryMock);
+      bind(UserFeedsRepository.class).toInstance(userFeedsRepositoryMock);
       bind(FragmentManager.class).toInstance(fragmentManager);
       bind(EpisodeListFragment.class).toInstance(episodeListFragment);
       bind(EpisodeViewInflater.class).toInstance(episodeViewInflaterMock);

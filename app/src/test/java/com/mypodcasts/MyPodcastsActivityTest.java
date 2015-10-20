@@ -6,8 +6,8 @@ import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
+import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.models.Feed;
-import com.mypodcasts.repositories.UserPodcasts;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
@@ -42,7 +42,7 @@ public class MyPodcastsActivityTest {
   MyPodcastsActivity activity;
   ListView leftDrawer;
 
-  UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
+  UserFeedsRepository userFeedsRepositoryMock = mock(UserFeedsRepository.class);
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
 
   @Before
@@ -118,7 +118,7 @@ public class MyPodcastsActivityTest {
   }
 
   private void createActivityWith(List<Feed> feeds) {
-    when(userPodcastsMock.getFeeds()).thenReturn(feeds);
+    when(userFeedsRepositoryMock.getFeeds()).thenReturn(feeds);
 
     activity = buildActivity(MyPodcastsActivity.class).create().get();
     leftDrawer = (ListView) activity.findViewById(R.id.left_drawer);
@@ -128,7 +128,7 @@ public class MyPodcastsActivityTest {
     @Override
     protected void configure() {
       bind(ProgressDialog.class).toInstance(progressDialogMock);
-      bind(UserPodcasts.class).toInstance(userPodcastsMock);
+      bind(UserFeedsRepository.class).toInstance(userFeedsRepositoryMock);
     }
   }
 }

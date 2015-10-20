@@ -10,8 +10,8 @@ import com.mypodcasts.R;
 import com.mypodcasts.episodes.EpisodeList;
 import com.mypodcasts.episodes.EpisodeListFragment;
 import com.mypodcasts.episodes.EpisodeListHeaderInfo;
+import com.mypodcasts.repositories.UserLatestEpisodesRepository;
 import com.mypodcasts.repositories.models.Episode;
-import com.mypodcasts.repositories.UserPodcasts;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class LatestEpisodesActivity extends MyPodcastsActivity {
   private ProgressDialog progressDialog;
 
   @Inject
-  private UserPodcasts userPodcasts;
+  private UserLatestEpisodesRepository userLatestEpisodesRepository;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class LatestEpisodesActivity extends MyPodcastsActivity {
 
     @Override
     protected List<Episode> doInBackground(Void... params) {
-      return userPodcasts.getLatestEpisodes();
+      return userLatestEpisodesRepository.getLatestEpisodes();
     }
 
     @Override

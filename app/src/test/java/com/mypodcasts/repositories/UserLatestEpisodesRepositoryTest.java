@@ -6,7 +6,6 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.mypodcasts.R;
 import com.mypodcasts.repositories.models.Audio;
 import com.mypodcasts.repositories.models.Episode;
-import com.mypodcasts.repositories.models.Feed;
 import com.mypodcasts.repositories.models.Image;
 
 import org.junit.Before;
@@ -24,42 +23,33 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FeedPodcastsTest {
+public class UserLatestEpisodesRepositoryTest {
 
-  FeedPodcasts feedPodcasts;
+  UserLatestEpisodesRepository repository;
   HttpClient httpClient;
 
   Resources resources = mock(Resources.class);
+  int firstPosition = 0;
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(1111);
-  final String feed_path = "/api/user/johndoe/feeds/123456/episodes";
-  final String expectedId = "123456";
-  private int firstPosition = 0;
+  final String latestEpisodesPath = "/api/user/johndoe/latest_episodes";
 
   @Before
   public void setup() {
-    givenThat(get(urlEqualTo(feed_path))
+    givenThat(get(urlEqualTo(latestEpisodesPath))
         .willReturn(aResponse()
             .withStatus(200)
-            .withBodyFile("feed.json")));
+            .withBodyFile("latest_episodes.json")));
     when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
 
     httpClient = new HttpClient(resources, new RestAdapter.Builder());
-    feedPodcasts = new FeedPodcasts(httpClient);
+    repository = new UserLatestEpisodesRepository(httpClient);
   }
 
   @Test
-  public void itReturnsFeedId() {
-    Feed feed = feedPodcasts.getFeed(expectedId);
-
-    assertThat(feed.getId(), is(expectedId));
-  }
-
-  @Test
-  public void itReturnsTitleWhenGetFeeds() {
-    Feed feed = feedPodcasts.getFeed(expectedId);
-    Episode episode = feed.getEpisodes().get(firstPosition);
+  public void itReturnsTitleWhenGetLatestEpisodes() {
+    Episode episode = repository.getLatestEpisodes().get(firstPosition);
 
     Episode expectedEpisode = new Episode() {
       @Override
@@ -72,9 +62,8 @@ public class FeedPodcastsTest {
   }
 
   @Test
-  public void itReturnsAudioUrlWhenGetFeeds() {
-    Feed feed = feedPodcasts.getFeed(expectedId);
-    Episode episode = feed.getEpisodes().get(firstPosition);
+  public void itReturnsAudioUrlWhenGetLatestEpisodes() {
+    Episode episode = repository.getLatestEpisodes().get(firstPosition);
 
     Episode expectedEpisode = new Episode() {
       @Override
@@ -82,7 +71,7 @@ public class FeedPodcastsTest {
         return new Audio() {
           @Override
           public String getUrl() {
-            return "http://example.com/newest_episode.mp3";
+            return "http://example.com/episode_audio.mp3";
           }
         };
       }
@@ -92,9 +81,8 @@ public class FeedPodcastsTest {
   }
 
   @Test
-  public void itReturnsImageUrlWhenGetFeeds() {
-    Feed feed = feedPodcasts.getFeed(expectedId);
-    Episode episode = feed.getEpisodes().get(firstPosition);
+  public void itReturnsImageUrlWhenGetLatestEpisodes() {
+    Episode episode = repository.getLatestEpisodes().get(firstPosition);
 
     Episode expectedEpisode = new Episode() {
       @Override

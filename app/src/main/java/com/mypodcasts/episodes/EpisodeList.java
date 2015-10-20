@@ -3,7 +3,6 @@ package com.mypodcasts.episodes;
 import com.mypodcasts.repositories.models.Episode;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.emptyList;

@@ -12,8 +12,9 @@ import com.mypodcasts.episodes.EpisodeList;
 import com.mypodcasts.episodes.EpisodeListFragment;
 import com.mypodcasts.episodes.EpisodeListHeaderInfo;
 import com.mypodcasts.episodes.EpisodeViewInflater;
+import com.mypodcasts.repositories.UserFeedsRepository;
+import com.mypodcasts.repositories.UserLatestEpisodesRepository;
 import com.mypodcasts.repositories.models.Episode;
-import com.mypodcasts.repositories.UserPodcasts;
 
 import org.junit.After;
 import org.junit.Before;
@@ -46,7 +47,8 @@ public class LatestEpisodesActivityTest {
   EpisodeListFragment episodeListFragment = new EpisodeListFragment();
 
   EpisodeViewInflater episodeViewInflaterMock = mock(EpisodeViewInflater.class);
-  UserPodcasts userPodcastsMock = mock(UserPodcasts.class);
+  UserFeedsRepository userFeedsMock = mock(UserFeedsRepository.class);
+  UserLatestEpisodesRepository userLatestEpisodesRepositoryMock = mock(UserLatestEpisodesRepository.class);
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   FragmentManager fragmentManager = mock(FragmentManager.class);
   FragmentTransaction transaction = mock(FragmentTransaction.class);
@@ -129,7 +131,7 @@ public class LatestEpisodesActivityTest {
     when(transaction.replace(R.id.content_frame, episodeListFragment))
         .thenReturn(transaction);
 
-    when(userPodcastsMock.getLatestEpisodes()).thenReturn(episodes);
+    when(userLatestEpisodesRepositoryMock.getLatestEpisodes()).thenReturn(episodes);
 
     return buildActivity(LatestEpisodesActivity.class).create().get();
   }
@@ -142,7 +144,8 @@ public class LatestEpisodesActivityTest {
     @Override
     protected void configure() {
       bind(ProgressDialog.class).toInstance(progressDialogMock);
-      bind(UserPodcasts.class).toInstance(userPodcastsMock);
+      bind(UserFeedsRepository.class).toInstance(userFeedsMock);
+      bind(UserLatestEpisodesRepository.class).toInstance(userLatestEpisodesRepositoryMock);
       bind(FragmentManager.class).toInstance(fragmentManager);
       bind(EpisodeListFragment.class).toInstance(episodeListFragment);
       bind(EpisodeViewInflater.class).toInstance(episodeViewInflaterMock);

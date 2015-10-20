@@ -10,10 +10,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mypodcasts.episodes.feeds.FeedsAdapter;
 import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
+import com.mypodcasts.episodes.feeds.FeedsAdapter;
+import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.models.Feed;
-import com.mypodcasts.repositories.UserPodcasts;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class MyPodcastsActivity extends RoboActionBarActivity {
   private ListView leftDrawer;
 
   @Inject
-  private UserPodcasts userPodcasts;
+  private UserFeedsRepository userFeedsRepository;
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,7 +68,7 @@ public class MyPodcastsActivity extends RoboActionBarActivity {
 
     @Override
     protected List<Feed> doInBackground(Void... params) {
-      return userPodcasts.getFeeds();
+      return userFeedsRepository.getFeeds();
     }
 
     @Override

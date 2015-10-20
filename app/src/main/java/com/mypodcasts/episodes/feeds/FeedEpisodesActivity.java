@@ -10,8 +10,8 @@ import com.mypodcasts.R;
 import com.mypodcasts.episodes.EpisodeList;
 import com.mypodcasts.episodes.EpisodeListFragment;
 import com.mypodcasts.episodes.EpisodeListHeaderInfo;
+import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.models.Feed;
-import com.mypodcasts.repositories.FeedPodcasts;
 
 import javax.inject.Inject;
 
@@ -30,7 +30,7 @@ public class FeedEpisodesActivity extends MyPodcastsActivity {
   private ProgressDialog progressDialog;
 
   @Inject
-  private FeedPodcasts feedPodcasts;
+  private UserFeedsRepository userFeedsRepository;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class FeedEpisodesActivity extends MyPodcastsActivity {
 
     @Override
     protected Feed doInBackground(String... params) {
-      return feedPodcasts.getFeed(params[0]);
+      return userFeedsRepository.getFeed(params[0]);
     }
 
     @Override

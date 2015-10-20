@@ -24,40 +24,49 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class UserPodcastsTest {
+public class UserFeedsRepositoryTest {
 
-  UserPodcasts userPodcasts;
+  UserFeedsRepository repository;
   HttpClient httpClient;
 
   Resources resources = mock(Resources.class);
-  int firstPosition = 0;
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(1111);
-  final String latest_episodes_path = "/api/user/johndoe/latest_episodes";
-  final String feeds_path = "/api/user/johndoe/feeds";
+  final String userFeedsPath = "/api/user/johndoe/feeds";
+  final String userFeedPath = "/api/user/johndoe/feeds/123456/episodes";
+  final String expectedId = "123456";
+  private int firstPosition = 0;
 
   @Before
   public void setup() {
-    givenThat(get(urlEqualTo(latest_episodes_path))
-        .willReturn(aResponse()
-            .withStatus(200)
-            .withBodyFile("latest_episodes.json")));
-    when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
-
-    givenThat(get(urlEqualTo(feeds_path))
+    givenThat(get(urlEqualTo(userFeedsPath))
         .willReturn(aResponse()
             .withStatus(200)
             .withBodyFile("user_feeds.json")));
     when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
 
+    givenThat(get(urlEqualTo(userFeedPath))
+        .willReturn(aResponse()
+            .withStatus(200)
+            .withBodyFile("user_feed.json")));
+    when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
+
     httpClient = new HttpClient(resources, new RestAdapter.Builder());
-    userPodcasts = new UserPodcasts(httpClient);
+    repository = new UserFeedsRepository(httpClient);
   }
 
   @Test
-  public void itReturnsTitleWhenGetLatestEpisodes() {
-    Episode episode = userPodcasts.getLatestEpisodes().get(firstPosition);
+  public void itReturnsFeedId() {
+    Feed feed = repository.getFeed(expectedId);
+
+    assertThat(feed.getId(), is(expectedId));
+  }
+
+  @Test
+  public void itReturnsTitleWhenGetFeeds() {
+    Feed feed = repository.getFeed(expectedId);
+    Episode episode = feed.getEpisodes().get(firstPosition);
 
     Episode expectedEpisode = new Episode() {
       @Override
@@ -70,8 +79,9 @@ public class UserPodcastsTest {
   }
 
   @Test
-  public void itReturnsAudioUrlWhenGetLatestEpisodes() {
-    Episode episode = userPodcasts.getLatestEpisodes().get(firstPosition);
+  public void itReturnsAudioUrlWhenGetFeeds() {
+    Feed feed = repository.getFeed(expectedId);
+    Episode episode = feed.getEpisodes().get(firstPosition);
 
     Episode expectedEpisode = new Episode() {
       @Override
@@ -79,7 +89,7 @@ public class UserPodcastsTest {
         return new Audio() {
           @Override
           public String getUrl() {
-            return "http://example.com/episode_audio.mp3";
+            return "http://example.com/newest_episode.mp3";
           }
         };
       }
@@ -89,8 +99,9 @@ public class UserPodcastsTest {
   }
 
   @Test
-  public void itReturnsImageUrlWhenGetLatestEpisodes() {
-    Episode episode = userPodcasts.getLatestEpisodes().get(firstPosition);
+  public void itReturnsImageUrlWhenGetFeeds() {
+    Feed feed = repository.getFeed(expectedId);
+    Episode episode = feed.getEpisodes().get(firstPosition);
 
     Episode expectedEpisode = new Episode() {
       @Override
@@ -109,7 +120,7 @@ public class UserPodcastsTest {
 
   @Test
   public void itReturnsFeedIdWhenGetFeeds() {
-    Feed feed = userPodcasts.getFeeds().get(firstPosition);
+    Feed feed = repository.getFeeds().get(firstPosition);
 
     Feed expectedFeed = new Feed() {
       @Override
@@ -123,7 +134,7 @@ public class UserPodcastsTest {
 
   @Test
   public void itReturnsFeedTitleWhenGetFeeds() {
-    Feed feed = userPodcasts.getFeeds().get(firstPosition);
+    Feed feed = repository.getFeeds().get(firstPosition);
 
     Feed expectedFeed = new Feed() {
       @Override
@@ -137,7 +148,7 @@ public class UserPodcastsTest {
 
   @Test
   public void itReturnsFeedImageUrlWhenGetFeeds() {
-    Feed feed = userPodcasts.getFeeds().get(firstPosition);
+    Feed feed = repository.getFeeds().get(firstPosition);
 
     Feed expectedFeed = new Feed() {
       @Override
