@@ -7,7 +7,8 @@
       android:orientation="horizontal"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginTop="10dp">
+      android:layout_marginTop="15dp"
+      android:layout_marginBottom="20dp">
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/episode_thumbnail"
         android:layout_width="40dp"
@@ -38,28 +39,52 @@
         style="EpisodeDescription"
         android:text="@string/lorem_ipsum"
         />
-    <LinearLayout
+    <RelativeLayout
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
-      <ImageButton
-          android:id="@+id/media_play_button"
+      <LinearLayout
+          android:orientation="horizontal"
+          android:id="@+id/media_play_layout"
+          android:gravity="left"
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:src="@android:drawable/ic_media_play" />
-      <TextView
-          android:id="@+id/episode_length"
-          android:layout_height="match_parent"
-          android:layout_width="wrap_content"
-          style="@style/EpisodeLength"
-          android:text="60 MB"
-          />
-      <ImageButton
-          android:id="@+id/episode_download_button"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:src="@android:drawable/stat_sys_download" />
-    </LinearLayout>
+          android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/media_play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_av_play_circle_fill" />
+        <TextView
+            android:id="@+id/episode_duration"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            style="@style/EpisodeDuration"
+            android:text="30 min"
+            />
+      </LinearLayout>
+      <LinearLayout
+          android:id="@+id/episode_download_layout"
+          android:orientation="horizontal"
+          android:layout_toRightOf="@+id/media_play_layout"
+          android:gravity="right"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/episode_download_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_file_file_download" />
+        <TextView
+            android:id="@+id/episode_length"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            style="@style/EpisodeLength"
+            android:text="60 MB"
+            />
+        </LinearLayout>
+    </RelativeLayout>
   </LinearLayout>
 </LinearLayout>

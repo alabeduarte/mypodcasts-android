@@ -35,4 +35,9 @@
   <style name="EpisodePublishedDate">
     <item name="android:textSize">12sp</item>
   </style>
+
+  <style name="EpisodeDuration">
+    <item name="android:textSize">12sp</item>
+    <item name="android:gravity">center_vertical</item>
+  </style>
 </resources>
