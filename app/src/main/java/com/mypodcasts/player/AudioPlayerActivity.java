@@ -3,6 +3,7 @@ package com.mypodcasts.player;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 
@@ -14,9 +15,13 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 
 @ContentView(R.layout.audio_player)
 public class AudioPlayerActivity extends RoboActionBarActivity {
+
+  @InjectView(R.id.tool_bar)
+  private Toolbar toolbar;
 
   @Inject
   private EventBus eventBus;
@@ -33,6 +38,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     super.onCreate(savedInstanceState);
     eventBus.register(this);
 
+    setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     showProgressDialog();
