@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
   <LinearLayout
       android:layout_height="match_parent"
       android:layout_width="match_parent"
@@ -22,5 +23,5 @@
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
-            android:background="#111"/>
+            android:background="@color/primary"/>
 </android.support.v4.widget.DrawerLayout>

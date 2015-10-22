@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,8 +46,7 @@ public class MyPodcastsActivity extends RoboActionBarActivity {
     super.onCreate(savedInstanceState);
 
     setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayShowHomeEnabled(true);
-    getSupportActionBar().setIcon(R.drawable.ic_drawer);
+    setActionBarDrawerToggle(drawerLayout, toolbar);
 
     leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
@@ -78,6 +78,14 @@ public class MyPodcastsActivity extends RoboActionBarActivity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void setActionBarDrawerToggle(DrawerLayout drawerLayout, Toolbar toolbar) {
+    ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+        this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+
+    drawerLayout.setDrawerListener(actionBarDrawerToggle);
+    actionBarDrawerToggle.syncState();
   }
 
   private class FeedsAsyncTask extends AsyncTask<Void, Void, List<Feed>> {

@@ -1,12 +1,12 @@
 <resources>
   <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="colorPrimary">@color/ColorPrimary</item>
-    <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
-    <item name="android:statusBarColor">@color/ColorPrimaryDark</item>
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primary_dark</item>
+    <item name="android:statusBarColor">@color/primary_dark</item>
   </style>
 
   <style name="EpisodeList">
-    <item name="android:divider">@color/primary_text_default_material_dark</item>
+    <item name="android:divider">@color/divider</item>
     <item name="android:dividerHeight">2dp</item>
   </style>
 

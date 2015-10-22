@@ -87,7 +87,7 @@ public class FeedsAdapterTest {
 
     feedsAdapter.getView(firstPosition, recycledView, parent);
 
-    verify(spiedLayoutInflater).inflate(R.layout.drawer_list_item, parent, false);
+    verify(spiedLayoutInflater).inflate(R.layout.feed_list_item, parent, false);
   }
 
   @Test
@@ -95,13 +95,13 @@ public class FeedsAdapterTest {
     List<Feed> feeds = givenFeeds(new Feed());
     FeedsAdapter feedsAdapter = givenAdapaterWith(feeds);
 
-    recycledView = spiedLayoutInflater.inflate(R.layout.drawer_list_item, parent, false);
+    recycledView = spiedLayoutInflater.inflate(R.layout.feed_list_item, parent, false);
 
     feedsAdapter.getView(firstPosition, recycledView, parent);
     feedsAdapter.getView(firstPosition, recycledView, parent);
     feedsAdapter.getView(firstPosition, recycledView, parent);
 
-    verify(spiedLayoutInflater, times(1)).inflate(R.layout.drawer_list_item, parent, false);
+    verify(spiedLayoutInflater, times(1)).inflate(R.layout.feed_list_item, parent, false);
   }
 
   @Test

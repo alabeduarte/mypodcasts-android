@@ -38,7 +38,7 @@ public class FeedsAdapter extends BaseAdapter {
   @Override
   public View getView(int position, View recycledView, ViewGroup parent) {
     if (recycledView == null) {
-      recycledView = inflater.inflate(R.layout.drawer_list_item, parent, false);
+      recycledView = inflater.inflate(R.layout.feed_list_item, parent, false);
     }
 
     TextView textView = (TextView) recycledView.findViewById(R.id.feed_title);
