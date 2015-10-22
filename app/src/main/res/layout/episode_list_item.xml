@@ -54,7 +54,7 @@
             android:id="@+id/media_play_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
+            android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_av_play_circle_fill" />
         <TextView
             android:id="@+id/episode_duration"
@@ -75,7 +75,7 @@
             android:id="@+id/episode_download_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
+            android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_file_file_download" />
         <TextView
             android:id="@+id/episode_length"
