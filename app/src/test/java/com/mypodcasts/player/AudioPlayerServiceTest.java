@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
+import com.mypodcasts.R;
 import com.mypodcasts.repositories.models.Episode;
 
 import org.junit.After;
@@ -16,6 +17,7 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -39,20 +41,52 @@ public class AudioPlayerServiceTest {
   public void setup() {
     overrideApplicationInjector(application, new MyTestModule());
 
-    when(notificationBuilderMock.setContentTitle(
-        (CharSequence) anyObject())
-    ).thenReturn(notificationBuilderMock);
-    when(notificationBuilderMock.setContentText(
-            (CharSequence) anyObject())
+    when(
+        notificationBuilderMock.setStyle((Notification.Style) anyObject())
     ).thenReturn(notificationBuilderMock);
 
-    when(notificationBuilderMock.build())
-        .thenReturn(notificationMock);
+    when(
+        notificationBuilderMock.setSmallIcon(anyInt())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.setVisibility(anyInt())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.addAction((Notification.Action) anyObject())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.setContentTitle((CharSequence) anyObject())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.setContentText((CharSequence) anyObject())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.build()
+    ).thenReturn(notificationMock);
   }
 
   @After
   public void teardown() {
     reset();
+  }
+
+  @Test
+  public void itSetsNotificationSmallIcon() {
+    createService();
+
+    verify(notificationBuilderMock).setSmallIcon(R.drawable.ic_av_play_circle_fill);
+  }
+
+  @Test
+  public void itSetsNotificationVisibility() {
+    createService();
+
+    verify(notificationBuilderMock).setVisibility(Notification.VISIBILITY_PUBLIC);
   }
 
   @Test
