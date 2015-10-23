@@ -18,20 +18,29 @@ import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Image;
+import com.mypodcasts.support.ExternalPublicFileLookup;
 import com.mypodcasts.support.FileDownloadManager;
 
+import java.io.File;
+
 import javax.inject.Inject;
+
+import static android.os.Environment.DIRECTORY_PODCASTS;
+import static android.os.Environment.getExternalStoragePublicDirectory;
+import static android.view.View.INVISIBLE;
 
 public class EpisodeViewInflater {
   private final LayoutInflater layoutInflater;
   private final ImageLoader imageLoader;
   private final FileDownloadManager fileDownloadManager;
+  private final ExternalPublicFileLookup externalPublicFileLookup;
 
   @Inject
-  public EpisodeViewInflater(Activity activity, ImageLoader imageLoader, FileDownloadManager fileDownloadManager) {
+  public EpisodeViewInflater(Activity activity, ImageLoader imageLoader, FileDownloadManager fileDownloadManager, ExternalPublicFileLookup externalPublicFileLookup) {
     this.layoutInflater = activity.getLayoutInflater();
     this.imageLoader = imageLoader;
     this.fileDownloadManager = fileDownloadManager;
+    this.externalPublicFileLookup = externalPublicFileLookup;
   }
 
   protected InflaterWith inflate(View view) {
@@ -84,8 +93,9 @@ public class EpisodeViewInflater {
 
       this.setTitle(episode.getTitle());
       this.setImageUrl(episode.getImage());
-      this.setMediaPlayButton(episode);
-      this.setDownloadButton(episode);
+
+      this.setMediaPlayButtonLayout(episode);
+      this.setDownloadButtonLayout(episode);
     }
 
     protected View getView() {
@@ -104,7 +114,7 @@ public class EpisodeViewInflater {
       networkImageView.setImageUrl(imageUrl, imageLoader);
     }
 
-    private void setMediaPlayButton(final Episode episode) {
+    private void setMediaPlayButtonLayout(final Episode episode) {
       mediaPlayButton = (ImageButton) view.findViewById(R.id.media_play_button);
       mediaPlayButton.setFocusable(false);
 
@@ -120,7 +130,14 @@ public class EpisodeViewInflater {
       });
     }
 
-    private void setDownloadButton(final Episode episode) {
+    private void setDownloadButtonLayout(final Episode episode) {
+      ViewGroup downloadLayout = (ViewGroup) view.findViewById(R.id.episode_download_layout);
+      File directory = getExternalStoragePublicDirectory(DIRECTORY_PODCASTS);
+      if (externalPublicFileLookup.exists(directory, episode.getAudioFilePath())) {
+        downloadLayout.setVisibility(INVISIBLE);
+        return;
+      }
+
       downloadButton = (ImageButton) view.findViewById(R.id.episode_download_button);
       downloadButton.setFocusable(false);
 

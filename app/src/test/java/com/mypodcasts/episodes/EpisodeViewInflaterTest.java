@@ -17,6 +17,7 @@ import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Image;
+import com.mypodcasts.support.ExternalPublicFileLookup;
 import com.mypodcasts.support.FileDownloadManager;
 
 import org.junit.Before;
@@ -25,6 +26,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import static android.os.Environment.DIRECTORY_PODCASTS;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -52,6 +56,7 @@ public class EpisodeViewInflaterTest {
 
   ImageLoader imageLoaderMock = mock(ImageLoader.class);
   FileDownloadManager downloadManagerMock = mock(FileDownloadManager.class);
+  ExternalPublicFileLookup externalPublicFileLookupMock = mock(ExternalPublicFileLookup.class);
 
   @Before
   public void setup() {
@@ -65,7 +70,7 @@ public class EpisodeViewInflaterTest {
       }
     };
 
-    episodeViewInflater = new EpisodeViewInflater(activity, imageLoaderMock, downloadManagerMock);
+    episodeViewInflater = new EpisodeViewInflater(activity, imageLoaderMock, downloadManagerMock, externalPublicFileLookupMock);
   }
 
   private View inflateView(View view, Episode episode) {
@@ -78,7 +83,7 @@ public class EpisodeViewInflaterTest {
 
   @Test
   public void itIsVisible() {
-    assertThat(inflateView(new Episode()).getVisibility(), is(View.VISIBLE));
+    assertThat(inflateView(new Episode()).getVisibility(), is(VISIBLE));
   }
 
   @Test
@@ -232,5 +237,47 @@ public class EpisodeViewInflaterTest {
     inflateView(episode);
 
     verify(downloadManagerMock, never()).enqueue((Uri) anyObject(), anyString(), anyString());
+  }
+
+  @Test
+  public void itShowsDownloadButtonButtonWhenAudioFileHasNotBeenDownloaded() {
+    Episode episode = new Episode() {
+      @Override
+      public String getAudioFilePath() {
+        return "audio.mp3";
+      }
+    };
+
+    when(
+        externalPublicFileLookupMock.exists(
+            Environment.getExternalStoragePublicDirectory(DIRECTORY_PODCASTS), episode.getAudioFilePath()
+        )
+    ).thenReturn(false);
+
+    View inflatedView = inflateView(episode);
+    ViewGroup downloadButtonLayout = (ViewGroup) inflatedView.findViewById(R.id.episode_download_layout);
+
+    assertThat(downloadButtonLayout.getVisibility(), is(VISIBLE));
+  }
+
+  @Test
+  public void itDoesNotShowDownloadButtonButtonWhenAudioFileItsAlreadyDownloaded() {
+    Episode episode = new Episode() {
+      @Override
+      public String getAudioFilePath() {
+        return "audio.mp3";
+      }
+    };
+
+    when(
+        externalPublicFileLookupMock.exists(
+            Environment.getExternalStoragePublicDirectory(DIRECTORY_PODCASTS), episode.getAudioFilePath()
+        )
+    ).thenReturn(true);
+
+    View inflatedView = inflateView(episode);
+    ViewGroup downloadButtonLayout = (ViewGroup) inflatedView.findViewById(R.id.episode_download_layout);
+
+    assertThat(downloadButtonLayout.getVisibility(), is(INVISIBLE));
   }
 }

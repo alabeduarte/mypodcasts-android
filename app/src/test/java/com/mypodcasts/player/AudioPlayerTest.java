@@ -82,7 +82,11 @@ public class AudioPlayerTest {
 
   @Test
   public void itSetsDataSourceWithLocalFilePathAndPreparesMediaPlayerWhenAlreadyDownloadedEpisode() throws IOException {
-    when(externalPublicFileLookupMock.exists(Environment.getExternalStoragePublicDirectory(DIRECTORY_PODCASTS), episode.getAudioFilePath())).thenReturn(true);
+    when(
+        externalPublicFileLookupMock.exists(
+            Environment.getExternalStoragePublicDirectory(DIRECTORY_PODCASTS), episode.getAudioFilePath()
+        )
+    ).thenReturn(true);
 
     audioPlayer.play(episode);
 
