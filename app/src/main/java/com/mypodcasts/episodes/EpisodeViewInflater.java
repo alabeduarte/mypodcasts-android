@@ -136,6 +136,8 @@ public class EpisodeViewInflater {
       if (externalPublicFileLookup.exists(directory, episode.getAudioFilePath())) {
         downloadLayout.setVisibility(INVISIBLE);
         return;
+      } else {
+        downloadLayout.setVisibility(View.VISIBLE);
       }
 
       downloadButton = (ImageButton) view.findViewById(R.id.episode_download_button);
