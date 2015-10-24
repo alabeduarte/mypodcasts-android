@@ -18,29 +18,24 @@ import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Image;
-import com.mypodcasts.support.ExternalPublicFileLookup;
 import com.mypodcasts.support.FileDownloadManager;
-
-import java.io.File;
 
 import javax.inject.Inject;
 
-import static android.os.Environment.DIRECTORY_PODCASTS;
-import static android.os.Environment.getExternalStoragePublicDirectory;
 import static android.view.View.INVISIBLE;
 
 public class EpisodeViewInflater {
   private final LayoutInflater layoutInflater;
   private final ImageLoader imageLoader;
   private final FileDownloadManager fileDownloadManager;
-  private final ExternalPublicFileLookup externalPublicFileLookup;
+  private final EpisodeFile episodeFile;
 
   @Inject
-  public EpisodeViewInflater(Activity activity, ImageLoader imageLoader, FileDownloadManager fileDownloadManager, ExternalPublicFileLookup externalPublicFileLookup) {
+  public EpisodeViewInflater(Activity activity, ImageLoader imageLoader, FileDownloadManager fileDownloadManager, EpisodeFile episodeFile) {
     this.layoutInflater = activity.getLayoutInflater();
     this.imageLoader = imageLoader;
     this.fileDownloadManager = fileDownloadManager;
-    this.externalPublicFileLookup = externalPublicFileLookup;
+    this.episodeFile = episodeFile;
   }
 
   protected InflaterWith inflate(View view) {
@@ -132,8 +127,7 @@ public class EpisodeViewInflater {
 
     private void setDownloadButtonLayout(final Episode episode) {
       ViewGroup downloadLayout = (ViewGroup) view.findViewById(R.id.episode_download_layout);
-      File directory = getExternalStoragePublicDirectory(DIRECTORY_PODCASTS);
-      if (externalPublicFileLookup.exists(directory, episode.getAudioFilePath())) {
+      if (episodeFile.exists(episode)) {
         downloadLayout.setVisibility(INVISIBLE);
         return;
       } else {

@@ -17,7 +17,6 @@ import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Image;
-import com.mypodcasts.support.ExternalPublicFileLookup;
 import com.mypodcasts.support.FileDownloadManager;
 
 import org.junit.Before;
@@ -26,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import static android.os.Environment.DIRECTORY_PODCASTS;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static java.lang.String.valueOf;
@@ -56,7 +54,7 @@ public class EpisodeViewInflaterTest {
 
   ImageLoader imageLoaderMock = mock(ImageLoader.class);
   FileDownloadManager downloadManagerMock = mock(FileDownloadManager.class);
-  ExternalPublicFileLookup externalPublicFileLookupMock = mock(ExternalPublicFileLookup.class);
+  EpisodeFile episodeFileMock = mock(EpisodeFile.class);
 
   @Before
   public void setup() {
@@ -70,7 +68,9 @@ public class EpisodeViewInflaterTest {
       }
     };
 
-    episodeViewInflater = new EpisodeViewInflater(activity, imageLoaderMock, downloadManagerMock, externalPublicFileLookupMock);
+    episodeViewInflater = new EpisodeViewInflater(
+        activity, imageLoaderMock, downloadManagerMock, episodeFileMock
+    );
   }
 
   private View inflateView(View view, Episode episode) {
@@ -243,12 +243,7 @@ public class EpisodeViewInflaterTest {
   public void itShowsDownloadButtonButtonWhenAudioFileHasNotBeenDownloaded() {
     Episode episode = new Episode();
 
-    when(
-        externalPublicFileLookupMock.exists(
-            Environment.getExternalStoragePublicDirectory(DIRECTORY_PODCASTS),
-            episode.getAudioFilePath()
-        )
-    ).thenReturn(false);
+    when(episodeFileMock.exists(episode)).thenReturn(false);
 
     ViewGroup downloadButtonLayout = (ViewGroup) inflateView(episode)
         .findViewById(R.id.episode_download_layout);
@@ -260,12 +255,7 @@ public class EpisodeViewInflaterTest {
   public void itDoesNotShowDownloadButtonButtonWhenAudioFileItsAlreadyDownloaded() {
     Episode episode = new Episode();
 
-    when(
-        externalPublicFileLookupMock.exists(
-            Environment.getExternalStoragePublicDirectory(DIRECTORY_PODCASTS),
-            episode.getAudioFilePath()
-        )
-    ).thenReturn(true);
+    when(episodeFileMock.exists(episode)).thenReturn(true);
 
     ViewGroup downloadButtonLayout = (ViewGroup) inflateView(episode)
         .findViewById(R.id.episode_download_layout);
@@ -277,12 +267,7 @@ public class EpisodeViewInflaterTest {
   public void itShowsDownloadButtonButtonWhenAudioFileHasNotBeenDownloadedAndLayoutIsNotVisible() {
     Episode episode = new Episode();
 
-    when(
-        externalPublicFileLookupMock.exists(
-            Environment.getExternalStoragePublicDirectory(DIRECTORY_PODCASTS),
-            episode.getAudioFilePath()
-        )
-    ).thenReturn(true);
+    when(episodeFileMock.exists(episode)).thenReturn(true);
 
     View inflatedView = inflateView(episode);
     ViewGroup invisibleDownloadButtonLayout = (ViewGroup) inflatedView
@@ -290,12 +275,7 @@ public class EpisodeViewInflaterTest {
 
     assertThat(invisibleDownloadButtonLayout.getVisibility(), is(INVISIBLE));
 
-    when(
-        externalPublicFileLookupMock.exists(
-            Environment.getExternalStoragePublicDirectory(DIRECTORY_PODCASTS),
-            episode.getAudioFilePath()
-        )
-    ).thenReturn(false);
+    when(episodeFileMock.exists(episode)).thenReturn(false);
 
     View recycledView = episodeViewInflater.inflate(inflatedView).with(episode).from(parent);
     ViewGroup visibleDownloadButtonLayout = (ViewGroup) recycledView
