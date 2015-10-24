@@ -20,6 +20,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
+import java.util.Random;
 
 import de.greenrobot.event.EventBus;
 
@@ -42,7 +43,6 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 @Config(constants = BuildConfig.class)
 public class AudioPlayerActivityTest {
 
-  AudioPlayerActivity activity;
   Episode episode;
 
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
@@ -66,14 +66,14 @@ public class AudioPlayerActivityTest {
 
   @Test
   public void itRegistersItselfToEventBusOnStart() {
-    activity = buildActivity(AudioPlayerActivity.class).create().get();
+    AudioPlayerActivity activity = buildActivity(AudioPlayerActivity.class).create().get();
 
     verify(eventBusMock).register(activity);
   }
 
   @Test
   public void itUnregistersItselfToEventBusOnStop() {
-    activity = buildActivity(AudioPlayerActivity.class).create().stop().get();
+    AudioPlayerActivity activity = buildActivity(AudioPlayerActivity.class).create().stop().get();
 
     verify(eventBusMock).unregister(activity);
   }
@@ -92,7 +92,7 @@ public class AudioPlayerActivityTest {
         application.getString(R.string.loading_episode), episode.getTitle()
     );
 
-    createActivity();
+    AudioPlayerActivity activity = createActivity();
     activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
 
     InOrder order = inOrder(progressDialogMock);
@@ -132,7 +132,7 @@ public class AudioPlayerActivityTest {
 
   @Test
   public void itStartsAudioServiceGivenAnEpisode() throws IOException {
-    createActivity();
+    AudioPlayerActivity activity = createActivity();
 
     Intent intent = shadowOf(activity).peekNextStartedService();
     assertThat(
@@ -143,7 +143,7 @@ public class AudioPlayerActivityTest {
 
   @Test
   public void itShowsMediaControlWhenAudioStartToPlay() {
-    createActivity();
+    AudioPlayerActivity activity = createActivity();
 
     activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
 
@@ -152,7 +152,7 @@ public class AudioPlayerActivityTest {
 
   @Test
   public void itShowsMediaControlOnTouchEvent() {
-    createActivity();
+    AudioPlayerActivity activity = createActivity();
 
     MotionEvent motionEvent = mock(MotionEvent.class);
     activity.onTouchEvent(motionEvent);
@@ -162,7 +162,7 @@ public class AudioPlayerActivityTest {
 
   @Test
   public void itBindsAudioPlayerWithMediaControl() {
-    createActivity();
+    AudioPlayerActivity activity = createActivity();
 
     activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
 
@@ -171,7 +171,7 @@ public class AudioPlayerActivityTest {
 
   @Test
   public void itAnchorsMediaControllerToAudioView() {
-    createActivity();
+    AudioPlayerActivity activity = createActivity();
 
     View audioView = activity.findViewById(R.id.audio_view);
     activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
@@ -184,20 +184,43 @@ public class AudioPlayerActivityTest {
     MenuItem homeButton = mock(MenuItem.class);
     when(homeButton.getItemId()).thenReturn(android.R.id.home);
 
-    Intent intent = getIntent();
-    activity = spy(
-        buildActivity(AudioPlayerActivity.class).withIntent(intent).create().get()
-    );
+    AudioPlayerActivity activity = spy(createActivity());
 
     activity.onOptionsItemSelected(homeButton);
 
     verify(activity).onBackPressed();
   }
 
-  private void createActivity() {
-    Intent intent = getIntent();
+  @Test
+  public void itSeeksToInitialPositionOnCreate() {
+    int initialPosition = 0;
 
-    activity = buildActivity(AudioPlayerActivity.class).withIntent(intent).create().get();
+    AudioPlayerActivity activity = createActivity();
+
+    activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
+
+    verify(audioPlayerMock).seekTo(initialPosition);
+  }
+
+  @Test
+  public void itSeeksToCurrentPositionOnResumeAfterPause() {
+    Integer currentPosition = new Random().nextInt();
+    when(audioPlayerMock.getCurrentPosition()).thenReturn(currentPosition);
+
+    AudioPlayerActivity activity = createActivity();
+    activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
+
+    verify(audioPlayerMock).seekTo(0);
+
+    activity.onPause();
+    activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
+
+    verify(audioPlayerMock).seekTo(currentPosition);
+  }
+
+  private AudioPlayerActivity createActivity() {
+    Intent intent = getIntent();
+    return buildActivity(AudioPlayerActivity.class).withIntent(intent).create().get();
   }
 
   private Intent getIntent() {

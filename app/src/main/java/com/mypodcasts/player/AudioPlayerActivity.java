@@ -36,6 +36,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
   private ProgressDialog progressDialog;
 
   private Episode episode;
+  private int playerCurrentPosition;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -64,16 +65,38 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
   }
 
   @Override
+  protected void onPause() {
+    super.onPause();
+
+    if (audioPlayer != null) {
+      playerCurrentPosition = audioPlayer.getCurrentPosition();
+    }
+  }
+
+  @Override
   public boolean onTouchEvent(MotionEvent event) {
     mediaController.show();
 
     return super.onTouchEvent(event);
   }
 
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt(AudioPlayer.class.toString(), playerCurrentPosition);
+  }
+
+  @Override
+  protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    playerCurrentPosition = savedInstanceState.getInt(AudioPlayer.class.toString());
+  }
+
   public void onEvent(AudioPlayingEvent event){
     cancelProgressDialog();
 
     audioPlayer = event.getAudioPlayer();
+    audioPlayer.seekTo(playerCurrentPosition);
 
     mediaController.setMediaPlayer(audioPlayer);
     mediaController.setAnchorView(findViewById(R.id.audio_view));
