@@ -54,13 +54,8 @@ public class EpisodeFileTest {
   public void itReturnsAudioFileUrlWhenFileDoesNotExists() {
     episode = new Episode() {
       @Override
-      public Audio getAudio() {
-        return new Audio() {
-          @Override
-          public String getUrl() {
-            return "audio.mp3";
-          }
-        };
+      public String getAudioUrl() {
+        return "audio.mp3";
       }
     };
 
@@ -71,7 +66,7 @@ public class EpisodeFileTest {
         )
     ).thenReturn(false);
 
-    assertThat(episodeFile.getAudioFilePath(episode), is(episode.getAudio().getUrl()));
+    assertThat(episodeFile.getAudioFilePath(episode), is(episode.getAudioUrl()));
   }
 
   @Test

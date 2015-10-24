@@ -3,8 +3,6 @@ package com.mypodcasts.episodes;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Image;
-import com.mypodcasts.support.FileDownloadManager;
 
 import javax.inject.Inject;
 
@@ -27,15 +24,13 @@ import static android.view.View.INVISIBLE;
 public class EpisodeViewInflater {
   private final LayoutInflater layoutInflater;
   private final ImageLoader imageLoader;
-  private final FileDownloadManager fileDownloadManager;
-  private final EpisodeFile episodeFile;
+  private final EpisodeDownloader episodeDownloader;
 
   @Inject
-  public EpisodeViewInflater(Activity activity, ImageLoader imageLoader, FileDownloadManager fileDownloadManager, EpisodeFile episodeFile) {
+  public EpisodeViewInflater(Activity activity, ImageLoader imageLoader, EpisodeDownloader episodeDownloader) {
     this.layoutInflater = activity.getLayoutInflater();
     this.imageLoader = imageLoader;
-    this.fileDownloadManager = fileDownloadManager;
-    this.episodeFile = episodeFile;
+    this.episodeDownloader = episodeDownloader;
   }
 
   protected InflaterWith inflate(View view) {
@@ -127,7 +122,7 @@ public class EpisodeViewInflater {
 
     private void setDownloadButtonLayout(final Episode episode) {
       ViewGroup downloadLayout = (ViewGroup) view.findViewById(R.id.episode_download_layout);
-      if (episodeFile.exists(episode)) {
+      if (episodeDownloader.isAlreadyDownloaded(episode)) {
         downloadLayout.setVisibility(INVISIBLE);
         return;
       } else {
@@ -140,11 +135,7 @@ public class EpisodeViewInflater {
       downloadButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          fileDownloadManager.enqueue(
-              Uri.parse(episode.getAudio().getUrl()),
-              Environment.DIRECTORY_PODCASTS,
-              episode.getAudioFilePath()
-          );
+          episodeDownloader.download(episode);
         }
       });
     }

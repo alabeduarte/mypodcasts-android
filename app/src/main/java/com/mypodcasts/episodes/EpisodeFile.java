@@ -19,16 +19,19 @@ public class EpisodeFile {
   }
 
   public boolean exists(Episode episode) {
-    return externalPublicFileLookup.exists(getPodcastsDirectory(), episode.getAudioFilePath());
+    return externalPublicFileLookup.exists(
+        getExternalStoragePublicDirectory(getPodcastsDirectory()),
+        episode.getAudioFilePath()
+    );
   }
 
   public String getAudioFilePath(Episode episode) {
     if (exists(episode)) { return episode.getAudioFilePath(); }
 
-    return episode.getAudio().getUrl();
+    return episode.getAudioUrl();
   }
 
-  private File getPodcastsDirectory() {
-    return getExternalStoragePublicDirectory(DIRECTORY_PODCASTS);
+  public String getPodcastsDirectory() {
+    return DIRECTORY_PODCASTS;
   }
 }

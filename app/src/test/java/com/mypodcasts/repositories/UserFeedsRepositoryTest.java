@@ -85,17 +85,12 @@ public class UserFeedsRepositoryTest {
 
     Episode expectedEpisode = new Episode() {
       @Override
-      public Audio getAudio() {
-        return new Audio() {
-          @Override
-          public String getUrl() {
-            return "http://example.com/newest_episode.mp3";
-          }
-        };
+      public String getAudioUrl() {
+        return "http://example.com/newest_episode.mp3";
       }
     };
 
-    assertThat(episode.getAudio().getUrl(), is(expectedEpisode.getAudio().getUrl()) );
+    assertThat(episode.getAudioUrl(), is(expectedEpisode.getAudioUrl()));
   }
 
   @Test

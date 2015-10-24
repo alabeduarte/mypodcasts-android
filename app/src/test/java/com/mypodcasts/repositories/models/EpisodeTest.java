@@ -44,4 +44,27 @@ public class EpisodeTest {
     assertThat(episode.getAudioFilePath(), is(episode.getPodcast().getId() + "/" + episode.getTitle() + ".mp3"));
   }
 
+  @Test
+  public void itReturnsAudioUrl() {
+    Episode episode = new Episode() {
+      @Override
+      protected Audio getAudio() {
+        return new Audio() {
+          @Override
+          public String getUrl() {
+            return "audio.mp3";
+          }
+        };
+      }
+    };
+
+    assertThat(episode.getAudioUrl(), is(episode.getAudio().getUrl()));
+  }
+
+  @Test
+  public void itReturnsEmptyUrlWhenAudioIsNull() {
+    Episode episode = new Episode();
+
+    assertThat(episode.getAudioUrl(), is(""));
+  }
 }

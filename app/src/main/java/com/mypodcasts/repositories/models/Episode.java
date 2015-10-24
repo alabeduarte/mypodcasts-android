@@ -27,19 +27,6 @@ public class Episode implements Serializable {
     return description;
   }
 
-  public Audio getAudio() {
-    if (audio == null) {
-      return new Audio() {
-        @Override
-        public String getUrl() {
-          return "";
-        }
-      };
-    } else {
-      return audio;
-    }
-  }
-
   public Podcast getPodcast() {
     if (podcast == null) {
       return new Podcast();
@@ -50,5 +37,22 @@ public class Episode implements Serializable {
 
   public String getAudioFilePath() {
     return getPodcast().getId() + "/" + getTitle() + ".mp3";
+  }
+
+  public String getAudioUrl() {
+    return getAudio().getUrl();
+  }
+
+  protected Audio getAudio() {
+    if (audio == null) {
+      return new Audio() {
+        @Override
+        public String getUrl() {
+          return "";
+        }
+      };
+    } else {
+      return audio;
+    }
   }
 }

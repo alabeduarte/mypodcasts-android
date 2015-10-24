@@ -2,8 +2,6 @@ package com.mypodcasts.episodes;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Image;
-import com.mypodcasts.support.FileDownloadManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,8 +28,6 @@ import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -53,8 +48,7 @@ public class EpisodeViewInflaterTest {
   LayoutInflater spiedLayoutInflater;
 
   ImageLoader imageLoaderMock = mock(ImageLoader.class);
-  FileDownloadManager downloadManagerMock = mock(FileDownloadManager.class);
-  EpisodeFile episodeFileMock = mock(EpisodeFile.class);
+  EpisodeDownloader episodeDownloaderMock = mock(EpisodeDownloader.class);
 
   @Before
   public void setup() {
@@ -68,9 +62,7 @@ public class EpisodeViewInflaterTest {
       }
     };
 
-    episodeViewInflater = new EpisodeViewInflater(
-        activity, imageLoaderMock, downloadManagerMock, episodeFileMock
-    );
+    episodeViewInflater = new EpisodeViewInflater(activity, imageLoaderMock, episodeDownloaderMock);
   }
 
   private View inflateView(View view, Episode episode) {
@@ -211,23 +203,15 @@ public class EpisodeViewInflaterTest {
 
   @Test
   public void itDownloadsEpisodeAudioOnDownloadButtonClick() {
-    Episode episode = new Episode() {
-      @Override
-      public String getAudioFilePath() {
-        return "audio.mp3";
-      }
-    };
+    Episode episode = new Episode();
 
     View inflatedView = inflateView(episode);
-    ImageButton downloadButton = (ImageButton) inflatedView.findViewById(R.id.episode_download_button);
+    ImageButton downloadButton = (ImageButton) inflatedView
+        .findViewById(R.id.episode_download_button);
 
     downloadButton.performClick();
 
-    verify(downloadManagerMock).enqueue(
-        Uri.parse(episode.getAudio().getUrl()),
-        Environment.DIRECTORY_PODCASTS,
-        episode.getAudioFilePath()
-    );
+    verify(episodeDownloaderMock).download(episode);
   }
 
   @Test
@@ -236,14 +220,14 @@ public class EpisodeViewInflaterTest {
 
     inflateView(episode);
 
-    verify(downloadManagerMock, never()).enqueue((Uri) anyObject(), anyString(), anyString());
+    verify(episodeDownloaderMock, never()).download(episode);
   }
 
   @Test
   public void itShowsDownloadButtonButtonWhenAudioFileHasNotBeenDownloaded() {
     Episode episode = new Episode();
 
-    when(episodeFileMock.exists(episode)).thenReturn(false);
+    when(episodeDownloaderMock.isAlreadyDownloaded(episode)).thenReturn(false);
 
     ViewGroup downloadButtonLayout = (ViewGroup) inflateView(episode)
         .findViewById(R.id.episode_download_layout);
@@ -255,7 +239,7 @@ public class EpisodeViewInflaterTest {
   public void itDoesNotShowDownloadButtonButtonWhenAudioFileItsAlreadyDownloaded() {
     Episode episode = new Episode();
 
-    when(episodeFileMock.exists(episode)).thenReturn(true);
+    when(episodeDownloaderMock.isAlreadyDownloaded(episode)).thenReturn(true);
 
     ViewGroup downloadButtonLayout = (ViewGroup) inflateView(episode)
         .findViewById(R.id.episode_download_layout);
@@ -267,7 +251,7 @@ public class EpisodeViewInflaterTest {
   public void itShowsDownloadButtonButtonWhenAudioFileHasNotBeenDownloadedAndLayoutIsNotVisible() {
     Episode episode = new Episode();
 
-    when(episodeFileMock.exists(episode)).thenReturn(true);
+    when(episodeDownloaderMock.isAlreadyDownloaded(episode)).thenReturn(true);
 
     View inflatedView = inflateView(episode);
     ViewGroup invisibleDownloadButtonLayout = (ViewGroup) inflatedView
@@ -275,7 +259,7 @@ public class EpisodeViewInflaterTest {
 
     assertThat(invisibleDownloadButtonLayout.getVisibility(), is(INVISIBLE));
 
-    when(episodeFileMock.exists(episode)).thenReturn(false);
+    when(episodeDownloaderMock.isAlreadyDownloaded(episode)).thenReturn(false);
 
     View recycledView = episodeViewInflater.inflate(inflatedView).with(episode).from(parent);
     ViewGroup visibleDownloadButtonLayout = (ViewGroup) recycledView
