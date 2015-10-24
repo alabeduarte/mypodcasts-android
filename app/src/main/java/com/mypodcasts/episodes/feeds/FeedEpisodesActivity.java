@@ -15,6 +15,8 @@ import com.mypodcasts.repositories.models.Feed;
 
 import javax.inject.Inject;
 
+import static java.lang.String.format;
+
 public class FeedEpisodesActivity extends MyPodcastsActivity {
 
   @Inject
@@ -38,19 +40,27 @@ public class FeedEpisodesActivity extends MyPodcastsActivity {
 
     Feed feed = (Feed) getIntent().getSerializableExtra(Feed.class.toString());
 
-    new FeedEpisodesAsyncTask().execute(feed.getId());
+    new FeedEpisodesAsyncTask(feed).execute();
   }
 
-  class FeedEpisodesAsyncTask extends AsyncTask<String, Void, Feed> {
-    @Override
-    protected void onPreExecute() {
-      progressDialog.show();
-      progressDialog.setMessage(getResources().getString(R.string.loading_latest_episodes));
+  class FeedEpisodesAsyncTask extends AsyncTask<Void, Void, Feed> {
+    private final Feed feed;
+
+    public FeedEpisodesAsyncTask(Feed feed) {
+      this.feed = feed;
     }
 
     @Override
-    protected Feed doInBackground(String... params) {
-      return userFeedsRepository.getFeed(params[0]);
+    protected void onPreExecute() {
+      progressDialog.show();
+      progressDialog.setMessage(format(
+          getResources().getString(R.string.loading_feed_episodes), feed.getTitle()
+      ));
+    }
+
+    @Override
+    protected Feed doInBackground(Void... params) {
+      return userFeedsRepository.getFeed(feed.getId());
     }
 
     @Override

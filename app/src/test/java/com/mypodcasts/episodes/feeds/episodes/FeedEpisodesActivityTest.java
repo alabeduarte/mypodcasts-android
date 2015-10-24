@@ -32,6 +32,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -82,9 +83,12 @@ public class FeedEpisodesActivityTest {
   @Test
   public void itShowsAndHideProgressDialog() {
     when(progressDialogMock.isShowing()).thenReturn(true);
-    String message = application.getString(R.string.loading_latest_episodes);
 
-    activity = createActivityWith(aFeed());
+    Feed feed = aFeed("Awesome Feed");
+    activity = createActivityWith(feed);
+    String message = format(
+        application.getString(R.string.loading_feed_episodes), feed.getTitle()
+    );
 
     InOrder order = inOrder(progressDialogMock);
 

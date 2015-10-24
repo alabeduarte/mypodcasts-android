@@ -17,6 +17,8 @@ import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
+import static java.lang.String.format;
+
 @ContentView(R.layout.audio_player)
 public class AudioPlayerActivity extends RoboActionBarActivity {
 
@@ -32,6 +34,8 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
 
   @Inject
   private ProgressDialog progressDialog;
+
+  private Episode episode;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +81,15 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
   }
 
   private void showProgressDialog() {
+    String episodeTitle = getEpisode() == null ? "" : getEpisode().getTitle();
+
     progressDialog.show();
-    progressDialog.setMessage(getResources().getString(R.string.loading_episode));
+    progressDialog.setMessage(
+        format(
+            getResources().getString(R.string.loading_episode),
+            episodeTitle
+        )
+    );
   }
 
   private void cancelProgressDialog() {
@@ -99,6 +110,10 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
   }
 
   private Episode getEpisode() {
-    return (Episode) getIntent().getSerializableExtra(Episode.class.toString());
+    if (episode == null) {
+      episode = (Episode) getIntent().getSerializableExtra(Episode.class.toString());
+    }
+
+    return episode;
   }
 }

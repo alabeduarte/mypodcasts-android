@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
 
+import static java.lang.String.format;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.inOrder;
@@ -42,7 +43,7 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 public class AudioPlayerActivityTest {
 
   AudioPlayerActivity activity;
-  Episode episode = new Episode();
+  Episode episode;
 
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   AudioPlayerService audioPlayerServiceMock = mock(AudioPlayerService.class);
@@ -54,6 +55,8 @@ public class AudioPlayerActivityTest {
   @Before
   public void setup() {
     overrideApplicationInjector(application, new MyTestModule());
+
+    episode = new Episode();
   }
 
   @After
@@ -78,7 +81,16 @@ public class AudioPlayerActivityTest {
   @Test
   public void itShowsAndHideProgressDialog() {
     when(progressDialogMock.isShowing()).thenReturn(true);
-    String message = application.getString(R.string.loading_episode);
+
+    episode = new Episode() {
+      @Override
+      public String getTitle() {
+        return "Awesome episode";
+      }
+    };
+    String message = format(
+        application.getString(R.string.loading_episode), episode.getTitle()
+    );
 
     createActivity();
     activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
@@ -89,6 +101,21 @@ public class AudioPlayerActivityTest {
     order.verify(progressDialogMock).setMessage(message);
 
     order.verify(progressDialogMock).cancel();
+  }
+
+  @Test
+  public void itShowsProgressDialogWithoutEpisodeInfoWhenItIsNull() {
+    when(progressDialogMock.isShowing()).thenReturn(true);
+
+    episode = null;
+    String message = format(application.getString(R.string.loading_episode), "");
+
+    createActivity();
+
+    InOrder order = inOrder(progressDialogMock);
+
+    order.verify(progressDialogMock).show();
+    order.verify(progressDialogMock).setMessage(message);
   }
 
   @Test
