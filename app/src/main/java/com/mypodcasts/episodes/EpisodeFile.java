@@ -3,12 +3,11 @@ package com.mypodcasts.episodes;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.support.ExternalPublicFileLookup;
 
-import java.io.File;
-
 import javax.inject.Inject;
 
 import static android.os.Environment.DIRECTORY_PODCASTS;
 import static android.os.Environment.getExternalStoragePublicDirectory;
+import static java.lang.String.format;
 
 public class EpisodeFile {
   private final ExternalPublicFileLookup externalPublicFileLookup;
@@ -26,7 +25,13 @@ public class EpisodeFile {
   }
 
   public String getAudioFilePath(Episode episode) {
-    if (exists(episode)) { return episode.getAudioFilePath(); }
+    if (exists(episode)) {
+      return format(
+          "%s/%s",
+          getExternalStoragePublicDirectory(getPodcastsDirectory()),
+          episode.getAudioFilePath()
+      );
+    }
 
     return episode.getAudioUrl();
   }

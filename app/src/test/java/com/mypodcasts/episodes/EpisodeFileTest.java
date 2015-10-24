@@ -1,9 +1,6 @@
 package com.mypodcasts.episodes;
 
-import android.os.Environment;
-
 import com.mypodcasts.BuildConfig;
-import com.mypodcasts.repositories.models.Audio;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.support.ExternalPublicFileLookup;
 
@@ -16,6 +13,7 @@ import org.robolectric.annotation.Config;
 import java.io.File;
 
 import static android.os.Environment.DIRECTORY_PODCASTS;
+import static android.os.Environment.getExternalStoragePublicDirectory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -37,7 +35,7 @@ public class EpisodeFileTest {
     episodeFile = new EpisodeFile(externalPublicFileLookupMock);
 
     episode = new Episode();
-    externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(DIRECTORY_PODCASTS);
+    externalStoragePublicDirectory = getExternalStoragePublicDirectory(DIRECTORY_PODCASTS);
   }
 
   @Test
@@ -86,6 +84,8 @@ public class EpisodeFileTest {
     ).thenReturn(true);
 
 
-    assertThat(episodeFile.getAudioFilePath(episode), is(episode.getAudioFilePath()));
+    String filePath = getExternalStoragePublicDirectory(DIRECTORY_PODCASTS) + "/" + episode.getAudioFilePath();
+
+    assertThat(episodeFile.getAudioFilePath(episode), is(filePath));
   }
 }
