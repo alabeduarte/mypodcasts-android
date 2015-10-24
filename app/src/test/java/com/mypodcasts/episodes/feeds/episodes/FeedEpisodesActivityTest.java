@@ -95,7 +95,7 @@ public class FeedEpisodesActivityTest {
     order.verify(progressDialogMock).show();
     order.verify(progressDialogMock).setMessage(message);
 
-    order.verify(progressDialogMock).cancel();
+    order.verify(progressDialogMock).dismiss();
   }
 
   @Test
@@ -107,7 +107,7 @@ public class FeedEpisodesActivityTest {
     InOrder order = inOrder(progressDialogMock);
 
     order.verify(progressDialogMock).show();
-    order.verify(progressDialogMock, never()).cancel();
+    order.verify(progressDialogMock, never()).dismiss();
   }
 
   @Test

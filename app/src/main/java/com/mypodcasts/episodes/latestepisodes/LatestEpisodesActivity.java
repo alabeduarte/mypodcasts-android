@@ -56,7 +56,7 @@ public class LatestEpisodesActivity extends MyPodcastsActivity {
     @Override
     protected void onPostExecute(List<Episode> latestEpisodes) {
       if (progressDialog != null && progressDialog.isShowing()) {
-        progressDialog.cancel();
+        progressDialog.dismiss();
       }
 
       arguments.putSerializable(

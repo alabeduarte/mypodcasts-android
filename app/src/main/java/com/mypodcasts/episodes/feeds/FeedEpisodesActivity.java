@@ -66,7 +66,7 @@ public class FeedEpisodesActivity extends MyPodcastsActivity {
     @Override
     protected void onPostExecute(Feed feed) {
       if (progressDialog != null && progressDialog.isShowing()) {
-        progressDialog.cancel();
+        progressDialog.dismiss();
       }
 
       arguments.putSerializable(

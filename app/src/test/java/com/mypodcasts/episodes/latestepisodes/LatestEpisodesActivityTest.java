@@ -109,7 +109,7 @@ public class LatestEpisodesActivityTest {
     order.verify(progressDialogMock).show();
     order.verify(progressDialogMock).setMessage(message);
 
-    order.verify(progressDialogMock).cancel();
+    order.verify(progressDialogMock).dismiss();
   }
 
   @Test
@@ -121,7 +121,7 @@ public class LatestEpisodesActivityTest {
     InOrder order = inOrder(progressDialogMock);
 
     order.verify(progressDialogMock).show();
-    order.verify(progressDialogMock, never()).cancel();
+    order.verify(progressDialogMock, never()).dismiss();
   }
 
   LatestEpisodesActivity createActivityWith(List<Episode> episodes) {

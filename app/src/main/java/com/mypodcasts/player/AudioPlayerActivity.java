@@ -117,7 +117,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
 
   private void cancelProgressDialog() {
     if (progressDialog != null && progressDialog.isShowing()) {
-      progressDialog.cancel();
+      progressDialog.dismiss();
     }
   }
 
