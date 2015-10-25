@@ -2,6 +2,7 @@ package com.mypodcasts.player;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -46,8 +47,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    showProgressDialog();
-    playAudio();
+    new PlayAudioAsyncTask().execute();
   }
 
   @Override
@@ -103,40 +103,56 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     mediaController.show();
   }
 
-  private void showProgressDialog() {
-    String episodeTitle = getEpisode() == null ? "" : getEpisode().getTitle();
-
-    progressDialog.show();
-    progressDialog.setMessage(
-        format(
-            getResources().getString(R.string.loading_episode),
-            episodeTitle
-        )
-    );
-  }
-
   private void dismissProgressDialog() {
     if (progressDialog != null && progressDialog.isShowing()) {
       progressDialog.dismiss();
     }
   }
 
-  private void playAudio() {
-    Intent intent = new Intent(
-        AudioPlayerActivity.this,
-        AudioPlayerService.class
-    );
-
-    intent.putExtra(Episode.class.toString(), getEpisode());
-    stopService(intent);
-    startService(intent);
-  }
-
-  private Episode getEpisode() {
-    if (episode == null) {
-      episode = (Episode) getIntent().getSerializableExtra(Episode.class.toString());
+  private class PlayAudioAsyncTask extends AsyncTask<Void, Void, Episode> {
+    @Override
+    protected void onPreExecute() {
+      showProgressDialog();
     }
 
-    return episode;
+    @Override
+    protected Episode doInBackground(Void... params) {
+      return playAudio();
+    }
+
+    private void showProgressDialog() {
+      String episodeTitle = getEpisode() == null ? "" : getEpisode().getTitle();
+
+      progressDialog.show();
+      progressDialog.setMessage(
+          format(
+              getResources().getString(R.string.loading_episode),
+              episodeTitle
+          )
+      );
+    }
+
+    private Episode playAudio() {
+      Intent intent = new Intent(
+          AudioPlayerActivity.this,
+          AudioPlayerService.class
+      );
+
+      Episode episode = getEpisode();
+      intent.putExtra(Episode.class.toString(), episode);
+
+      stopService(intent);
+      startService(intent);
+
+      return AudioPlayerActivity.this.episode;
+    }
+
+    private Episode getEpisode() {
+      if (episode == null) {
+        episode = (Episode) getIntent().getSerializableExtra(Episode.class.toString());
+      }
+
+      return episode;
+    }
   }
 }
