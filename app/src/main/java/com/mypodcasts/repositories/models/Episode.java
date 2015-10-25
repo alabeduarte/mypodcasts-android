@@ -1,6 +1,13 @@
 package com.mypodcasts.repositories.models;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.io.Serializable;
+import java.util.Date;
+
+import static org.joda.time.format.ISODateTimeFormat.dateTimeParser;
 
 public class Episode implements Serializable {
 
@@ -19,8 +26,10 @@ public class Episode implements Serializable {
     return title;
   }
 
-  public String getPublishedDate() {
-    return publishedDate;
+  public Date getPublishedDate() {
+    if (publishedDate == null) { return null; }
+
+    return dateTimeParser().parseDateTime(publishedDate).toDate();
   }
 
   public String getDescription() {

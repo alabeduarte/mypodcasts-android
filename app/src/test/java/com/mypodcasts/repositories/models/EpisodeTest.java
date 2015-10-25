@@ -3,6 +3,7 @@ package com.mypodcasts.repositories.models;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class EpisodeTest {
@@ -66,5 +67,10 @@ public class EpisodeTest {
     Episode episode = new Episode();
 
     assertThat(episode.getAudioUrl(), is(""));
+  }
+
+  @Test
+  public void itReturnsNullDateByDefault() {
+    assertNull(new Episode().getPublishedDate());
   }
 }

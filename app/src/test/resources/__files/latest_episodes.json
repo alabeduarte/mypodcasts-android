@@ -1,7 +1,7 @@
 [
   {
     "title": "Newest Episode!",
-    "publishedDate": "Sat, 20 Jun 2015 03:10:01 +0000",
+    "publishedDate": "2015-09-23T15:00:00.000Z",
     "description": "Newest episode description",
     "image": {
       "url": "http://example.com/episode_image.png"
@@ -20,7 +20,7 @@
   },
   {
     "title": "Newest Episode from another podcast",
-    "publishedDate": "Fri, 19 Jun 2015 03:10:01 +0000",
+    "publishedDate": "2015-05-15T15:00:00.000Z",
     "description": "Another newest episode description",
     "image": {
       "url": "http://example.com/another_episode_image.png"

@@ -4,14 +4,18 @@ import android.content.res.Resources;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.mypodcasts.R;
-import com.mypodcasts.repositories.models.Audio;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Feed;
 import com.mypodcasts.repositories.models.Image;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.Date;
 
 import retrofit.RestAdapter;
 
@@ -20,6 +24,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.givenThat;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.joda.time.format.ISODateTimeFormat.dateTimeParser;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -111,6 +116,23 @@ public class UserFeedsRepositoryTest {
     };
 
     assertThat(episode.getImage().getUrl(), is(expectedEpisode.getImage().getUrl()) );
+  }
+
+  @Test
+  public void itReturnsPublishedDateWhenGetFeeds() {
+    Feed feed = repository.getFeed(expectedId);
+    Episode episode = feed.getEpisodes().get(firstPosition);
+
+    Episode expectedEpisode = new Episode() {
+      @Override
+      public Date getPublishedDate() {
+        DateTime date = dateTimeParser().parseDateTime("2015-09-23T15:00:00.000Z");
+
+        return date.toDate();
+      }
+    };
+
+    assertThat(episode.getPublishedDate(), is(expectedEpisode.getPublishedDate()) );
   }
 
   @Test

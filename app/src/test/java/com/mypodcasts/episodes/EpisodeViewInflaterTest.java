@@ -22,11 +22,15 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Date;
+
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.joda.time.DateTime.parse;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -111,6 +115,36 @@ public class EpisodeViewInflaterTest {
     String title = valueOf(textView.getText());
 
     assertThat(title, is("123 - Podcast Episode"));
+  }
+
+  @Test
+  public void itSetsPublishedDate() {
+    Episode episode = new Episode() {
+      @Override
+      public Date getPublishedDate() {
+        return parse("2015-10-20", forPattern("yyyy-MM-dd")).toDate();
+      }
+    };
+
+    View inflatedView = inflateView(episode);
+
+    TextView textView = (TextView) inflatedView.findViewById(R.id.episode_published_date);
+    String publishedDate = valueOf(textView.getText());
+
+    assertThat(publishedDate, is("OCT 20, 2015"));
+  }
+
+  @Test
+  public void itSetsToEmptyPublishedDateWhenItIsNull() {
+    Episode episode = new Episode();
+
+    View inflatedView = inflateView(episode);
+
+    TextView textView = (TextView) inflatedView.findViewById(R.id.episode_published_date);
+    String publishedDate = valueOf(textView.getText());
+
+    assertThat(textView.getVisibility(), is(INVISIBLE));
+    assertThat(publishedDate, is(""));
   }
 
   @Test

@@ -23,7 +23,6 @@
           android:layout_height="wrap_content"
           android:layout_width="match_parent"
           style="@style/EpisodePublishedDate"
-          android:text="SEP 23"
           />
       <TextView android:id="@+id/episode_title" style="@style/EpisodeTitle" />
     </LinearLayout>

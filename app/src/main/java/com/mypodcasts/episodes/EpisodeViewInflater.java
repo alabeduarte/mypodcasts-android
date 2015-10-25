@@ -17,9 +17,14 @@ import com.mypodcasts.player.AudioPlayerActivity;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Image;
 
+import org.joda.time.DateTime;
+
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import static android.view.View.INVISIBLE;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class EpisodeViewInflater {
   private final LayoutInflater layoutInflater;
@@ -74,6 +79,7 @@ public class EpisodeViewInflater {
   private class EpisodeView {
     private final View view;
     private TextView titleTextView;
+    private TextView publishedDateTextView;
     private NetworkImageView networkImageView;
     private ImageButton mediaPlayButton;
     private ImageButton downloadButton;
@@ -82,6 +88,7 @@ public class EpisodeViewInflater {
       this.view = view;
 
       this.setTitle(episode.getTitle());
+      this.setPublishedDate(episode.getPublishedDate());
       this.setImageUrl(episode.getImage());
 
       this.setMediaPlayButtonLayout(episode);
@@ -95,6 +102,18 @@ public class EpisodeViewInflater {
     private void setTitle(String title) {
       titleTextView = (TextView) view.findViewById(R.id.episode_title);
       titleTextView.setText(title);
+    }
+
+    public void setPublishedDate(Date publishedDate) {
+      publishedDateTextView = (TextView) view.findViewById(R.id.episode_published_date);
+
+      if (publishedDate == null) {
+        publishedDateTextView.setVisibility(INVISIBLE);
+        publishedDateTextView.setText("");
+      } else {
+        String formattedDateTime = new DateTime(publishedDate).toString(forPattern("MMM dd, yyyy"));
+        publishedDateTextView.setText(formattedDateTime.toUpperCase());
+      }
     }
 
     private void setImageUrl(Image image) {
