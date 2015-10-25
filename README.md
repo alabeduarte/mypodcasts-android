@@ -4,9 +4,9 @@
 
 Podcast client for android.
 
-<img src="screenshots/latest_episodes.png" width="200" height="400" />
-<img src="screenshots/menu.png" width="200" height="400" />
-<img src="screenshots/player.png" width="200" height="400" />
+<img src="screenshots/menu.png" width="220" height="380" />
+<img src="screenshots/latest_episodes.png" width="220" height="380" />
+<img src="screenshots/player.png" width="220" height="380" />
 
 ## Running tests:
 ```
