@@ -93,7 +93,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
   }
 
   public void onEvent(AudioPlayingEvent event){
-    cancelProgressDialog();
+    dismissProgressDialog();
 
     audioPlayer = event.getAudioPlayer();
     audioPlayer.seekTo(playerCurrentPosition);
@@ -115,7 +115,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     );
   }
 
-  private void cancelProgressDialog() {
+  private void dismissProgressDialog() {
     if (progressDialog != null && progressDialog.isShowing()) {
       progressDialog.dismiss();
     }

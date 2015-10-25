@@ -78,7 +78,7 @@ public class AudioPlayerTest {
     InOrder order = inOrder(mediaPlayerMock);
 
     order.verify(mediaPlayerMock).setDataSource(episodeAutioPath);
-    order.verify(mediaPlayerMock).prepare();
+    order.verify(mediaPlayerMock).prepareAsync();
   }
 
   @Test

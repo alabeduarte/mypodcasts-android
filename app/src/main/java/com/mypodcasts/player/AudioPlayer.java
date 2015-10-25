@@ -31,10 +31,9 @@ public class AudioPlayer implements MediaPlayerControl, OnPreparedListener {
   public MediaPlayer play(Episode episode) throws IOException {
     mediaPlayer.setAudioStreamType(STREAM_MUSIC);
     mediaPlayer.setDataSource(episodeFile.getAudioFilePath(episode));
-
-    mediaPlayer.prepare();
     mediaPlayer.setOnPreparedListener(this);
 
+    mediaPlayer.prepareAsync();
     return mediaPlayer;
   }
 
