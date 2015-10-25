@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import static android.text.Html.fromHtml;
 import static android.view.View.INVISIBLE;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
@@ -79,6 +81,7 @@ public class EpisodeViewInflater {
   private class EpisodeView {
     private final View view;
     private TextView titleTextView;
+    private TextView descriptionTextView;
     private TextView publishedDateTextView;
     private NetworkImageView networkImageView;
     private ImageButton mediaPlayButton;
@@ -88,6 +91,7 @@ public class EpisodeViewInflater {
       this.view = view;
 
       this.setTitle(episode.getTitle());
+      this.setDescription(episode.getDescription());
       this.setPublishedDate(episode.getPublishedDate());
       this.setImageUrl(episode.getImage());
 
@@ -102,6 +106,12 @@ public class EpisodeViewInflater {
     private void setTitle(String title) {
       titleTextView = (TextView) view.findViewById(R.id.episode_title);
       titleTextView.setText(title);
+    }
+
+    private void setDescription(String description) {
+      descriptionTextView = (TextView) view.findViewById(R.id.episode_description);
+
+      descriptionTextView.setText((description == null) ? "" : fromHtml(description));
     }
 
     public void setPublishedDate(Date publishedDate) {

@@ -136,6 +136,21 @@ public class UserFeedsRepositoryTest {
   }
 
   @Test
+  public void itReturnsDescriptionWhenGetFeeds() {
+    Feed feed = repository.getFeed(expectedId);
+    Episode episode = feed.getEpisodes().get(firstPosition);
+
+    Episode expectedEpisode = new Episode() {
+      @Override
+      public String getDescription() {
+        return "Newest episode description";
+      }
+    };
+
+    assertThat(episode.getDescription(), is(expectedEpisode.getDescription()));
+  }
+
+  @Test
   public void itReturnsFeedIdWhenGetFeeds() {
     Feed feed = repository.getFeeds().get(firstPosition);
 

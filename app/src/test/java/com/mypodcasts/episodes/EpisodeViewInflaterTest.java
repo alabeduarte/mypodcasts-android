@@ -2,6 +2,7 @@ package com.mypodcasts.episodes;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +116,53 @@ public class EpisodeViewInflaterTest {
     String title = valueOf(textView.getText());
 
     assertThat(title, is("123 - Podcast Episode"));
+  }
+
+  @Test
+  public void itSetsEpisodeDescription() {
+    Episode episode = new Episode() {
+      @Override
+      public String getDescription() {
+        return "<span>Awesome Episode</span>";
+      }
+    };
+
+    View inflatedView = inflateView(episode);
+
+    TextView textView = (TextView) inflatedView.findViewById(R.id.episode_description);
+    String description = valueOf(textView.getText());
+
+    assertThat(description, is("Awesome Episode"));
+  }
+
+  @Test
+  public void itEllipsizeDescriptionWithMaxLines() {
+    Episode episode = new Episode() {
+      @Override
+      public String getDescription() {
+        return "<span>Awesome Episode</span>";
+      }
+    };
+
+    View inflatedView = inflateView(episode);
+
+    TextView textView = (TextView) inflatedView.findViewById(R.id.episode_description);
+
+    assertThat(textView.getEllipsize(), is(TextUtils.TruncateAt.END));
+    assertThat(textView.getMaxLines(), is(3));
+  }
+
+
+  @Test
+  public void itSetsToEmptyDescriptionWhenItIsNull() {
+    Episode episode = new Episode();
+
+    View inflatedView = inflateView(episode);
+
+    TextView textView = (TextView) inflatedView.findViewById(R.id.episode_description);
+    String description = valueOf(textView.getText());
+
+    assertThat(description, is(""));
   }
 
   @Test

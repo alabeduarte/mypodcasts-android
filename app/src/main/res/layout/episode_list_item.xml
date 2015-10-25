@@ -36,10 +36,11 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         style="EpisodeDescription"
-        android:text="@string/lorem_ipsum"
+        android:ellipsize="end"
+        android:maxLines="3"
         />
     <RelativeLayout
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="18dp"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
