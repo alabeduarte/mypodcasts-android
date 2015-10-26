@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 public class Audio implements Serializable {
   private String url;
-  private String length;
+  private Long length;
   private String type;
 
   public String getUrl() {
     return url;
   }
 
-  public String getLength() {
+  public Long getLength() {
     return length;
   }
 

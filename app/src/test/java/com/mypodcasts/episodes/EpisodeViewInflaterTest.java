@@ -14,6 +14,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerActivity;
+import com.mypodcasts.repositories.models.Audio;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Image;
 
@@ -163,6 +164,28 @@ public class EpisodeViewInflaterTest {
     String description = valueOf(textView.getText());
 
     assertThat(description, is(""));
+  }
+
+  @Test
+  public void itSetsFileSizeIntoHumanReadableWay() {
+    Episode episode = new Episode() {
+      @Override
+      protected Audio getAudio() {
+        return new Audio() {
+          @Override
+          public Long getLength() {
+            return 67139026L;
+          }
+        };
+      }
+    };
+
+    View inflatedView = inflateView(episode);
+
+    TextView textView = (TextView) inflatedView.findViewById(R.id.episode_length);
+    String audioLength = valueOf(textView.getText());
+
+    assertThat(audioLength, is("64MB"));
   }
 
   @Test

@@ -1,9 +1,5 @@
 package com.mypodcasts.repositories.models;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -37,11 +33,9 @@ public class Episode implements Serializable {
   }
 
   public Podcast getPodcast() {
-    if (podcast == null) {
-      return new Podcast();
-    } else {
-      return podcast;
-    }
+    if (podcast == null) { return new Podcast(); }
+
+    return podcast;
   }
 
   public String getAudioFilePath() {
@@ -52,16 +46,25 @@ public class Episode implements Serializable {
     return getAudio().getUrl();
   }
 
+  public Long getAudioLength() {
+    return getAudio().getLength();
+  }
+
   protected Audio getAudio() {
-    if (audio == null) {
-      return new Audio() {
-        @Override
-        public String getUrl() {
-          return "";
-        }
-      };
-    } else {
-      return audio;
+    if (audio == null) { return new EmptyAudio(); }
+
+    return audio;
+  }
+
+  private class EmptyAudio extends Audio {
+    @Override
+    public String getUrl() {
+      return "";
+    }
+
+    @Override
+    public Long getLength() {
+      return 0L;
     }
   }
 }
