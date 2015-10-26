@@ -24,5 +24,3 @@ $ ./stub.sh
 ```
 
 Once the server is up, you can run your app normally as a regular android project.
-
-*Note: Android API 19 is required*
