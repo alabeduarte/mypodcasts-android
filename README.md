@@ -18,12 +18,10 @@ I have a set of features to be worked and I plan to make them available as soon 
 * Fix orientation change bug on audio playing.
 * Recover state when episode is playing in background.
 * Recover state when app is in background.
-* Fix crash on switch episodes.
 * Download Complete Feedback.
-* Does not load episodes when home button is pressed on audio playing.
 * Feed search (using [mypodcasts-api](https://github.com/alabeduarte/mypodcasts-api) on top of some existing API that retrieves those). 
  
-Some of this issues are on github issues already, so any help will be well received.
+Some of this [issues](https://github.com/alabeduarte/mypodcasts-android/issues) are listed already, so any help will be well received.
 
 If you want to use the app and report bugs, please send me an email so I can add you to the Beta testers list on [TestFairy](https://free.testfairy.com).
 
