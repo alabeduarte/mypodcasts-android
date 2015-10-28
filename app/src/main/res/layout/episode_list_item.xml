@@ -61,7 +61,6 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
             style="@style/EpisodeDuration"
-            android:text="30 min"
             />
       </LinearLayout>
       <LinearLayout

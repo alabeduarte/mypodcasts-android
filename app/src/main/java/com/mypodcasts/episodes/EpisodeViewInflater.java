@@ -85,6 +85,7 @@ public class EpisodeViewInflater {
     private TextView titleTextView;
     private TextView descriptionTextView;
     private TextView publishedDateTextView;
+    private TextView durationTextView;
     private TextView audioLengthTextView;
 
     private NetworkImageView networkImageView;
@@ -97,6 +98,7 @@ public class EpisodeViewInflater {
       this.setTitle(episode.getTitle());
       this.setDescription(episode.getDescription());
       this.setPublishedDate(episode.getPublishedDate());
+      this.setDuration(episode.getDuration());
       this.setAudioLength(episode.getAudioLength());
 
       this.setImageUrl(episode.getImage());
@@ -130,6 +132,11 @@ public class EpisodeViewInflater {
         String formattedDateTime = new DateTime(publishedDate).toString(forPattern("MMM dd, yyyy"));
         publishedDateTextView.setText(formattedDateTime.toUpperCase());
       }
+    }
+
+    private void setDuration(String duration) {
+      durationTextView = (TextView) view.findViewById(R.id.episode_duration);
+      durationTextView.setText(duration);
     }
 
     private void setAudioLength(Long audioLength) {

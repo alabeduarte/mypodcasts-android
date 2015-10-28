@@ -54,7 +54,7 @@ public class UserFeedsRepositoryTest {
     givenThat(get(urlEqualTo(userFeedPath))
         .willReturn(aResponse()
             .withStatus(200)
-            .withBodyFile("user_feed.json")));
+            .withBodyFile("user_feed_episodes.json")));
     when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
 
     httpClient = new HttpClient(resources, new RestAdapter.Builder());
@@ -115,7 +115,7 @@ public class UserFeedsRepositoryTest {
       }
     };
 
-    assertThat(episode.getImage().getUrl(), is(expectedEpisode.getImage().getUrl()) );
+    assertThat(episode.getImage().getUrl(), is(expectedEpisode.getImage().getUrl()));
   }
 
   @Test
@@ -132,7 +132,22 @@ public class UserFeedsRepositoryTest {
       }
     };
 
-    assertThat(episode.getPublishedDate(), is(expectedEpisode.getPublishedDate()) );
+    assertThat(episode.getPublishedDate(), is(expectedEpisode.getPublishedDate()));
+  }
+
+  @Test
+  public void itReturnsDurationWhenGetFeeds() {
+    Feed feed = repository.getFeed(expectedId);
+    Episode episode = feed.getEpisodes().get(firstPosition);
+
+    Episode expectedEpisode = new Episode() {
+      @Override
+      public String getDuration() {
+        return "01:01:07";
+      }
+    };
+
+    assertThat(episode.getDuration(), is(expectedEpisode.getDuration()));
   }
 
   @Test

@@ -10,6 +10,7 @@ public class Episode implements Serializable {
   private String title;
   private String publishedDate;
   private String description;
+  private String duration;
   private Audio audio;
   private Podcast podcast;
   private Image image;
@@ -30,6 +31,10 @@ public class Episode implements Serializable {
 
   public String getDescription() {
     return description;
+  }
+
+  public String getDuration() {
+    return duration;
   }
 
   public Podcast getPodcast() {

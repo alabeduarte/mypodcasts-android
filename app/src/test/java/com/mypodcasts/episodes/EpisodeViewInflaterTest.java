@@ -206,6 +206,23 @@ public class EpisodeViewInflaterTest {
   }
 
   @Test
+  public void itSetsDuration() {
+    Episode episode = new Episode() {
+      @Override
+      public String getDuration() {
+        return "01:30:00";
+      }
+    };
+
+    View inflatedView = inflateView(episode);
+
+    TextView textView = (TextView) inflatedView.findViewById(R.id.episode_duration);
+    String duration = valueOf(textView.getText());
+
+    assertThat(duration, is(episode.getDuration()));
+  }
+
+  @Test
   public void itSetsToEmptyPublishedDateWhenItIsNull() {
     Episode episode = new Episode();
 

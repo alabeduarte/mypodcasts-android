@@ -9,6 +9,7 @@
       "title": "Newest Episode!",
       "publishedDate": "2015-09-23T15:00:00.000Z",
       "description": "Newest episode description",
+      "duration": "01:01:07",
       "image": {
         "url": "http://example.com/episode_image.png"
       },
@@ -28,6 +29,7 @@
       "title": "Newest Episode from another podcast",
       "publishedDate": "2015-05-15T15:00:00.000Z",
       "description": "Another newest episode description",
+      "duration": "01:21:38",
       "image": {
         "url": "http://example.com/episode_image.png"
       },
