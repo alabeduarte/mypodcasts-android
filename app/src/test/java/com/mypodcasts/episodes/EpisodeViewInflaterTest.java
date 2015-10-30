@@ -153,19 +153,6 @@ public class EpisodeViewInflaterTest {
     assertThat(textView.getMaxLines(), is(3));
   }
 
-
-  @Test
-  public void itSetsToEmptyDescriptionWhenItIsNull() {
-    Episode episode = new Episode();
-
-    View inflatedView = inflateView(episode);
-
-    TextView textView = (TextView) inflatedView.findViewById(R.id.episode_description);
-    String description = valueOf(textView.getText());
-
-    assertThat(description, is(""));
-  }
-
   @Test
   public void itSetsFileSizeIntoHumanReadableWay() {
     Episode episode = new Episode() {

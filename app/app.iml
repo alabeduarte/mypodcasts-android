@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":app" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="MyPodcasts" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":app" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="mypodcasts-android" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
@@ -88,8 +88,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/reports" />
-      <excludeFolder url="file://$MODULE_DIR$/build/test-results" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
@@ -110,12 +108,12 @@
     <orderEntry type="library" exported="" name="guava-18.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="commons-logging-1.1.3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="icu4j-53.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="commons-lang-2.6" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="shadows-core-3.0-rc3" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="commons-lang-2.6" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="httpcore-4.3.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="asm-tree-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="sqlite4java-0.282" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="asm-tree-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="log4j-1.2.16" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="wiremock-1.51-standalone" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
@@ -139,16 +137,16 @@
     <orderEntry type="library" exported="" name="eventbus-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="roboblender-3.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-3.0-rc3" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="robolectric-resources-3.0-rc3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jackson-databind-2.4.2" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="robolectric-resources-3.0-rc3" level="project" />
     <orderEntry type="library" exported="" name="commons-collections-3.2.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="asm-analysis-5.0.1" level="project" />
     <orderEntry type="library" exported="" name="roboguice-3.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="vtd-xml-2.11" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="vtd-xml-2.11" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jsonassert-1.2.3" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
     <orderEntry type="library" exported="" name="joda-time-2.9" level="project" />
   </component>
 </module>

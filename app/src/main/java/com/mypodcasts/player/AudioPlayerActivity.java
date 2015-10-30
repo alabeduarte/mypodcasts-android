@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.widget.TextView;
 
 import com.mypodcasts.R;
 import com.mypodcasts.repositories.models.Episode;
@@ -18,6 +19,7 @@ import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
+import static android.text.Html.fromHtml;
 import static java.lang.String.format;
 
 @ContentView(R.layout.audio_player)
@@ -35,6 +37,9 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
 
   @Inject
   private ProgressDialog progressDialog;
+
+  @InjectView(R.id.episode_description)
+  private TextView episodeDescription;
 
   private Episode episode;
   private int playerCurrentPosition;
@@ -120,6 +125,13 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
       return playAudio();
     }
 
+    @Override
+    protected void onPostExecute(Episode episode) {
+      if (episode == null) { return; }
+
+      episodeDescription.setText(fromHtml(episode.getDescription()));
+    }
+
     private void showProgressDialog() {
       String episodeTitle = getEpisode() == null ? "" : getEpisode().getTitle();
 
@@ -144,7 +156,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
       stopService(intent);
       startService(intent);
 
-      return AudioPlayerActivity.this.episode;
+      return episode;
     }
 
     private Episode getEpisode() {

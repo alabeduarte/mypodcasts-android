@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
@@ -25,6 +26,7 @@ import java.util.Random;
 import de.greenrobot.event.EventBus;
 
 import static java.lang.String.format;
+import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.inOrder;
@@ -216,6 +218,37 @@ public class AudioPlayerActivityTest {
     activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
 
     verify(audioPlayerMock).seekTo(currentPosition);
+  }
+
+  @Test
+  public void itSetsEpisodeDescription() {
+    episode = new Episode() {
+      @Override
+      public String getDescription() {
+        return "<span>Awesome Episode</span>";
+      }
+    };
+
+    AudioPlayerActivity activity = createActivity();
+    activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
+
+    TextView textView = (TextView) activity.findViewById(R.id.episode_description);
+    String description = valueOf(textView.getText());
+
+    assertThat(description, is("Awesome Episode"));
+  }
+
+  @Test
+  public void itSetsToEmptyDescriptionWhenEpisodeIsNull() {
+    episode = null;
+
+    AudioPlayerActivity activity = createActivity();
+    activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
+
+    TextView textView = (TextView) activity.findViewById(R.id.episode_description);
+    String description = valueOf(textView.getText());
+
+    assertThat(description, is(""));
   }
 
   private AudioPlayerActivity createActivity() {

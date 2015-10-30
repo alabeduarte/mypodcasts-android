@@ -70,6 +70,13 @@ public class EpisodeTest {
   }
 
   @Test
+  public void itReturnsEmptyDescriptionWhenItIsNull() {
+    Episode episode = new Episode();
+
+    assertThat(episode.getDescription(), is(""));
+  }
+
+  @Test
   public void itReturnsNullDateByDefault() {
     assertNull(new Episode().getPublishedDate());
   }

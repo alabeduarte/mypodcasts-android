@@ -118,8 +118,7 @@ public class EpisodeViewInflater {
 
     private void setDescription(String description) {
       descriptionTextView = (TextView) view.findViewById(R.id.episode_description);
-
-      descriptionTextView.setText((description == null) ? "" : fromHtml(description));
+      descriptionTextView.setText(fromHtml(description));
     }
 
     public void setPublishedDate(Date publishedDate) {

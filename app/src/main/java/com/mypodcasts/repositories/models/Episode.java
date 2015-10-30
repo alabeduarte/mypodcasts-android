@@ -30,7 +30,7 @@ public class Episode implements Serializable {
   }
 
   public String getDescription() {
-    return description;
+    return description == null ? "" : description;
   }
 
   public String getDuration() {
