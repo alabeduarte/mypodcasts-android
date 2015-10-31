@@ -1,7 +1,6 @@
 package com.mypodcasts;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +16,7 @@ import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
 import com.mypodcasts.episodes.feeds.FeedsAdapter;
 import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.models.Feed;
+import com.mypodcasts.support.asynkTask.RetryableAsyncTask;
 
 import java.util.List;
 
@@ -88,7 +88,11 @@ public class MyPodcastsActivity extends RoboActionBarActivity {
     actionBarDrawerToggle.syncState();
   }
 
-  private class FeedsAsyncTask extends AsyncTask<Void, Void, List<Feed>> {
+  private class FeedsAsyncTask extends RetryableAsyncTask<Void, Void, List<Feed>> {
+
+    public FeedsAsyncTask() {
+      super(MyPodcastsActivity.this);
+    }
 
     @Override
     protected List<Feed> doInBackground(Void... params) {

@@ -2,7 +2,6 @@ package com.mypodcasts.episodes.feeds;
 
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.mypodcasts.MyPodcastsActivity;
@@ -12,6 +11,7 @@ import com.mypodcasts.episodes.EpisodeListFragment;
 import com.mypodcasts.episodes.EpisodeListHeaderInfo;
 import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.models.Feed;
+import com.mypodcasts.support.asynkTask.RetryableAsyncTask;
 
 import javax.inject.Inject;
 
@@ -43,10 +43,12 @@ public class FeedEpisodesActivity extends MyPodcastsActivity {
     new FeedEpisodesAsyncTask(feed).execute();
   }
 
-  class FeedEpisodesAsyncTask extends AsyncTask<Void, Void, Feed> {
+  class FeedEpisodesAsyncTask extends RetryableAsyncTask<Void, Void, Feed> {
     private final Feed feed;
 
     public FeedEpisodesAsyncTask(Feed feed) {
+      super(FeedEpisodesActivity.this);
+
       this.feed = feed;
     }
 

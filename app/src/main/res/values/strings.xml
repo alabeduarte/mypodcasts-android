@@ -13,4 +13,7 @@
   <string name="drawer_close">Close Drawer</string>
   <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a magna nec nisl cursus condimentum.</string>
   <string name="episode_default_image">http://soundfusemag.com/wp-content/uploads/2013/06/Headphones-300x214.jpg</string>
+
+  <string name="no_internet_connection">No internet connection</string>
+  <string name="retry">Retry</string>
 </resources>

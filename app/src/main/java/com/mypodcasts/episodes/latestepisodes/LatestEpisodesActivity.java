@@ -2,7 +2,6 @@ package com.mypodcasts.episodes.latestepisodes;
 
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.mypodcasts.MyPodcastsActivity;
@@ -12,6 +11,7 @@ import com.mypodcasts.episodes.EpisodeListFragment;
 import com.mypodcasts.episodes.EpisodeListHeaderInfo;
 import com.mypodcasts.repositories.UserLatestEpisodesRepository;
 import com.mypodcasts.repositories.models.Episode;
+import com.mypodcasts.support.asynkTask.RetryableAsyncTask;
 
 import java.util.List;
 
@@ -41,7 +41,11 @@ public class LatestEpisodesActivity extends MyPodcastsActivity {
     new LatestEpisodesAsyncTask().execute();
   }
 
-  class LatestEpisodesAsyncTask extends AsyncTask<Void, Void, List<Episode>> {
+  class LatestEpisodesAsyncTask extends RetryableAsyncTask<Void, Void, List<Episode>> {
+    public LatestEpisodesAsyncTask() {
+      super(LatestEpisodesActivity.this);
+    }
+
     @Override
     protected void onPreExecute() {
       progressDialog.show();
