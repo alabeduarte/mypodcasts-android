@@ -2,7 +2,6 @@ package com.mypodcasts.player;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import com.mypodcasts.R;
 import com.mypodcasts.repositories.models.Episode;
+import com.mypodcasts.support.asynkTask.RetryableAsyncTask;
 
 import javax.inject.Inject;
 
@@ -114,7 +114,11 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     }
   }
 
-  private class PlayAudioAsyncTask extends AsyncTask<Void, Void, Episode> {
+  private class PlayAudioAsyncTask extends RetryableAsyncTask<Void, Void, Episode> {
+    public PlayAudioAsyncTask() {
+      super(AudioPlayerActivity.this);
+    }
+
     @Override
     protected void onPreExecute() {
       showProgressDialog();
