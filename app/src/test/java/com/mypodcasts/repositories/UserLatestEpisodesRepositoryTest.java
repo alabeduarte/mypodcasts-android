@@ -4,7 +4,6 @@ import android.content.res.Resources;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.mypodcasts.R;
-import com.mypodcasts.repositories.models.Audio;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.repositories.models.Image;
 

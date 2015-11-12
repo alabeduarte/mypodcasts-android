@@ -16,12 +16,12 @@ import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
 import com.mypodcasts.episodes.feeds.FeedsAdapter;
 import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.models.Feed;
-import com.mypodcasts.support.asynkTask.RetryableAsyncTask;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import retryable.asynctask.RetryableAsyncTask;
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
