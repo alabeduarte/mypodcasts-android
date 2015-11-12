@@ -75,6 +75,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex-cache" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.alabeduarte/retryableasynctask/0.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jacoco" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaResources" />
@@ -98,6 +99,7 @@
     <orderEntry type="library" exported="" scope="TEST" name="jetty-util-6.1.26" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="asm-commons-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="asm-5.0.1" level="project" />
+    <orderEntry type="library" exported="" name="retryableasynctask-0.0.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-utils-3.0-rc3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jackson-annotations-2.4.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jetty-6.1.26" level="project" />
@@ -108,12 +110,12 @@
     <orderEntry type="library" exported="" name="guava-18.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="commons-logging-1.1.3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="icu4j-53.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="shadows-core-3.0-rc3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="commons-lang-2.6" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="shadows-core-3.0-rc3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="httpcore-4.3.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="sqlite4java-0.282" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="asm-tree-5.0.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="sqlite4java-0.282" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="log4j-1.2.16" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="wiremock-1.51-standalone" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />

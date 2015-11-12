@@ -40,6 +40,8 @@ dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   compile 'com.android.support:appcompat-v7:21.+'
 
+  compile 'com.github.alabeduarte:retryableasynctask:0.0.0'
+
   compile 'org.roboguice:roboguice:3.+'
   provided 'org.roboguice:roboblender:3.+'
 

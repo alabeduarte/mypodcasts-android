@@ -11,11 +11,12 @@ import com.mypodcasts.episodes.EpisodeListFragment;
 import com.mypodcasts.episodes.EpisodeListHeaderInfo;
 import com.mypodcasts.repositories.UserLatestEpisodesRepository;
 import com.mypodcasts.repositories.models.Episode;
-import com.mypodcasts.support.asynkTask.RetryableAsyncTask;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import retryable.asyncTask.RetryableAsyncTask;
 
 public class LatestEpisodesActivity extends MyPodcastsActivity {
 
