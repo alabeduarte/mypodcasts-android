@@ -1,8 +1,5 @@
 package com.mypodcasts.episodes;
 
-import android.net.Uri;
-import android.os.Environment;
-
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.support.FileDownloadManager;

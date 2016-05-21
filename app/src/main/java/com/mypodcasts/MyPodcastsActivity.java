@@ -21,7 +21,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retryable.asyncTask.RetryableAsyncTask;
+import retryable.asynctask.RetryableAsyncTask;
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;

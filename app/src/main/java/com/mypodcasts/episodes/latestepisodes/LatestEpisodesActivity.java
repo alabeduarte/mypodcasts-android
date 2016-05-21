@@ -16,7 +16,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retryable.asyncTask.RetryableAsyncTask;
+import retryable.asynctask.RetryableAsyncTask;
 
 public class LatestEpisodesActivity extends MyPodcastsActivity {
 

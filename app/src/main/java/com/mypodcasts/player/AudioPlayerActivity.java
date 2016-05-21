@@ -14,7 +14,7 @@ import com.mypodcasts.repositories.models.Episode;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-import retryable.asyncTask.RetryableAsyncTask;
+import retryable.asynctask.RetryableAsyncTask;
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;

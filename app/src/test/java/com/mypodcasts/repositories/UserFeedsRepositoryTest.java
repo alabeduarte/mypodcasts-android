@@ -9,8 +9,6 @@ import com.mypodcasts.repositories.models.Feed;
 import com.mypodcasts.repositories.models.Image;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

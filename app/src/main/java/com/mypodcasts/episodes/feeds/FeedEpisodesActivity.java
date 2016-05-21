@@ -14,7 +14,7 @@ import com.mypodcasts.repositories.models.Feed;
 
 import javax.inject.Inject;
 
-import retryable.asyncTask.RetryableAsyncTask;
+import retryable.asynctask.RetryableAsyncTask;
 
 import static java.lang.String.format;
 
