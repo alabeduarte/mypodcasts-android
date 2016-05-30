@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 import com.mypodcasts.R;
+import com.mypodcasts.episodes.EpisodeCheckpoint;
 import com.mypodcasts.repositories.models.Episode;
 
 import javax.inject.Inject;
@@ -37,6 +38,9 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
 
   @Inject
   private ProgressDialog progressDialog;
+
+  @Inject
+  private EpisodeCheckpoint episodeCheckpoint;
 
   @InjectView(R.id.episode_description)
   private TextView episodeDescription;
@@ -74,7 +78,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     super.onPause();
 
     if (audioPlayer != null) {
-      playerCurrentPosition = audioPlayer.getCurrentPosition();
+      setPlayerCurrentPosition(audioPlayer.getCurrentPosition());
     }
   }
 
@@ -94,18 +98,25 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
   @Override
   protected void onRestoreInstanceState(Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
-    playerCurrentPosition = savedInstanceState.getInt(AudioPlayer.class.toString());
+    setPlayerCurrentPosition(savedInstanceState.getInt(AudioPlayer.class.toString()));
   }
 
   public void onEvent(AudioPlayingEvent event){
     dismissProgressDialog();
 
     audioPlayer = event.getAudioPlayer();
-    audioPlayer.seekTo(playerCurrentPosition);
+    audioPlayer.seekTo(
+        episodeCheckpoint.getLastCheckpointPosition(episode, playerCurrentPosition)
+    );
 
     mediaController.setMediaPlayer(audioPlayer);
     mediaController.setAnchorView(findViewById(R.id.audio_view));
     mediaController.show();
+  }
+
+  private void setPlayerCurrentPosition(Integer newPosition) {
+    playerCurrentPosition = newPosition;
+    episodeCheckpoint.markCheckpoint(episode, audioPlayer.getCurrentPosition());
   }
 
   private void dismissProgressDialog() {
