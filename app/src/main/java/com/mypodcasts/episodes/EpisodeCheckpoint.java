@@ -2,6 +2,7 @@ package com.mypodcasts.episodes;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.mypodcasts.repositories.models.Episode;
 
@@ -21,6 +22,9 @@ public class EpisodeCheckpoint {
 
   public Integer markCheckpoint(Episode episode, Integer currentPosition) {
     SharedPreferences.Editor editor = getSharedPreferences().edit();
+
+    Log.i("[mypodcasts]", "Mark playing episode checkpoint: " + episode);
+
     editor.putInt(episodeKey(episode), currentPosition).apply();
 
     return currentPosition;
@@ -39,7 +43,7 @@ public class EpisodeCheckpoint {
   private String episodeKey(Episode episode) {
     return format(
         "podcast_%s#episode_%s",
-        replaceFromSpaceToUnderscore(episode.getPodcast().getTitle()),
+        episode.getPodcast().getId(),
         replaceFromSpaceToUnderscore(episode.getTitle())
     );
   }

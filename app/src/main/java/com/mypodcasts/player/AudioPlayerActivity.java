@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.TextView;
@@ -167,6 +168,8 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
 
       Episode episode = getEpisode();
       intent.putExtra(Episode.class.toString(), episode);
+
+      Log.i("[mypodcasts]", "playing episode: " + episode);
 
       stopService(intent);
       startService(intent);

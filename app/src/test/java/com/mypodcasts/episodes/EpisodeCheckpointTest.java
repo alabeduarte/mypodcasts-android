@@ -36,7 +36,7 @@ public class EpisodeCheckpointTest {
 
     assertThat(episodeCheckpoint.markCheckpoint(anEpisode(), audioPosition), is(audioPosition));
     assertThat(
-        getSharedPreferences().getInt("podcast_awesome_podcast#episode_an_awesome_episode", 0),
+        getSharedPreferences().getInt("podcast_crazy_id_123#episode_an_awesome_episode", 0),
         is(audioPosition)
     );
   }
@@ -46,7 +46,7 @@ public class EpisodeCheckpointTest {
     int audioPosition = new Random().nextInt();
 
     SharedPreferences.Editor editor = getSharedPreferences().edit();
-    editor.putInt("podcast_awesome_podcast#episode_an_awesome_episode", audioPosition).apply();
+    editor.putInt("podcast_crazy_id_123#episode_an_awesome_episode", audioPosition).apply();
 
     assertThat(episodeCheckpoint.getLastCheckpointPosition(anEpisode(), 0), is(audioPosition));
   }
@@ -71,8 +71,8 @@ public class EpisodeCheckpointTest {
       @Override public Podcast getPodcast() {
         return new Podcast() {
           @Override
-          public String getTitle() {
-            return "Awesome podcast";
+          public String getId() {
+            return "crazy_id_123";
           }
         };
       }
