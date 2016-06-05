@@ -3,6 +3,7 @@ package com.mypodcasts.repositories.models;
 import java.io.Serializable;
 import java.util.Date;
 
+import static java.lang.String.format;
 import static org.joda.time.format.ISODateTimeFormat.dateTimeParser;
 
 public class Episode implements Serializable {
@@ -59,6 +60,20 @@ public class Episode implements Serializable {
     if (audio == null) { return new EmptyAudio(); }
 
     return audio;
+  }
+
+  @Override
+  public String toString() {
+    return format(
+        "{ \"title\": %s, " +
+            "\"audioFilePath\": %s, " +
+            "\"podcast\": { \"id\": %s, \"title\": %s } " +
+        "}",
+        getTitle(),
+        getAudioFilePath(),
+        getPodcast().getId(),
+        getPodcast().getTitle()
+    );
   }
 
   private class EmptyAudio extends Audio {

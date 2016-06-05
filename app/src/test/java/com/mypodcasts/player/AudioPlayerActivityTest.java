@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
+import com.mypodcasts.episodes.EpisodeCheckpoint;
 import com.mypodcasts.repositories.models.Episode;
 
 import org.junit.After;
@@ -50,6 +51,7 @@ public class AudioPlayerActivityTest {
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   AudioPlayerService audioPlayerServiceMock = mock(AudioPlayerService.class);
   AudioPlayer audioPlayerMock = mock(AudioPlayer.class);
+  EpisodeCheckpoint episodeCheckpointMock = mock(EpisodeCheckpoint.class);
 
   EventBus eventBusMock = mock(EventBus.class);
   AudioPlayerController mediaControllerMock = mock(AudioPlayerController.class);
@@ -205,9 +207,25 @@ public class AudioPlayerActivityTest {
   }
 
   @Test
-  public void itSeeksToCurrentPositionOnResumeAfterPause() {
+  public void itStoresCurrentPositionOnPause() {
     Integer currentPosition = new Random().nextInt();
     when(audioPlayerMock.getCurrentPosition()).thenReturn(currentPosition);
+
+    AudioPlayerActivity activity = createActivity();
+    activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
+
+    activity.onPause();
+
+    verify(episodeCheckpointMock).markCheckpoint(episode, currentPosition);
+  }
+
+  @Test
+  public void itSeeksToLastCheckpointPositionOnResumeAfterPause() {
+    Integer currentPosition = new Random().nextInt();
+    when(audioPlayerMock.getCurrentPosition()).thenReturn(currentPosition);
+
+    when(episodeCheckpointMock.getLastCheckpointPosition(episode, currentPosition))
+        .thenReturn(currentPosition);
 
     AudioPlayerActivity activity = createActivity();
     activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
@@ -218,6 +236,7 @@ public class AudioPlayerActivityTest {
     activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
 
     verify(audioPlayerMock).seekTo(currentPosition);
+    verify(episodeCheckpointMock).getLastCheckpointPosition(episode, currentPosition);
   }
 
   @Test
@@ -266,6 +285,7 @@ public class AudioPlayerActivityTest {
     @Override
     protected void configure() {
       bind(EventBus.class).toInstance(eventBusMock);
+      bind(EpisodeCheckpoint.class).toInstance(episodeCheckpointMock);
       bind(ProgressDialog.class).toInstance(progressDialogMock);
       bind(AudioPlayerService.class).toInstance(audioPlayerServiceMock);
       bind(AudioPlayer.class).toInstance(audioPlayerMock);

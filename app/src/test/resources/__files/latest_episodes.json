@@ -12,7 +12,7 @@
       "type": "audio/mpeg"
     },
     "podcast":{
-      "tittle": "MyPodcasts",
+      "title": "MyPodcasts",
       "image":{
         "url": "http://example.com/feed_image.jpg"
       }
@@ -31,7 +31,7 @@
       "type": "audio/mpeg"
     },
     "podcast": {
-      "tittle": "Another podcasts",
+      "title": "Another podcasts",
       "image": {
         "url": "http://example.com/another_feed_image.jpg"
       }
