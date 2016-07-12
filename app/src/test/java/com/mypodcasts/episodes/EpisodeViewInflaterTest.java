@@ -160,8 +160,8 @@ public class EpisodeViewInflaterTest {
       protected Audio getAudio() {
         return new Audio() {
           @Override
-          public Long getLength() {
-            return 67139026L;
+          public String getLength() {
+            return "67139026";
           }
         };
       }
@@ -173,6 +173,28 @@ public class EpisodeViewInflaterTest {
     String audioLength = valueOf(textView.getText());
 
     assertThat(audioLength, is("64MB"));
+  }
+
+  @Test
+  public void itSetsFileSizeToEmptyWhenItsInvalid() {
+    Episode episode = new Episode() {
+      @Override
+      protected Audio getAudio() {
+        return new Audio() {
+          @Override
+          public String getLength() {
+            return "85:12";
+          }
+        };
+      }
+    };
+
+    View inflatedView = inflateView(episode);
+
+    TextView textView = (TextView) inflatedView.findViewById(R.id.episode_length);
+    String audioLength = valueOf(textView.getText());
+
+    assertThat(audioLength, is(""));
   }
 
   @Test

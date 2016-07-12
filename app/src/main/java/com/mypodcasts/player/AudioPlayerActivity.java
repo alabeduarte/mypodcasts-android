@@ -153,10 +153,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
 
       progressDialog.show();
       progressDialog.setMessage(
-          format(
-              getResources().getString(R.string.loading_episode),
-              episodeTitle
-          )
+          format(getResources().getString(R.string.loading_episode), episodeTitle)
       );
     }
 

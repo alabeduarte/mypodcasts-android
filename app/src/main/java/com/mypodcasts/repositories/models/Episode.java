@@ -52,7 +52,7 @@ public class Episode implements Serializable {
     return getAudio().getUrl();
   }
 
-  public Long getAudioLength() {
+  public String getAudioLength() {
     return getAudio().getLength();
   }
 
@@ -83,8 +83,8 @@ public class Episode implements Serializable {
     }
 
     @Override
-    public Long getLength() {
-      return 0L;
+    public String getLength() {
+      return "0";
     }
   }
 }

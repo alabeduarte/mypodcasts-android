@@ -63,14 +63,14 @@ public class AudioPlayerService extends RoboService {
         .addAction(generateAction(android.R.drawable.ic_media_previous, "Previous", "previous"))
         .addAction(generateAction(android.R.drawable.ic_media_rew, "Rewind", "rewind"))
         .addAction(generateAction(android.R.drawable.ic_media_pause, "Pause", "pause"))
-        .addAction(generateAction(android.R.drawable.ic_media_ff, "Fast Foward", "fastForward"))
+        .addAction(generateAction(android.R.drawable.ic_media_ff, "Fast Forward", "fastForward"))
         .addAction(generateAction(android.R.drawable.ic_media_next, "Next", "next"))
         .build();
   }
 
   private Notification.Action generateAction( int icon, String title, String intentAction ) {
     Intent intent = new Intent(getApplicationContext(), this.getClass());
-    intent.setAction( intentAction );
+    intent.setAction(intentAction);
     PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
 
     return new Notification.Action.Builder(icon, title, pendingIntent).build();

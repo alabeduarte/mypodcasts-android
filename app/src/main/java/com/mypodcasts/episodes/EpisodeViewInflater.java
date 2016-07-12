@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import static android.text.Html.fromHtml;
 import static android.text.format.Formatter.formatShortFileSize;
 import static android.view.View.INVISIBLE;
+import static java.lang.Long.valueOf;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class EpisodeViewInflater {
@@ -137,9 +138,15 @@ public class EpisodeViewInflater {
       durationTextView.setText(duration);
     }
 
-    private void setAudioLength(Long audioLength) {
+    private void setAudioLength(String audioLength) {
       audioLengthTextView = (TextView) view.findViewById(R.id.episode_length);
-      audioLengthTextView.setText(formatShortFileSize(view.getContext(), audioLength));
+
+      try {
+        String formattedShortFileSize = formatShortFileSize(view.getContext(), valueOf(audioLength));
+        audioLengthTextView.setText(formattedShortFileSize);
+      } catch (NumberFormatException ex) {
+        audioLengthTextView.setText("");
+      }
     }
 
     private void setImageUrl(Image image) {
