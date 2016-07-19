@@ -86,6 +86,12 @@ public class AudioPlayerService extends RoboService {
       audioPlayer.pause();
     }
 
+    if(intent.getAction().equalsIgnoreCase(ACTION_STOP)){
+      Log.d(MYPODCASTS_TAG, ACTION_STOP);
+
+      audioPlayer.pause();
+    }
+
     if(intent.getAction().equalsIgnoreCase(ACTION_FAST_FORWARD)){
       Log.d(MYPODCASTS_TAG, ACTION_FAST_FORWARD);
 

@@ -16,6 +16,7 @@ import org.robolectric.annotation.Config;
 import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Robolectric.buildService;
 import static org.robolectric.RuntimeEnvironment.application;
@@ -41,23 +42,60 @@ public class AudioPlayerServiceTest {
   }
 
   @Test
-  public void itPlaysAudioStreamingGivenAnEpisode() throws IOException {
-    createService();
+  public void itPlaysAudioOnActionPlay() throws IOException {
+    createService(intentWithAction(AudioPlayerService.ACTION_PLAY));
 
     verify(audioPlayerMock).play(episode);
   }
 
   @Test
+  public void itDoesNotPlayAudioWhenActionPlayIsNotFired() throws IOException {
+    createService(intentWithAction("UNKNOWN_ACTION"));
+
+    verify(audioPlayerMock, never()).play(episode);
+  }
+
+  @Test
+  public void itPausesAudioOnActionPause() throws IOException {
+    createService(intentWithAction(AudioPlayerService.ACTION_PAUSE));
+
+    verify(audioPlayerMock).pause();
+  }
+
+  @Test
+  public void itRewindsAudioOnActionRewind() throws IOException {
+    createService(intentWithAction(AudioPlayerService.ACTION_REWIND));
+
+    int currentPosition = 0;
+
+    verify(audioPlayerMock).seekTo(currentPosition - AudioPlayerService.POSITION);
+  }
+
+  @Test
+  public void itForwardsAudioOnActionFastForward() throws IOException {
+    createService(intentWithAction(AudioPlayerService.ACTION_FAST_FORWARD));
+
+    int currentPosition = 0;
+
+    verify(audioPlayerMock).seekTo(currentPosition + AudioPlayerService.POSITION);
+  }
+
+  @Test
+  public void itPausesAudioAndReleaseNotificationOnActionStop() throws IOException {
+    createService(intentWithAction(AudioPlayerService.ACTION_STOP));
+
+    verify(audioPlayerMock).pause();
+  }
+
+  @Test
   public void itReleasesAudioPlayerOnDestroy() {
-    Intent intent = getIntent();
+    Intent intent = intentWithAction(AudioPlayerService.ACTION_PLAY);
     service = buildService(AudioPlayerService.class).withIntent(intent).create().destroy().get();
 
     verify(audioPlayerMock).release();
   }
 
-  private void createService() {
-    Intent intent = getIntent();
-
+  private void createService(Intent intent) {
     service = buildService(AudioPlayerService.class)
       .withIntent(intent)
       .create()
@@ -65,10 +103,10 @@ public class AudioPlayerServiceTest {
       .get();
   }
 
-  private Intent getIntent() {
+  private Intent intentWithAction(String action) {
     Intent intent = new Intent(application, AudioPlayerService.class);
     intent.putExtra(Episode.class.toString(), episode);
-    intent.setAction(AudioPlayerService.ACTION_PLAY);
+    intent.setAction(action);
 
     return intent;
   }
