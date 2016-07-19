@@ -1,13 +1,11 @@
 package com.mypodcasts.player;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.mypodcasts.R;
+import com.mypodcasts.player.notification.AudioPlayerNotification;
 import com.mypodcasts.repositories.models.Episode;
 
 import java.io.IOException;
@@ -16,20 +14,18 @@ import javax.inject.Inject;
 
 import roboguice.service.RoboService;
 
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static com.mypodcasts.support.Support.MYPODCASTS_TAG;
 
 public class AudioPlayerService extends RoboService {
 
   public static final int ONGOING_NOTIFICATION_ID = 1;
 
-  public static final String ACTION_PREVIOUS = "action_previous";
-  public static final String ACTION_REWIND = "action_rewind";
-  public static final String ACTION_PAUSE = "action_pause";
-  public static final String ACTION_PLAY = "action_play";
-  public static final String ACTION_STOP = "action_stop";
-  public static final String ACTION_FAST_FORWARD = "action_fast_foward";
-  public static final String ACTION_NEXT = "action_next";
+  public static final String ACTION_REWIND = "com.mypodcasts.player.action.rewind";
+  public static final String ACTION_PAUSE = "com.mypodcasts.player.action.pause";
+  public static final String ACTION_PLAY = "com.mypodcasts.player.action.play";
+  public static final String ACTION_STOP = "com.mypodcasts.player.action.stop";
+  public static final String ACTION_FAST_FORWARD = "com.mypodcasts.player.action.fast_foward";
+  public static final int POSITION = 120;
 
   @Inject
   private Context context;
@@ -38,7 +34,7 @@ public class AudioPlayerService extends RoboService {
   private AudioPlayer audioPlayer;
 
   @Inject
-  private Notification.Builder notificationBuilder;
+  private AudioPlayerNotification audioPlayerNotification;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -48,13 +44,22 @@ public class AudioPlayerService extends RoboService {
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     final Episode episode = (Episode) intent.getSerializableExtra(Episode.class.toString());
-    startForeground(ONGOING_NOTIFICATION_ID, buildNotification());
 
-    try {
-      audioPlayer.play(episode);
-    } catch (IOException e) {
-      Log.e(MYPODCASTS_TAG, e.getMessage());
-      e.printStackTrace();
+    Log.d(MYPODCASTS_TAG, toString());
+
+    if (intent.getAction().equalsIgnoreCase(ACTION_PLAY)) {
+      Log.d(MYPODCASTS_TAG, intent.getAction());
+      startForeground(ONGOING_NOTIFICATION_ID,  audioPlayerNotification.buildNotification(episode));
+
+      try {
+        audioPlayer.play(episode);
+      } catch (IOException e) {
+        Log.e(MYPODCASTS_TAG, e.getMessage());
+
+        e.printStackTrace();
+      }
+    } else {
+      handleMediaControlByAction(intent);
     }
 
     return START_NOT_STICKY;
@@ -66,30 +71,25 @@ public class AudioPlayerService extends RoboService {
     audioPlayer.release();
   }
 
-  private Notification buildNotification() {
-    Notification.MediaStyle mediaStyle = new Notification.MediaStyle();
+  private void handleMediaControlByAction(Intent intent) {
+    if (intent.getAction() == null) return;
 
-    return notificationBuilder
-        .setSmallIcon(R.drawable.ic_av_play_circle_fill)
-        .setContentTitle("My Podcasts")
-        .setContentText("Some awesome podcast!")
-        .setStyle(mediaStyle)
-        .setVisibility(Notification.VISIBILITY_PUBLIC)
-        .addAction(generateAction(android.R.drawable.ic_media_previous, "Previous", ACTION_PREVIOUS))
-        .addAction(generateAction(android.R.drawable.ic_media_rew, "Rewind", ACTION_REWIND))
-        .addAction(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE))
-        .addAction(generateAction(android.R.drawable.ic_media_ff, "Fast Forward", ACTION_FAST_FORWARD))
-        .addAction(generateAction(android.R.drawable.ic_media_next, "Next", ACTION_NEXT))
-        .build();
-  }
+    if(intent.getAction().equalsIgnoreCase(ACTION_REWIND)){
+      Log.d(MYPODCASTS_TAG, ACTION_REWIND);
 
-  private Notification.Action generateAction( int icon, String title, String intentAction ) {
-    Intent intent = new Intent(getApplicationContext(), this.getClass());
-    intent.setAction(intentAction);
-    PendingIntent pendingIntent = PendingIntent.getService(
-        getApplicationContext(), 1, intent, FLAG_UPDATE_CURRENT
-    );
+      audioPlayer.seekTo(audioPlayer.getCurrentPosition() - POSITION);
+    }
 
-    return new Notification.Action.Builder(icon, title, pendingIntent).build();
+    if(intent.getAction().equalsIgnoreCase(ACTION_PAUSE)){
+      Log.d(MYPODCASTS_TAG, ACTION_PAUSE);
+
+      audioPlayer.pause();
+    }
+
+    if(intent.getAction().equalsIgnoreCase(ACTION_FAST_FORWARD)){
+      Log.d(MYPODCASTS_TAG, ACTION_FAST_FORWARD);
+
+      audioPlayer.seekTo(audioPlayer.getCurrentPosition() + POSITION);
+    }
   }
 }

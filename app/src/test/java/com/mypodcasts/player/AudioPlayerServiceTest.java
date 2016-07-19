@@ -1,11 +1,9 @@
 package com.mypodcasts.player;
 
-import android.app.Notification;
 import android.content.Intent;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
-import com.mypodcasts.R;
 import com.mypodcasts.repositories.models.Episode;
 
 import org.junit.After;
@@ -17,11 +15,8 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildService;
 import static org.robolectric.RuntimeEnvironment.application;
 import static roboguice.RoboGuice.Util.reset;
@@ -34,46 +29,15 @@ public class AudioPlayerServiceTest {
   Episode episode = new Episode();
 
   AudioPlayer audioPlayerMock = mock(AudioPlayer.class);
-  Notification.Builder notificationBuilderMock = stubbedNotificationBuilder();
 
   @Before
   public void setup() {
     overrideApplicationInjector(application, new MyTestModule());
-
-    stubbedNotificationBuilder();
   }
 
   @After
   public void teardown() {
     reset();
-  }
-
-  @Test
-  public void itSetsNotificationSmallIcon() {
-    createService();
-
-    verify(notificationBuilderMock).setSmallIcon(R.drawable.ic_av_play_circle_fill);
-  }
-
-  @Test
-  public void itSetsNotificationVisibility() {
-    createService();
-
-    verify(notificationBuilderMock).setVisibility(Notification.VISIBILITY_PUBLIC);
-  }
-
-  @Test
-  public void itSetsNotificationContentTitle() {
-    createService();
-
-    verify(notificationBuilderMock).setContentTitle("My Podcasts");
-  }
-
-  @Test
-  public void itSetsNotificationContentText() {
-    createService();
-
-    verify(notificationBuilderMock).setContentText("Some awesome podcast!");
   }
 
   @Test
@@ -104,49 +68,15 @@ public class AudioPlayerServiceTest {
   private Intent getIntent() {
     Intent intent = new Intent(application, AudioPlayerService.class);
     intent.putExtra(Episode.class.toString(), episode);
+    intent.setAction(AudioPlayerService.ACTION_PLAY);
+
     return intent;
-  }
-
-  private Notification.Builder stubbedNotificationBuilder() {
-    Notification.Builder notificationBuilderMock = mock(Notification.Builder.class);
-    Notification notificationMock = mock(Notification.class);
-
-    when(
-        notificationBuilderMock.setStyle((Notification.Style) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setSmallIcon(anyInt())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setVisibility(anyInt())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.addAction((Notification.Action) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setContentTitle((CharSequence) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setContentText((CharSequence) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.build()
-    ).thenReturn(notificationMock);
-
-    return notificationBuilderMock;
   }
 
   public class MyTestModule extends AbstractModule {
     @Override
     protected void configure() {
       bind(AudioPlayer.class).toInstance(audioPlayerMock);
-      bind(Notification.Builder.class).toInstance(notificationBuilderMock);
     }
   }
 }

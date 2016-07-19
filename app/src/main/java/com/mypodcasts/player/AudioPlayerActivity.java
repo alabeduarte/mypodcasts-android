@@ -22,6 +22,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 import static android.text.Html.fromHtml;
+import static com.mypodcasts.player.AudioPlayerService.ACTION_PLAY;
 import static com.mypodcasts.support.Support.MYPODCASTS_TAG;
 import static java.lang.String.format;
 
@@ -159,10 +160,8 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     }
 
     private Episode playAudio() {
-      Intent intent = new Intent(
-          AudioPlayerActivity.this,
-          AudioPlayerService.class
-      );
+      Intent intent = new Intent(AudioPlayerActivity.this, AudioPlayerService.class);
+      intent.setAction(ACTION_PLAY);
 
       Episode episode = getEpisode();
       intent.putExtra(Episode.class.toString(), episode);
