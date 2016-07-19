@@ -15,10 +15,16 @@ import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static com.mypodcasts.player.AudioPlayerService.ACTION_FAST_FORWARD;
 import static com.mypodcasts.player.AudioPlayerService.ACTION_PAUSE;
 import static com.mypodcasts.player.AudioPlayerService.ACTION_REWIND;
+import static com.mypodcasts.player.AudioPlayerService.ACTION_STOP;
 
 public class AudioPlayerNotification {
   private final Context context;
   private final Notification.Builder notificationBuilder;
+
+  protected static final String REWIND = "Rewind";
+  protected static final String PAUSE = "Pause";
+  protected static final String STOP = "Stop";
+  protected static final String FAST_FORWARD = "Fast Forward";
 
   @Inject
   public AudioPlayerNotification(Context context, Notification.Builder notificationBuilder) {
@@ -35,9 +41,10 @@ public class AudioPlayerNotification {
         .setContentText(episode.getTitle())
         .setStyle(mediaStyle)
         .setVisibility(Notification.VISIBILITY_PUBLIC)
-        .addAction(generateAction(episode, android.R.drawable.ic_media_rew, "Rewind", ACTION_REWIND))
-        .addAction(generateAction(episode, android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE))
-        .addAction(generateAction(episode, android.R.drawable.ic_media_ff, "Fast Forward", ACTION_FAST_FORWARD))
+        .addAction(generateAction(episode, android.R.drawable.ic_media_rew, REWIND, ACTION_REWIND))
+        .addAction(generateAction(episode, android.R.drawable.ic_media_pause, PAUSE, ACTION_PAUSE))
+        .addAction(generateAction(episode, android.R.drawable.ic_lock_power_off, STOP, ACTION_STOP))
+        .addAction(generateAction(episode, android.R.drawable.ic_media_ff, FAST_FORWARD, ACTION_FAST_FORWARD))
         .build();
   }
 

@@ -12,6 +12,10 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import static com.mypodcasts.player.notification.AudioPlayerNotification.FAST_FORWARD;
+import static com.mypodcasts.player.notification.AudioPlayerNotification.PAUSE;
+import static com.mypodcasts.player.notification.AudioPlayerNotification.REWIND;
+import static com.mypodcasts.player.notification.AudioPlayerNotification.STOP;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.robolectric.RuntimeEnvironment.application;
@@ -66,5 +70,22 @@ public class AudioPlayerNotificationTest {
     Notification notification = audioPlayerNotification.buildNotification(episode);
 
     assertThat(notification.extras.getString(Notification.EXTRA_TEXT), is("Lorem ipsum dolor sit amet"));
+  }
+
+  @Test
+  public void itReturnsNotificationWithMediaControlActions() {
+    Notification notification = audioPlayerNotification.buildNotification(episode);
+
+    assertThat(String.valueOf(notification.actions[0].title), is(REWIND));
+    assertThat(notification.actions[0].icon, is(android.R.drawable.ic_media_rew));
+
+    assertThat(String.valueOf(notification.actions[1].title), is(PAUSE));
+    assertThat(notification.actions[1].icon, is(android.R.drawable.ic_media_pause));
+
+    assertThat(String.valueOf(notification.actions[2].title), is(STOP));
+    assertThat(notification.actions[2].icon, is(android.R.drawable.ic_lock_power_off));
+
+    assertThat(String.valueOf(notification.actions[3].title), is(FAST_FORWARD));
+    assertThat(notification.actions[3].icon, is(android.R.drawable.ic_media_ff));
   }
 }

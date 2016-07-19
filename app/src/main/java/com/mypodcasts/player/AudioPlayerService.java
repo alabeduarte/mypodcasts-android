@@ -49,7 +49,7 @@ public class AudioPlayerService extends RoboService {
 
     if (intent.getAction().equalsIgnoreCase(ACTION_PLAY)) {
       Log.d(MYPODCASTS_TAG, intent.getAction());
-      startForeground(ONGOING_NOTIFICATION_ID,  audioPlayerNotification.buildNotification(episode));
+      startForeground(ONGOING_NOTIFICATION_ID, audioPlayerNotification.buildNotification(episode));
 
       try {
         audioPlayer.play(episode);
