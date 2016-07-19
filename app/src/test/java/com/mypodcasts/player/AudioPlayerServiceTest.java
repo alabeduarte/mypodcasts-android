@@ -34,40 +34,13 @@ public class AudioPlayerServiceTest {
   Episode episode = new Episode();
 
   AudioPlayer audioPlayerMock = mock(AudioPlayer.class);
-  Notification.Builder notificationBuilderMock = mock(Notification.Builder.class);
-  Notification notificationMock = mock(Notification.class);
+  Notification.Builder notificationBuilderMock = stubbedNotificationBuilder();
 
   @Before
   public void setup() {
     overrideApplicationInjector(application, new MyTestModule());
 
-    when(
-        notificationBuilderMock.setStyle((Notification.Style) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setSmallIcon(anyInt())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setVisibility(anyInt())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.addAction((Notification.Action) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setContentTitle((CharSequence) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setContentText((CharSequence) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.build()
-    ).thenReturn(notificationMock);
+    stubbedNotificationBuilder();
   }
 
   @After
@@ -132,6 +105,41 @@ public class AudioPlayerServiceTest {
     Intent intent = new Intent(application, AudioPlayerService.class);
     intent.putExtra(Episode.class.toString(), episode);
     return intent;
+  }
+
+  private Notification.Builder stubbedNotificationBuilder() {
+    Notification.Builder notificationBuilderMock = mock(Notification.Builder.class);
+    Notification notificationMock = mock(Notification.class);
+
+    when(
+        notificationBuilderMock.setStyle((Notification.Style) anyObject())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.setSmallIcon(anyInt())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.setVisibility(anyInt())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.addAction((Notification.Action) anyObject())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.setContentTitle((CharSequence) anyObject())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.setContentText((CharSequence) anyObject())
+    ).thenReturn(notificationBuilderMock);
+
+    when(
+        notificationBuilderMock.build()
+    ).thenReturn(notificationMock);
+
+    return notificationBuilderMock;
   }
 
   public class MyTestModule extends AbstractModule {

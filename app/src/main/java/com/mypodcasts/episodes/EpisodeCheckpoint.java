@@ -9,6 +9,7 @@ import com.mypodcasts.repositories.models.Episode;
 import javax.inject.Inject;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.mypodcasts.support.Support.MYPODCASTS_TAG;
 import static java.lang.String.format;
 
 public class EpisodeCheckpoint {
@@ -23,7 +24,7 @@ public class EpisodeCheckpoint {
   public Integer markCheckpoint(Episode episode, Integer currentPosition) {
     SharedPreferences.Editor editor = getSharedPreferences().edit();
 
-    Log.i("[mypodcasts]", "Mark playing episode checkpoint: " + episode);
+    Log.i(MYPODCASTS_TAG, "Mark playing episode checkpoint: " + episode);
 
     editor.putInt(episodeKey(episode), currentPosition).apply();
 
