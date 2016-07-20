@@ -83,6 +83,8 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
   protected void onPause() {
     super.onPause();
 
+    mediaController.hide();
+
     if (audioPlayer != null) {
       setPlayerCurrentPosition(audioPlayer.getCurrentPosition());
     }

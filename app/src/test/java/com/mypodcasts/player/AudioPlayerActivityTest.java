@@ -222,6 +222,16 @@ public class AudioPlayerActivityTest {
   }
 
   @Test
+  public void itHidesMediaControllerOnPauseToAvoidWindowLeakedError() {
+    AudioPlayerActivity activity = createActivity();
+    activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
+
+    activity.onPause();
+
+    verify(mediaControllerMock).hide();
+  }
+
+  @Test
   public void itSeeksToLastCheckpointPositionOnResumeAfterPause() {
     Integer currentPosition = new Random().nextInt();
     when(audioPlayerMock.getCurrentPosition()).thenReturn(currentPosition);
