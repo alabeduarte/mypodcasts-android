@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.mypodcasts.player.notification.AudioPlayerNotification;
 import com.mypodcasts.repositories.models.Episode;
+import com.mypodcasts.support.Support;
 
 import java.io.IOException;
 
@@ -43,23 +44,25 @@ public class AudioPlayerService extends RoboService {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    final Episode episode = (Episode) intent.getSerializableExtra(Episode.class.toString());
+    try {
+      Log.d(Support.MYPODCASTS_TAG, "[AudioPlayerService][onStartCommand]");
 
-    Log.d(MYPODCASTS_TAG, toString());
+      final Episode episode = (Episode) intent.getSerializableExtra(Episode.class.toString());
 
-    if (intent.getAction().equalsIgnoreCase(ACTION_PLAY)) {
-      Log.d(MYPODCASTS_TAG, intent.getAction());
-      startForeground(ONGOING_NOTIFICATION_ID, audioPlayerNotification.buildNotification(episode));
+      Log.d(MYPODCASTS_TAG, toString());
 
-      try {
+      if (intent.getAction().equalsIgnoreCase(ACTION_PLAY)) {
+        Log.d(MYPODCASTS_TAG, intent.getAction());
+        startForeground(ONGOING_NOTIFICATION_ID, audioPlayerNotification.buildNotification(episode));
+
         audioPlayer.play(episode);
-      } catch (IOException e) {
-        Log.e(MYPODCASTS_TAG, e.getMessage());
-
-        e.printStackTrace();
+      } else {
+        handleMediaControlByAction(intent);
       }
-    } else {
-      handleMediaControlByAction(intent);
+    } catch (IOException e) {
+      Log.e(MYPODCASTS_TAG, e.getMessage());
+
+      e.printStackTrace();
     }
 
     return START_NOT_STICKY;
@@ -74,25 +77,26 @@ public class AudioPlayerService extends RoboService {
   private void handleMediaControlByAction(Intent intent) {
     if (intent.getAction() == null) return;
 
-    if(intent.getAction().equalsIgnoreCase(ACTION_REWIND)){
+    if (intent.getAction().equalsIgnoreCase(ACTION_REWIND)) {
       Log.d(MYPODCASTS_TAG, ACTION_REWIND);
 
       audioPlayer.seekTo(audioPlayer.getCurrentPosition() - POSITION);
     }
 
-    if(intent.getAction().equalsIgnoreCase(ACTION_PAUSE)){
+    if (intent.getAction().equalsIgnoreCase(ACTION_PAUSE)) {
       Log.d(MYPODCASTS_TAG, ACTION_PAUSE);
 
       audioPlayer.pause();
     }
 
-    if(intent.getAction().equalsIgnoreCase(ACTION_STOP)){
+    if (intent.getAction().equalsIgnoreCase(ACTION_STOP)) {
       Log.d(MYPODCASTS_TAG, ACTION_STOP);
-
       audioPlayer.pause();
+
+      stopForeground(true);
     }
 
-    if(intent.getAction().equalsIgnoreCase(ACTION_FAST_FORWARD)){
+    if (intent.getAction().equalsIgnoreCase(ACTION_FAST_FORWARD)) {
       Log.d(MYPODCASTS_TAG, ACTION_FAST_FORWARD);
 
       audioPlayer.seekTo(audioPlayer.getCurrentPosition() + POSITION);

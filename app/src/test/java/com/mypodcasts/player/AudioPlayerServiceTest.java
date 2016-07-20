@@ -1,12 +1,17 @@
 package com.mypodcasts.player;
 
+import android.app.ActivityManager;
+import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
+import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
 import com.mypodcasts.repositories.models.Episode;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,18 +20,21 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Robolectric.buildService;
 import static org.robolectric.RuntimeEnvironment.application;
+import static org.robolectric.Shadows.shadowOf;
 import static roboguice.RoboGuice.Util.reset;
 import static roboguice.RoboGuice.overrideApplicationInjector;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class AudioPlayerServiceTest {
-  AudioPlayerService service;
   Episode episode = new Episode();
 
   AudioPlayer audioPlayerMock = mock(AudioPlayer.class);
@@ -90,13 +98,13 @@ public class AudioPlayerServiceTest {
   @Test
   public void itReleasesAudioPlayerOnDestroy() {
     Intent intent = intentWithAction(AudioPlayerService.ACTION_PLAY);
-    service = buildService(AudioPlayerService.class).withIntent(intent).create().destroy().get();
+    buildService(AudioPlayerService.class).withIntent(intent).create().destroy().get();
 
     verify(audioPlayerMock).release();
   }
 
-  private void createService(Intent intent) {
-    service = buildService(AudioPlayerService.class)
+  private Service createService(Intent intent) {
+    return buildService(AudioPlayerService.class)
       .withIntent(intent)
       .create()
       .startCommand(0, 1)

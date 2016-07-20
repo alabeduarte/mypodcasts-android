@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.mypodcasts.R;
 import com.mypodcasts.episodes.EpisodeCheckpoint;
 import com.mypodcasts.repositories.models.Episode;
+import com.mypodcasts.support.Support;
 
 import javax.inject.Inject;
 
@@ -105,6 +106,8 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
   }
 
   public void onEvent(AudioPlayingEvent event){
+    Log.d(Support.MYPODCASTS_TAG, "[AudioPlayerActivity][onEvent][AudioPlayingEvent]");
+
     dismissProgressDialog();
 
     audioPlayer = event.getAudioPlayer();
