@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
-import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
+import com.mypodcasts.episodes.EpisodeFeedsActivity;
 import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.models.Feed;
 
@@ -86,7 +86,7 @@ public class MyPodcastsActivityTest {
 
     Intent intent = shadowOf(activity).peekNextStartedActivity();
     assertThat(
-        FeedEpisodesActivity.class.getCanonicalName(),
+        EpisodeFeedsActivity.class.getCanonicalName(),
         is(intent.getComponent().getClassName())
     );
   }

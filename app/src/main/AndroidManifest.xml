@@ -23,7 +23,7 @@
           </intent-filter>
       </activity>
       <activity
-          android:name=".episodes.feeds.FeedEpisodesActivity"
+          android:name=".episodes.EpisodeFeedsActivity"
           android:label="@string/app_name" >
       </activity>
       <activity

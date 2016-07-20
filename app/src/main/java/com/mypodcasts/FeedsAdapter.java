@@ -1,4 +1,4 @@
-package com.mypodcasts.episodes.feeds;
+package com.mypodcasts;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.mypodcasts.R;
 import com.mypodcasts.repositories.models.Feed;
 
 import java.util.List;

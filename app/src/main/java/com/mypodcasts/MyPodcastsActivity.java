@@ -12,8 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
-import com.mypodcasts.episodes.feeds.FeedsAdapter;
+import com.mypodcasts.episodes.EpisodeFeedsActivity;
 import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.models.Feed;
 
@@ -52,7 +51,7 @@ public class MyPodcastsActivity extends RoboActionBarActivity {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Feed feed = (Feed) leftDrawer.getAdapter().getItem(position);
-        Intent intent = new Intent(view.getContext(), FeedEpisodesActivity.class);
+        Intent intent = new Intent(view.getContext(), EpisodeFeedsActivity.class);
         intent.putExtra(Feed.class.toString(), feed);
 
         startActivity(intent);

@@ -1,4 +1,4 @@
-package com.mypodcasts.episodes.feeds.episodes;
+package com.mypodcasts.episodes;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -9,11 +9,6 @@ import android.os.Bundle;
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
-import com.mypodcasts.episodes.EpisodeList;
-import com.mypodcasts.episodes.EpisodeListFragment;
-import com.mypodcasts.episodes.EpisodeListHeaderInfo;
-import com.mypodcasts.episodes.EpisodeViewInflater;
-import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
 import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.UserLatestEpisodesRepository;
 import com.mypodcasts.repositories.models.Episode;
@@ -47,9 +42,9 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class FeedEpisodesActivityTest {
+public class EpisodeFeedsActivityTest {
 
-  FeedEpisodesActivity activity;
+  EpisodeFeedsActivity activity;
   EpisodeListFragment episodeListFragment = new EpisodeListFragment();
 
   EpisodeViewInflater episodeViewInflaterMock = mock(EpisodeViewInflater.class);
@@ -136,7 +131,7 @@ public class FeedEpisodesActivityTest {
     assertThat(episodeList.getEpisodes(), is(episodes));
   }
 
-  private FeedEpisodesActivity createActivityWith(Feed feed) {
+  private EpisodeFeedsActivity createActivityWith(Feed feed) {
     when(fragmentManager.beginTransaction())
         .thenReturn(transaction);
 
@@ -148,13 +143,13 @@ public class FeedEpisodesActivityTest {
 
     when(userFeedsRepositoryMock.getFeed(feed.getId())).thenReturn(feed);
 
-    return buildActivity(FeedEpisodesActivity.class)
+    return buildActivity(EpisodeFeedsActivity.class)
         .withIntent(intent)
         .create()
         .get();
   }
 
-  private FeedEpisodesActivity createActivity() {
+  private EpisodeFeedsActivity createActivity() {
     return createActivityWith(aFeed());
   }
 
