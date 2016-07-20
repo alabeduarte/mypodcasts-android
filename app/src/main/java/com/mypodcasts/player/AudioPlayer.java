@@ -5,6 +5,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.widget.MediaController.MediaPlayerControl;
 
 import com.mypodcasts.episodes.EpisodeFile;
+import com.mypodcasts.player.events.AudioPlayingEvent;
 import com.mypodcasts.repositories.models.Episode;
 
 import java.io.IOException;

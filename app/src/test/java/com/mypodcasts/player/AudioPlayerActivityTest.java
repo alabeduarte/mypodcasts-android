@@ -11,6 +11,8 @@ import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.episodes.EpisodeCheckpoint;
+import com.mypodcasts.player.events.AudioPlayingEvent;
+import com.mypodcasts.player.events.AudioStoppedEvent;
 import com.mypodcasts.repositories.models.Episode;
 
 import org.junit.After;
@@ -268,6 +270,15 @@ public class AudioPlayerActivityTest {
     String description = valueOf(textView.getText());
 
     assertThat(description, is(""));
+  }
+
+  @Test
+  public void itFinishesActivityOnAudioPlayerStoppedEvent() {
+    AudioPlayerActivity activity = createActivity();
+
+    activity.onEvent(new AudioStoppedEvent());
+
+    assertThat(activity.isFinishing(), is(true));
   }
 
   private AudioPlayerActivity createActivity() {

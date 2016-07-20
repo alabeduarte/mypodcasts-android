@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.mypodcasts.player.events.AudioStoppedEvent;
 import com.mypodcasts.player.notification.AudioPlayerNotification;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.support.Support;
@@ -13,6 +14,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
 import roboguice.service.RoboService;
 
 import static com.mypodcasts.support.Support.MYPODCASTS_TAG;
@@ -36,6 +38,9 @@ public class AudioPlayerService extends RoboService {
 
   @Inject
   private AudioPlayerNotification audioPlayerNotification;
+
+  @Inject
+  private EventBus eventBus;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -94,6 +99,7 @@ public class AudioPlayerService extends RoboService {
       audioPlayer.pause();
 
       stopForeground(true);
+      eventBus.post(new AudioStoppedEvent());
     }
 
     if (intent.getAction().equalsIgnoreCase(ACTION_FAST_FORWARD)) {

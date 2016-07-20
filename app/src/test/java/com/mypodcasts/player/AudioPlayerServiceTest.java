@@ -1,17 +1,14 @@
 package com.mypodcasts.player;
 
-import android.app.ActivityManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
-import com.mypodcasts.episodes.feeds.FeedEpisodesActivity;
+import com.mypodcasts.player.events.AudioStoppedEvent;
 import com.mypodcasts.repositories.models.Episode;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,15 +17,14 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import de.greenrobot.event.EventBus;
+
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Robolectric.buildService;
 import static org.robolectric.RuntimeEnvironment.application;
-import static org.robolectric.Shadows.shadowOf;
 import static roboguice.RoboGuice.Util.reset;
 import static roboguice.RoboGuice.overrideApplicationInjector;
 
@@ -38,6 +34,7 @@ public class AudioPlayerServiceTest {
   Episode episode = new Episode();
 
   AudioPlayer audioPlayerMock = mock(AudioPlayer.class);
+  EventBus eventBusMock = mock(EventBus.class);
 
   @Before
   public void setup() {
@@ -51,28 +48,28 @@ public class AudioPlayerServiceTest {
 
   @Test
   public void itPlaysAudioOnActionPlay() throws IOException {
-    createService(intentWithAction(AudioPlayerService.ACTION_PLAY));
+    createService(buildIntent(episode, AudioPlayerService.ACTION_PLAY));
 
     verify(audioPlayerMock).play(episode);
   }
 
   @Test
   public void itDoesNotPlayAudioWhenActionPlayIsNotFired() throws IOException {
-    createService(intentWithAction("UNKNOWN_ACTION"));
+    createService(buildIntent(episode, "UNKNOWN_ACTION"));
 
     verify(audioPlayerMock, never()).play(episode);
   }
 
   @Test
   public void itPausesAudioOnActionPause() throws IOException {
-    createService(intentWithAction(AudioPlayerService.ACTION_PAUSE));
+    createService(buildIntent(episode, AudioPlayerService.ACTION_PAUSE));
 
     verify(audioPlayerMock).pause();
   }
 
   @Test
   public void itRewindsAudioOnActionRewind() throws IOException {
-    createService(intentWithAction(AudioPlayerService.ACTION_REWIND));
+    createService(buildIntent(episode, AudioPlayerService.ACTION_REWIND));
 
     int currentPosition = 0;
 
@@ -81,7 +78,7 @@ public class AudioPlayerServiceTest {
 
   @Test
   public void itForwardsAudioOnActionFastForward() throws IOException {
-    createService(intentWithAction(AudioPlayerService.ACTION_FAST_FORWARD));
+    createService(buildIntent(episode, AudioPlayerService.ACTION_FAST_FORWARD));
 
     int currentPosition = 0;
 
@@ -89,15 +86,16 @@ public class AudioPlayerServiceTest {
   }
 
   @Test
-  public void itPausesAudioAndReleaseNotificationOnActionStop() throws IOException {
-    createService(intentWithAction(AudioPlayerService.ACTION_STOP));
+  public void itPausesAudioAndTriggerAudioStoppedEventOnActionStop() throws IOException {
+    createService(buildIntent(episode, AudioPlayerService.ACTION_STOP));
 
     verify(audioPlayerMock).pause();
+    verify(eventBusMock).post(any(AudioStoppedEvent.class));
   }
 
   @Test
   public void itReleasesAudioPlayerOnDestroy() {
-    Intent intent = intentWithAction(AudioPlayerService.ACTION_PLAY);
+    Intent intent = buildIntent(episode, AudioPlayerService.ACTION_PLAY);
     buildService(AudioPlayerService.class).withIntent(intent).create().destroy().get();
 
     verify(audioPlayerMock).release();
@@ -111,7 +109,7 @@ public class AudioPlayerServiceTest {
       .get();
   }
 
-  private Intent intentWithAction(String action) {
+  private Intent buildIntent(Episode episode, String action) {
     Intent intent = new Intent(application, AudioPlayerService.class);
     intent.putExtra(Episode.class.toString(), episode);
     intent.setAction(action);
@@ -123,6 +121,7 @@ public class AudioPlayerServiceTest {
     @Override
     protected void configure() {
       bind(AudioPlayer.class).toInstance(audioPlayerMock);
+      bind(EventBus.class).toInstance(eventBusMock);
     }
   }
 }

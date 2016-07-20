@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.mypodcasts.R;
 import com.mypodcasts.episodes.EpisodeCheckpoint;
+import com.mypodcasts.player.events.AudioPlayingEvent;
+import com.mypodcasts.player.events.AudioStoppedEvent;
 import com.mypodcasts.repositories.models.Episode;
 import com.mypodcasts.support.Support;
 
@@ -105,7 +107,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     setPlayerCurrentPosition(savedInstanceState.getInt(AudioPlayer.class.toString()));
   }
 
-  public void onEvent(AudioPlayingEvent event){
+  public void onEvent(AudioPlayingEvent event) {
     Log.d(Support.MYPODCASTS_TAG, "[AudioPlayerActivity][onEvent][AudioPlayingEvent]");
 
     dismissProgressDialog();
@@ -118,6 +120,12 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     mediaController.setMediaPlayer(audioPlayer);
     mediaController.setAnchorView(findViewById(R.id.audio_view));
     mediaController.show();
+  }
+
+  public void onEvent(AudioStoppedEvent event) {
+    Log.d(Support.MYPODCASTS_TAG, "[AudioPlayerActivity][onEvent][AudioStoppedEvent]");
+
+    finish();
   }
 
   private void setPlayerCurrentPosition(Integer newPosition) {
