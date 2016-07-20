@@ -1,11 +1,11 @@
 package com.mypodcasts.player;
 
-import android.app.Notification;
+import android.app.Service;
 import android.content.Intent;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
-import com.mypodcasts.R;
+import com.mypodcasts.player.events.AudioStoppedEvent;
 import com.mypodcasts.repositories.models.Episode;
 
 import org.junit.After;
@@ -17,11 +17,12 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
+import de.greenrobot.event.EventBus;
+
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildService;
 import static org.robolectric.RuntimeEnvironment.application;
 import static roboguice.RoboGuice.Util.reset;
@@ -30,44 +31,14 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class AudioPlayerServiceTest {
-  AudioPlayerService service;
   Episode episode = new Episode();
 
   AudioPlayer audioPlayerMock = mock(AudioPlayer.class);
-  Notification.Builder notificationBuilderMock = mock(Notification.Builder.class);
-  Notification notificationMock = mock(Notification.class);
+  EventBus eventBusMock = mock(EventBus.class);
 
   @Before
   public void setup() {
     overrideApplicationInjector(application, new MyTestModule());
-
-    when(
-        notificationBuilderMock.setStyle((Notification.Style) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setSmallIcon(anyInt())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setVisibility(anyInt())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.addAction((Notification.Action) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setContentTitle((CharSequence) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.setContentText((CharSequence) anyObject())
-    ).thenReturn(notificationBuilderMock);
-
-    when(
-        notificationBuilderMock.build()
-    ).thenReturn(notificationMock);
   }
 
   @After
@@ -76,61 +47,73 @@ public class AudioPlayerServiceTest {
   }
 
   @Test
-  public void itSetsNotificationSmallIcon() {
-    createService();
-
-    verify(notificationBuilderMock).setSmallIcon(R.drawable.ic_av_play_circle_fill);
-  }
-
-  @Test
-  public void itSetsNotificationVisibility() {
-    createService();
-
-    verify(notificationBuilderMock).setVisibility(Notification.VISIBILITY_PUBLIC);
-  }
-
-  @Test
-  public void itSetsNotificationContentTitle() {
-    createService();
-
-    verify(notificationBuilderMock).setContentTitle("My Podcasts");
-  }
-
-  @Test
-  public void itSetsNotificationContentText() {
-    createService();
-
-    verify(notificationBuilderMock).setContentText("Some awesome podcast!");
-  }
-
-  @Test
-  public void itPlaysAudioStreamingGivenAnEpisode() throws IOException {
-    createService();
+  public void itPlaysAudioOnActionPlay() throws IOException {
+    createService(buildIntent(episode, AudioPlayerService.ACTION_PLAY));
 
     verify(audioPlayerMock).play(episode);
   }
 
   @Test
+  public void itDoesNotPlayAudioWhenActionPlayIsNotFired() throws IOException {
+    createService(buildIntent(episode, "UNKNOWN_ACTION"));
+
+    verify(audioPlayerMock, never()).play(episode);
+  }
+
+  @Test
+  public void itPausesAudioOnActionPause() throws IOException {
+    createService(buildIntent(episode, AudioPlayerService.ACTION_PAUSE));
+
+    verify(audioPlayerMock).pause();
+  }
+
+  @Test
+  public void itRewindsAudioOnActionRewind() throws IOException {
+    createService(buildIntent(episode, AudioPlayerService.ACTION_REWIND));
+
+    int currentPosition = 0;
+
+    verify(audioPlayerMock).seekTo(currentPosition - AudioPlayerService.POSITION);
+  }
+
+  @Test
+  public void itForwardsAudioOnActionFastForward() throws IOException {
+    createService(buildIntent(episode, AudioPlayerService.ACTION_FAST_FORWARD));
+
+    int currentPosition = 0;
+
+    verify(audioPlayerMock).seekTo(currentPosition + AudioPlayerService.POSITION);
+  }
+
+  @Test
+  public void itPausesAudioAndTriggerAudioStoppedEventOnActionStop() throws IOException {
+    createService(buildIntent(episode, AudioPlayerService.ACTION_STOP));
+
+    verify(audioPlayerMock).pause();
+    verify(eventBusMock).post(any(AudioStoppedEvent.class));
+  }
+
+  @Test
   public void itReleasesAudioPlayerOnDestroy() {
-    Intent intent = getIntent();
-    service = buildService(AudioPlayerService.class).withIntent(intent).create().destroy().get();
+    Intent intent = buildIntent(episode, AudioPlayerService.ACTION_PLAY);
+    buildService(AudioPlayerService.class).withIntent(intent).create().destroy().get();
 
     verify(audioPlayerMock).release();
   }
 
-  private void createService() {
-    Intent intent = getIntent();
-
-    service = buildService(AudioPlayerService.class)
+  private Service createService(Intent intent) {
+    return buildService(AudioPlayerService.class)
       .withIntent(intent)
       .create()
       .startCommand(0, 1)
       .get();
   }
 
-  private Intent getIntent() {
+  private Intent buildIntent(Episode episode, String action) {
     Intent intent = new Intent(application, AudioPlayerService.class);
     intent.putExtra(Episode.class.toString(), episode);
+    intent.setAction(action);
+
     return intent;
   }
 
@@ -138,7 +121,7 @@ public class AudioPlayerServiceTest {
     @Override
     protected void configure() {
       bind(AudioPlayer.class).toInstance(audioPlayerMock);
-      bind(Notification.Builder.class).toInstance(notificationBuilderMock);
+      bind(EventBus.class).toInstance(eventBusMock);
     }
   }
 }

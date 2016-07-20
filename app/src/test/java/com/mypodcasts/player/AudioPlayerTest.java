@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.episodes.EpisodeFile;
+import com.mypodcasts.player.events.AudioPlayingEvent;
 import com.mypodcasts.repositories.models.Audio;
 import com.mypodcasts.repositories.models.Episode;
 

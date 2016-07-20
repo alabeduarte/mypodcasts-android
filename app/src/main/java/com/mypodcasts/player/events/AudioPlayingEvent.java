@@ -1,4 +1,6 @@
-package com.mypodcasts.player;
+package com.mypodcasts.player.events;
+
+import com.mypodcasts.player.AudioPlayer;
 
 public class AudioPlayingEvent {
   private final AudioPlayer audioPlayer;

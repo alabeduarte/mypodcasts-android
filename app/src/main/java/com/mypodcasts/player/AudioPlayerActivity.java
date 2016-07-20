@@ -11,7 +11,10 @@ import android.widget.TextView;
 
 import com.mypodcasts.R;
 import com.mypodcasts.episodes.EpisodeCheckpoint;
+import com.mypodcasts.player.events.AudioPlayingEvent;
+import com.mypodcasts.player.events.AudioStoppedEvent;
 import com.mypodcasts.repositories.models.Episode;
+import com.mypodcasts.support.Support;
 
 import javax.inject.Inject;
 
@@ -22,6 +25,8 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 import static android.text.Html.fromHtml;
+import static com.mypodcasts.player.AudioPlayerService.ACTION_PLAY;
+import static com.mypodcasts.support.Support.MYPODCASTS_TAG;
 import static java.lang.String.format;
 
 @ContentView(R.layout.audio_player)
@@ -102,7 +107,9 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     setPlayerCurrentPosition(savedInstanceState.getInt(AudioPlayer.class.toString()));
   }
 
-  public void onEvent(AudioPlayingEvent event){
+  public void onEvent(AudioPlayingEvent event) {
+    Log.d(Support.MYPODCASTS_TAG, "[AudioPlayerActivity][onEvent][AudioPlayingEvent]");
+
     dismissProgressDialog();
 
     audioPlayer = event.getAudioPlayer();
@@ -113,6 +120,12 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     mediaController.setMediaPlayer(audioPlayer);
     mediaController.setAnchorView(findViewById(R.id.audio_view));
     mediaController.show();
+  }
+
+  public void onEvent(AudioStoppedEvent event) {
+    Log.d(Support.MYPODCASTS_TAG, "[AudioPlayerActivity][onEvent][AudioStoppedEvent]");
+
+    finish();
   }
 
   private void setPlayerCurrentPosition(Integer newPosition) {
@@ -158,15 +171,13 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     }
 
     private Episode playAudio() {
-      Intent intent = new Intent(
-          AudioPlayerActivity.this,
-          AudioPlayerService.class
-      );
+      Intent intent = new Intent(AudioPlayerActivity.this, AudioPlayerService.class);
+      intent.setAction(ACTION_PLAY);
 
       Episode episode = getEpisode();
       intent.putExtra(Episode.class.toString(), episode);
 
-      Log.i("[mypodcasts]", "playing episode: " + episode);
+      Log.i(MYPODCASTS_TAG, "playing episode: " + episode);
 
       stopService(intent);
       startService(intent);

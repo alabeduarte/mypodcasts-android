@@ -1,25 +1,34 @@
 package com.mypodcasts.player;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.IBinder;
+import android.util.Log;
 
-import com.mypodcasts.R;
+import com.mypodcasts.player.events.AudioStoppedEvent;
+import com.mypodcasts.player.notification.AudioPlayerNotification;
 import com.mypodcasts.repositories.models.Episode;
+import com.mypodcasts.support.Support;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
 import roboguice.service.RoboService;
+
+import static com.mypodcasts.support.Support.MYPODCASTS_TAG;
 
 public class AudioPlayerService extends RoboService {
 
   public static final int ONGOING_NOTIFICATION_ID = 1;
+
+  public static final String ACTION_REWIND = "com.mypodcasts.player.action.rewind";
+  public static final String ACTION_PAUSE = "com.mypodcasts.player.action.pause";
+  public static final String ACTION_PLAY = "com.mypodcasts.player.action.play";
+  public static final String ACTION_STOP = "com.mypodcasts.player.action.stop";
+  public static final String ACTION_FAST_FORWARD = "com.mypodcasts.player.action.fast_foward";
+  public static final int POSITION = 25 * 1000;
 
   @Inject
   private Context context;
@@ -28,7 +37,10 @@ public class AudioPlayerService extends RoboService {
   private AudioPlayer audioPlayer;
 
   @Inject
-  private Notification.Builder notificationBuilder;
+  private AudioPlayerNotification audioPlayerNotification;
+
+  @Inject
+  private EventBus eventBus;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -37,10 +49,26 @@ public class AudioPlayerService extends RoboService {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    final Episode episode = (Episode) intent.getSerializableExtra(Episode.class.toString());
-    startForeground(ONGOING_NOTIFICATION_ID, buildNotification());
+    try {
+      Log.d(Support.MYPODCASTS_TAG, "[AudioPlayerService][onStartCommand]");
 
-    new Player(episode).execute();
+      final Episode episode = (Episode) intent.getSerializableExtra(Episode.class.toString());
+
+      Log.d(MYPODCASTS_TAG, toString());
+
+      if (intent.getAction().equalsIgnoreCase(ACTION_PLAY)) {
+        Log.d(MYPODCASTS_TAG, intent.getAction());
+        startForeground(ONGOING_NOTIFICATION_ID, audioPlayerNotification.buildNotification(episode));
+
+        audioPlayer.play(episode);
+      } else {
+        handleMediaControlByAction(intent);
+      }
+    } catch (IOException e) {
+      Log.e(MYPODCASTS_TAG, e.getMessage());
+
+      e.printStackTrace();
+    }
 
     return START_NOT_STICKY;
   }
@@ -51,47 +79,33 @@ public class AudioPlayerService extends RoboService {
     audioPlayer.release();
   }
 
-  private Notification buildNotification() {
-    Notification.MediaStyle mediaStyle = new Notification.MediaStyle();
+  private void handleMediaControlByAction(Intent intent) {
+    if (intent.getAction() == null) return;
 
-    return notificationBuilder
-        .setSmallIcon(R.drawable.ic_av_play_circle_fill)
-        .setContentTitle("My Podcasts")
-        .setContentText("Some awesome podcast!")
-        .setStyle(mediaStyle)
-        .setVisibility(Notification.VISIBILITY_PUBLIC)
-        .addAction(generateAction(android.R.drawable.ic_media_previous, "Previous", "previous"))
-        .addAction(generateAction(android.R.drawable.ic_media_rew, "Rewind", "rewind"))
-        .addAction(generateAction(android.R.drawable.ic_media_pause, "Pause", "pause"))
-        .addAction(generateAction(android.R.drawable.ic_media_ff, "Fast Forward", "fastForward"))
-        .addAction(generateAction(android.R.drawable.ic_media_next, "Next", "next"))
-        .build();
-  }
+    if (intent.getAction().equalsIgnoreCase(ACTION_REWIND)) {
+      Log.d(MYPODCASTS_TAG, ACTION_REWIND);
 
-  private Notification.Action generateAction( int icon, String title, String intentAction ) {
-    Intent intent = new Intent(getApplicationContext(), this.getClass());
-    intent.setAction(intentAction);
-    PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
-
-    return new Notification.Action.Builder(icon, title, pendingIntent).build();
-  }
-
-  class Player extends AsyncTask<Void, Void, MediaPlayer> {
-    private final Episode episode;
-
-    Player(Episode episode) {
-      this.episode = episode;
+      audioPlayer.seekTo(audioPlayer.getCurrentPosition() - POSITION);
     }
 
-    @Override
-    protected MediaPlayer doInBackground(Void... params) {
-      try {
-        return audioPlayer.play(episode);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+    if (intent.getAction().equalsIgnoreCase(ACTION_PAUSE)) {
+      Log.d(MYPODCASTS_TAG, ACTION_PAUSE);
 
-      return null;
+      audioPlayer.pause();
+    }
+
+    if (intent.getAction().equalsIgnoreCase(ACTION_STOP)) {
+      Log.d(MYPODCASTS_TAG, ACTION_STOP);
+      audioPlayer.pause();
+
+      stopForeground(true);
+      eventBus.post(new AudioStoppedEvent());
+    }
+
+    if (intent.getAction().equalsIgnoreCase(ACTION_FAST_FORWARD)) {
+      Log.d(MYPODCASTS_TAG, ACTION_FAST_FORWARD);
+
+      audioPlayer.seekTo(audioPlayer.getCurrentPosition() + POSITION);
     }
   }
 }
