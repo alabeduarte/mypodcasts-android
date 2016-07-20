@@ -44,7 +44,7 @@ public class EpisodeCheckpoint {
   private String episodeKey(Episode episode) {
     return format(
         "podcast_%s#episode_%s",
-        episode.getPodcast().getId(),
+        episode.getFeed().getId(),
         replaceFromSpaceToUnderscore(episode.getTitle())
     );
   }

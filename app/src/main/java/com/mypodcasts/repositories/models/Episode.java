@@ -13,7 +13,7 @@ public class Episode implements Serializable {
   private String description;
   private String duration;
   private Audio audio;
-  private Podcast podcast;
+  private Feed podcast;
   private Image image;
 
   public Image getImage() {
@@ -38,14 +38,14 @@ public class Episode implements Serializable {
     return duration;
   }
 
-  public Podcast getPodcast() {
-    if (podcast == null) { return new Podcast(); }
+  public Feed getFeed() {
+    if (podcast == null) { return new Feed(); }
 
     return podcast;
   }
 
   public String getAudioFilePath() {
-    return getPodcast().getId() + "/" + getTitle() + ".mp3";
+    return getFeed().getId() + "/" + getTitle() + ".mp3";
   }
 
   public String getAudioUrl() {
@@ -67,12 +67,12 @@ public class Episode implements Serializable {
     return format(
         "{ \"title\": %s, " +
             "\"audioFilePath\": %s, " +
-            "\"podcast\": { \"id\": %s, \"title\": %s } " +
+            "\"feed\": { \"id\": %s, \"title\": %s } " +
         "}",
         getTitle(),
         getAudioFilePath(),
-        getPodcast().getId(),
-        getPodcast().getTitle()
+        getFeed().getId(),
+        getFeed().getTitle()
     );
   }
 

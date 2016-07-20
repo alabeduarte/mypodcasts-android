@@ -18,8 +18,8 @@ public class EpisodeTest {
       }
 
       @Override
-      public Podcast getPodcast() {
-        return new Podcast() {
+      public Feed getFeed() {
+        return new Feed() {
           @Override
           public String getId() {
             return "123";
@@ -44,11 +44,11 @@ public class EpisodeTest {
     };
 
     String episodeRepresentation = format(
-        "{ \"title\": %s, \"audioFilePath\": %s, \"podcast\": { \"id\": %s, \"title\": %s } }",
+        "{ \"title\": %s, \"audioFilePath\": %s, \"feed\": { \"id\": %s, \"title\": %s } }",
         episode.getTitle(),
         episode.getAudioFilePath(),
-        episode.getPodcast().getId(),
-        episode.getPodcast().getTitle()
+        episode.getFeed().getId(),
+        episode.getFeed().getTitle()
     );
 
     assertThat(episode.toString(), is(episodeRepresentation));
@@ -63,8 +63,8 @@ public class EpisodeTest {
       }
 
       @Override
-      public Podcast getPodcast() {
-        return new Podcast() {
+      public Feed getFeed() {
+        return new Feed() {
           @Override
           public String getId() {
             return "123";
@@ -88,7 +88,7 @@ public class EpisodeTest {
       }
     };
 
-    assertThat(episode.getAudioFilePath(), is(episode.getPodcast().getId() + "/" + episode.getTitle() + ".mp3"));
+    assertThat(episode.getAudioFilePath(), is(episode.getFeed().getId() + "/" + episode.getTitle() + ".mp3"));
   }
 
   @Test

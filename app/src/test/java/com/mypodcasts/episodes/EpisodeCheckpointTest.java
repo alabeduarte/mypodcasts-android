@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.repositories.models.Episode;
-import com.mypodcasts.repositories.models.Podcast;
+import com.mypodcasts.repositories.models.Feed;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -68,8 +68,8 @@ public class EpisodeCheckpointTest {
         return "An awesome episode";
       }
 
-      @Override public Podcast getPodcast() {
-        return new Podcast() {
+      @Override public Feed getFeed() {
+        return new Feed() {
           @Override
           public String getId() {
             return "crazy_id_123";

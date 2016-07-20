@@ -37,7 +37,7 @@ public class AudioPlayerNotification {
 
     return notificationBuilder
         .setSmallIcon(R.drawable.ic_av_play_circle_fill)
-        .setContentTitle(episode.getPodcast().getTitle())
+        .setContentTitle(episode.getFeed().getTitle())
         .setContentText(episode.getTitle())
         .setStyle(mediaStyle)
         .setVisibility(Notification.VISIBILITY_PUBLIC)

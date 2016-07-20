@@ -5,7 +5,7 @@ import android.app.Notification;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
 import com.mypodcasts.repositories.models.Episode;
-import com.mypodcasts.repositories.models.Podcast;
+import com.mypodcasts.repositories.models.Feed;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,8 +29,8 @@ public class AudioPlayerNotificationTest {
 
   Episode episode = new Episode() {
     @Override
-    public Podcast getPodcast() {
-      return new Podcast() {
+    public Feed getFeed() {
+      return new Feed() {
         @Override
         public String getTitle() {
           return "Foo Bar";
