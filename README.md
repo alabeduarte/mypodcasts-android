@@ -9,11 +9,11 @@ Let's make a good app to listen our favorite podcasts with all amazing features 
 <img src="screenshots/menu.png" width="220" height="380" />
 <img src="screenshots/latest_episodes.png" width="220" height="380" />
 <img src="screenshots/player.png" width="220" height="380" />
+<img src="screenshots/media_control_notification.png" width="180" height="380" />
 
 ## Contributing:
 I have a set of features to be worked and I plan to make them available as soon as possible which are:
 
-* Improve MediaPlayer notification with controls.
 * Fix orientation change bug on audio playing.
 * Download Complete Feedback.
 * Feed search (using [mypodcasts-api](https://github.com/alabeduarte/mypodcasts-api) on top of some existing API that retrieves those). 
