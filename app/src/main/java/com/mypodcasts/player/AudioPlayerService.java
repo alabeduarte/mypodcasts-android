@@ -28,7 +28,7 @@ public class AudioPlayerService extends RoboService {
   public static final String ACTION_PLAY = "com.mypodcasts.player.action.play";
   public static final String ACTION_STOP = "com.mypodcasts.player.action.stop";
   public static final String ACTION_FAST_FORWARD = "com.mypodcasts.player.action.fast_foward";
-  public static final int POSITION = 120;
+  public static final int POSITION = 25 * 1000;
 
   @Inject
   private Context context;
