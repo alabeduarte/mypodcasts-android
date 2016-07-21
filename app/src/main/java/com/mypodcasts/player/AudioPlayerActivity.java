@@ -1,6 +1,5 @@
 package com.mypodcasts.player;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +18,6 @@ import com.mypodcasts.support.Support;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-import retryable.asynctask.RetryableAsyncTask;
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -27,7 +25,6 @@ import roboguice.inject.InjectView;
 import static android.text.Html.fromHtml;
 import static com.mypodcasts.player.AudioPlayerService.ACTION_PLAY;
 import static com.mypodcasts.support.Support.MYPODCASTS_TAG;
-import static java.lang.String.format;
 
 @ContentView(R.layout.audio_player)
 public class AudioPlayerActivity extends RoboActionBarActivity {
@@ -41,9 +38,6 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
 
   @Inject
   private AudioPlayerController mediaController;
-
-  @Inject
-  private ProgressDialog progressDialog;
 
   @Inject
   private EpisodeCheckpoint episodeCheckpoint;
@@ -62,7 +56,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    new PlayAudioAsyncTask().execute();
+    playAudio();
   }
 
   @Override
@@ -112,8 +106,6 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
   public void onEvent(AudioPlayingEvent event) {
     Log.d(Support.MYPODCASTS_TAG, "[AudioPlayerActivity][onEvent][AudioPlayingEvent]");
 
-    dismissProgressDialog();
-
     audioPlayer = event.getAudioPlayer();
     audioPlayer.seekTo(
         episodeCheckpoint.getLastCheckpointPosition(episode, playerCurrentPosition)
@@ -122,6 +114,10 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     mediaController.setMediaPlayer(audioPlayer);
     mediaController.setAnchorView(findViewById(R.id.audio_view));
     mediaController.show();
+
+    if (episode != null) {
+      episodeDescription.setText(fromHtml(episode.getDescription()));
+    }
   }
 
   public void onEvent(AudioStoppedEvent event) {
@@ -130,69 +126,33 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     finish();
   }
 
-  private void setPlayerCurrentPosition(Integer newPosition) {
+  private Episode playAudio() {
+    Intent intent = new Intent(AudioPlayerActivity.this, AudioPlayerService.class);
+    intent.setAction(ACTION_PLAY);
+
+    Episode episode = getEpisode();
+    intent.putExtra(Episode.class.toString(), episode);
+
+    Log.i(MYPODCASTS_TAG, "playing episode: " + episode);
+
+    stopService(intent);
+    startService(intent);
+
+    return episode;
+  }
+
+  private Episode getEpisode() {
+    if (episode == null) {
+      episode = (Episode) getIntent().getSerializableExtra(Episode.class.toString());
+    }
+
+    return episode;
+  }
+
+  private void setPlayerCurrentPosition(int newPosition) {
+    if (episode == null || audioPlayer == null) return;
+
     playerCurrentPosition = newPosition;
     episodeCheckpoint.markCheckpoint(episode, audioPlayer.getCurrentPosition());
-  }
-
-  private void dismissProgressDialog() {
-    if (progressDialog != null && progressDialog.isShowing()) {
-      progressDialog.dismiss();
-    }
-  }
-
-  private class PlayAudioAsyncTask extends RetryableAsyncTask<Void, Void, Episode> {
-    public PlayAudioAsyncTask() {
-      super(AudioPlayerActivity.this);
-    }
-
-    @Override
-    protected void onPreExecute() {
-      showProgressDialog();
-    }
-
-    @Override
-    protected Episode doInBackground(Void... params) {
-      return playAudio();
-    }
-
-    @Override
-    protected void onPostExecute(Episode episode) {
-      if (episode == null) { return; }
-
-      episodeDescription.setText(fromHtml(episode.getDescription()));
-    }
-
-    private void showProgressDialog() {
-      String episodeTitle = getEpisode() == null ? "" : getEpisode().getTitle();
-
-      progressDialog.show();
-      progressDialog.setMessage(
-          format(getResources().getString(R.string.loading_episode), episodeTitle)
-      );
-    }
-
-    private Episode playAudio() {
-      Intent intent = new Intent(AudioPlayerActivity.this, AudioPlayerService.class);
-      intent.setAction(ACTION_PLAY);
-
-      Episode episode = getEpisode();
-      intent.putExtra(Episode.class.toString(), episode);
-
-      Log.i(MYPODCASTS_TAG, "playing episode: " + episode);
-
-      stopService(intent);
-      startService(intent);
-
-      return episode;
-    }
-
-    private Episode getEpisode() {
-      if (episode == null) {
-        episode = (Episode) getIntent().getSerializableExtra(Episode.class.toString());
-      }
-
-      return episode;
-    }
   }
 }

@@ -21,7 +21,7 @@ public class EpisodeCheckpoint {
     this.context = context;
   }
 
-  public Integer markCheckpoint(Episode episode, Integer currentPosition) {
+  public int markCheckpoint(Episode episode, int currentPosition) {
     SharedPreferences.Editor editor = getSharedPreferences().edit();
 
     Log.i(MYPODCASTS_TAG, "Mark playing episode checkpoint: " + episode);
@@ -31,7 +31,7 @@ public class EpisodeCheckpoint {
     return currentPosition;
   }
 
-  public Integer getLastCheckpointPosition(Episode episode, Integer defaultPosition) {
+  public int getLastCheckpointPosition(Episode episode, int defaultPosition) {
     SharedPreferences sharedPreferences = getSharedPreferences();
 
     return sharedPreferences.getInt(episodeKey(episode), defaultPosition);

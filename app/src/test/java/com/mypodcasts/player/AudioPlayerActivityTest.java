@@ -1,6 +1,5 @@
 package com.mypodcasts.player;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -19,7 +18,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -28,13 +26,10 @@ import java.util.Random;
 
 import de.greenrobot.event.EventBus;
 
-import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,7 +45,6 @@ public class AudioPlayerActivityTest {
 
   Episode episode;
 
-  ProgressDialog progressDialogMock = mock(ProgressDialog.class);
   AudioPlayerService audioPlayerServiceMock = mock(AudioPlayerService.class);
   AudioPlayer audioPlayerMock = mock(AudioPlayer.class);
   EpisodeCheckpoint episodeCheckpointMock = mock(EpisodeCheckpoint.class);
@@ -82,58 +76,6 @@ public class AudioPlayerActivityTest {
     AudioPlayerActivity activity = buildActivity(AudioPlayerActivity.class).create().stop().get();
 
     verify(eventBusMock).unregister(activity);
-  }
-
-  @Test
-  public void itShowsAndHideProgressDialog() {
-    when(progressDialogMock.isShowing()).thenReturn(true);
-
-    episode = new Episode() {
-      @Override
-      public String getTitle() {
-        return "Awesome episode";
-      }
-    };
-    String message = format(
-        application.getString(R.string.loading_episode), episode.getTitle()
-    );
-
-    AudioPlayerActivity activity = createActivity();
-    activity.onEvent(new AudioPlayingEvent(audioPlayerMock));
-
-    InOrder order = inOrder(progressDialogMock);
-
-    order.verify(progressDialogMock).show();
-    order.verify(progressDialogMock).setMessage(message);
-
-    order.verify(progressDialogMock).dismiss();
-  }
-
-  @Test
-  public void itShowsProgressDialogWithoutEpisodeInfoWhenItIsNull() {
-    when(progressDialogMock.isShowing()).thenReturn(true);
-
-    episode = null;
-    String message = format(application.getString(R.string.loading_episode), "");
-
-    createActivity();
-
-    InOrder order = inOrder(progressDialogMock);
-
-    order.verify(progressDialogMock).show();
-    order.verify(progressDialogMock).setMessage(message);
-  }
-
-  @Test
-  public void itDoNotCancelProgressDialogIfItIsNotShowing() {
-    when(progressDialogMock.isShowing()).thenReturn(false);
-
-    createActivity();
-
-    InOrder order = inOrder(progressDialogMock);
-
-    order.verify(progressDialogMock).show();
-    order.verify(progressDialogMock, never()).dismiss();
   }
 
   @Test
@@ -210,7 +152,7 @@ public class AudioPlayerActivityTest {
 
   @Test
   public void itStoresCurrentPositionOnPause() {
-    Integer currentPosition = new Random().nextInt();
+    int currentPosition = new Random().nextInt();
     when(audioPlayerMock.getCurrentPosition()).thenReturn(currentPosition);
 
     AudioPlayerActivity activity = createActivity();
@@ -233,7 +175,7 @@ public class AudioPlayerActivityTest {
 
   @Test
   public void itSeeksToLastCheckpointPositionOnResumeAfterPause() {
-    Integer currentPosition = new Random().nextInt();
+    int currentPosition = new Random().nextInt();
     when(audioPlayerMock.getCurrentPosition()).thenReturn(currentPosition);
 
     when(episodeCheckpointMock.getLastCheckpointPosition(episode, currentPosition))
@@ -307,7 +249,6 @@ public class AudioPlayerActivityTest {
     protected void configure() {
       bind(EventBus.class).toInstance(eventBusMock);
       bind(EpisodeCheckpoint.class).toInstance(episodeCheckpointMock);
-      bind(ProgressDialog.class).toInstance(progressDialogMock);
       bind(AudioPlayerService.class).toInstance(audioPlayerServiceMock);
       bind(AudioPlayer.class).toInstance(audioPlayerMock);
       bind(AudioPlayerController.class).toInstance(mediaControllerMock);
