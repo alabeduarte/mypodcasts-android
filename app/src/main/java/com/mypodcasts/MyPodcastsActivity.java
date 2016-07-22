@@ -40,6 +40,7 @@ public class MyPodcastsActivity extends RoboActionBarActivity {
 
   @Inject
   private UserFeedsRepository userFeedsRepository;
+  private FeedsAsyncTask feedsAsyncTask;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,16 @@ public class MyPodcastsActivity extends RoboActionBarActivity {
       }
     });
 
-    new FeedsAsyncTask(this).execute();
+    feedsAsyncTask = new FeedsAsyncTask(this);
+
+    feedsAsyncTask.execute();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+
+    feedsAsyncTask.cancel();
   }
 
   @Override

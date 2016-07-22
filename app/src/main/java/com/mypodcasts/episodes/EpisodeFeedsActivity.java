@@ -32,6 +32,7 @@ public class EpisodeFeedsActivity extends MyPodcastsActivity {
 
   @Inject
   private UserFeedsRepository userFeedsRepository;
+  private FeedEpisodesAsyncTask feedEpisodesAsyncTask;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,16 @@ public class EpisodeFeedsActivity extends MyPodcastsActivity {
 
     Feed feed = (Feed) getIntent().getSerializableExtra(Feed.class.toString());
 
-    new FeedEpisodesAsyncTask(this, feed).execute();
+    feedEpisodesAsyncTask = new FeedEpisodesAsyncTask(this, feed);
+
+    feedEpisodesAsyncTask.execute();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+
+    feedEpisodesAsyncTask.cancel();
   }
 
   @Override

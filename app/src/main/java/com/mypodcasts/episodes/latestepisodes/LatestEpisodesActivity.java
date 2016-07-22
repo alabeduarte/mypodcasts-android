@@ -35,12 +35,22 @@ public class LatestEpisodesActivity extends MyPodcastsActivity {
 
   @Inject
   private UserLatestEpisodesRepository userLatestEpisodesRepository;
+  private LatestEpisodesAsyncTask latestEpisodesAsyncTask;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    new LatestEpisodesAsyncTask(this).execute();
+    latestEpisodesAsyncTask = new LatestEpisodesAsyncTask(this);
+
+    latestEpisodesAsyncTask.execute();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+
+    latestEpisodesAsyncTask.cancel();
   }
 
   @Override
