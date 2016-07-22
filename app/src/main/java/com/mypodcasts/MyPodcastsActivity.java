@@ -1,5 +1,6 @@
 package com.mypodcasts;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -58,7 +59,7 @@ public class MyPodcastsActivity extends RoboActionBarActivity {
       }
     });
 
-    new FeedsAsyncTask().execute();
+    new FeedsAsyncTask(this).execute();
   }
 
   @Override
@@ -88,9 +89,8 @@ public class MyPodcastsActivity extends RoboActionBarActivity {
   }
 
   private class FeedsAsyncTask extends RetryableAsyncTask<Void, Void, List<Feed>> {
-
-    public FeedsAsyncTask() {
-      super(MyPodcastsActivity.this);
+    public FeedsAsyncTask(Activity activity) {
+      super(activity);
     }
 
     @Override

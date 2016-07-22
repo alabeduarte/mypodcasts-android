@@ -34,6 +34,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.RuntimeEnvironment.application;
@@ -91,6 +93,16 @@ public class EpisodeFeedsActivityTest {
     order.verify(progressDialogMock).setMessage(message);
 
     order.verify(progressDialogMock).dismiss();
+  }
+
+  @Test
+  public void itHidesProgressDialogOnDestroyToAvoidNotAttachedWindowManager() {
+    when(progressDialogMock.isShowing()).thenReturn(true);
+
+    createActivityWith(aFeed("Awesome Feed")).onDestroy();
+
+    // first hide dialog after async task, then hides again on destroy
+    verify(progressDialogMock, times(2)).dismiss();
   }
 
   @Test

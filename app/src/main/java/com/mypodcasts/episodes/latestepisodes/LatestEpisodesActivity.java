@@ -1,5 +1,6 @@
 package com.mypodcasts.episodes.latestepisodes;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -39,18 +40,41 @@ public class LatestEpisodesActivity extends MyPodcastsActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    new LatestEpisodesAsyncTask().execute();
+    new LatestEpisodesAsyncTask(this).execute();
+  }
+
+  @Override
+  protected void onDestroy() {
+    dismissProgressDialog();
+
+    super.onDestroy();
+  }
+
+  private void showProgressDialog() {
+    progressDialog.setIndeterminate(false);
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+    progressDialog.setMessage(getResources().getString(R.string.loading_latest_episodes));
+  }
+
+  private void dismissProgressDialog() {
+    if (progressDialog != null && progressDialog.isShowing()) {
+      progressDialog.dismiss();
+    }
   }
 
   class LatestEpisodesAsyncTask extends RetryableAsyncTask<Void, Void, List<Episode>> {
-    public LatestEpisodesAsyncTask() {
-      super(LatestEpisodesActivity.this);
+    private final Activity activity;
+
+    public LatestEpisodesAsyncTask(Activity activity) {
+      super(activity);
+
+      this.activity = activity;
     }
 
     @Override
     protected void onPreExecute() {
-      progressDialog.show();
-      progressDialog.setMessage(getResources().getString(R.string.loading_latest_episodes));
+      showProgressDialog();
     }
 
     @Override
@@ -60,9 +84,9 @@ public class LatestEpisodesActivity extends MyPodcastsActivity {
 
     @Override
     protected void onPostExecute(List<Episode> latestEpisodes) {
-      if (progressDialog != null && progressDialog.isShowing()) {
-        progressDialog.dismiss();
-      }
+      if (this.activity.isDestroyed()) return;
+
+      dismissProgressDialog();
 
       arguments.putSerializable(
           EpisodeList.HEADER,

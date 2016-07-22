@@ -1,5 +1,6 @@
 package com.mypodcasts.episodes;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -38,24 +39,45 @@ public class EpisodeFeedsActivity extends MyPodcastsActivity {
 
     Feed feed = (Feed) getIntent().getSerializableExtra(Feed.class.toString());
 
-    new FeedEpisodesAsyncTask(feed).execute();
+    new FeedEpisodesAsyncTask(this, feed).execute();
+  }
+
+  @Override
+  protected void onDestroy() {
+    dismissProgressDialog();
+
+    super.onDestroy();
+  }
+
+  private void showProgressDialog(String feedTitle) {
+    progressDialog.setIndeterminate(false);
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+    progressDialog.setMessage(format(
+        getResources().getString(R.string.loading_feed_episodes), feedTitle
+    ));
+  }
+
+  private void dismissProgressDialog() {
+    if (progressDialog != null && progressDialog.isShowing()) {
+      progressDialog.dismiss();
+    }
   }
 
   class FeedEpisodesAsyncTask extends RetryableAsyncTask<Void, Void, Feed> {
+    private final Activity activity;
     private final Feed feed;
 
-    public FeedEpisodesAsyncTask(Feed feed) {
-      super(EpisodeFeedsActivity.this);
+    public FeedEpisodesAsyncTask(Activity activity, Feed feed) {
+      super(activity);
 
+      this.activity = activity;
       this.feed = feed;
     }
 
     @Override
     protected void onPreExecute() {
-      progressDialog.show();
-      progressDialog.setMessage(format(
-          getResources().getString(R.string.loading_feed_episodes), feed.getTitle()
-      ));
+      showProgressDialog(feed.getTitle());
     }
 
     @Override
@@ -65,9 +87,9 @@ public class EpisodeFeedsActivity extends MyPodcastsActivity {
 
     @Override
     protected void onPostExecute(Feed feed) {
-      if (progressDialog != null && progressDialog.isShowing()) {
-        progressDialog.dismiss();
-      }
+      if (this.activity.isDestroyed()) return;
+
+      dismissProgressDialog();
 
       arguments.putSerializable(
           EpisodeList.HEADER,
