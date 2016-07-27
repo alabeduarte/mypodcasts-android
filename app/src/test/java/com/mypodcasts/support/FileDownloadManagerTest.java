@@ -11,7 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.mockito.Matchers.any;
@@ -21,7 +21,7 @@ import static org.robolectric.RuntimeEnvironment.application;
 import static roboguice.RoboGuice.Util.reset;
 import static roboguice.RoboGuice.overrideApplicationInjector;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class FileDownloadManagerTest {
   private DownloadManager downloadManagerMock = mock(DownloadManager.class);

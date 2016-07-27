@@ -21,11 +21,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.Serializable;
 import java.util.List;
+
+import roboguice.activity.RoboFragmentActivity;
 
 import static com.mypodcasts.util.ListViewHelper.performItemClickAtPosition;
 import static java.lang.String.valueOf;
@@ -34,13 +36,13 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.robolectric.Robolectric.setupActivity;
 import static org.robolectric.RuntimeEnvironment.application;
 import static org.robolectric.Shadows.shadowOf;
-import static org.robolectric.util.FragmentTestUtil.startFragment;
 import static roboguice.RoboGuice.Util.reset;
 import static roboguice.RoboGuice.overrideApplicationInjector;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class EpisodeListFragmentTest {
 
@@ -50,10 +52,13 @@ public class EpisodeListFragmentTest {
   List<Episode> emptyList = emptyList();
 
   ImageLoader imageLoaderMock = mock(ImageLoader.class);
+  Activity activity;
 
   @Before
   public void setup() {
     overrideApplicationInjector(application, new MyTestModule());
+
+    activity = setupActivity(RoboFragmentActivity.class);
   }
 
   @After
@@ -175,7 +180,7 @@ public class EpisodeListFragmentTest {
     fragment = new EpisodeListFragment();
     fragment.setArguments(arguments);
 
-    startFragment(fragment);
+    activity.getFragmentManager().beginTransaction().add(fragment, null).commit();
 
     listView = (ListView) getView().findViewById(R.id.episodes_list_view);
   }

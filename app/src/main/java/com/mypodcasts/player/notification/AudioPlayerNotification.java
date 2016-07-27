@@ -4,6 +4,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Icon;
+import android.os.Build;
 
 import com.mypodcasts.R;
 import com.mypodcasts.player.AudioPlayerService;
@@ -56,6 +58,10 @@ public class AudioPlayerNotification {
 
     PendingIntent pendingIntent = PendingIntent.getService(context, 1, intent, FLAG_UPDATE_CURRENT);
 
-    return new Notification.Action.Builder(icon, title, pendingIntent).build();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      return new Notification.Action.Builder(Icon.createWithResource("", icon), title, pendingIntent).build();
+    } else {
+      return new Notification.Action.Builder(icon, title, pendingIntent).build();
+    }
   }
 }

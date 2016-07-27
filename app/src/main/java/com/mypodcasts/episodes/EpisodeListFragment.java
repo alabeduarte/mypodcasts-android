@@ -1,6 +1,5 @@
 package com.mypodcasts.episodes;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -74,9 +73,5 @@ public class EpisodeListFragment extends RoboFragment {
 
   private EpisodeListHeaderInfo getHeaderInfo() {
     return (EpisodeListHeaderInfo) getArguments().getSerializable(EpisodeList.HEADER);
-  }
-
-  private LayoutInflater getLayoutInflater(View view) {
-    return ((Activity) view.getContext()).getLayoutInflater();
   }
 }
