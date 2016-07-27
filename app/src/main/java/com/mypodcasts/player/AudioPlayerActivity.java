@@ -17,7 +17,9 @@ import com.mypodcasts.support.Support;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -103,6 +105,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     setPlayerCurrentPosition(savedInstanceState.getInt(AudioPlayer.class.toString()));
   }
 
+  @Subscribe
   public void onEvent(AudioPlayingEvent event) {
     Log.d(Support.MYPODCASTS_TAG, "[AudioPlayerActivity][onEvent][AudioPlayingEvent]");
 
@@ -120,6 +123,7 @@ public class AudioPlayerActivity extends RoboActionBarActivity {
     }
   }
 
+  @Subscribe
   public void onEvent(AudioStoppedEvent event) {
     Log.d(Support.MYPODCASTS_TAG, "[AudioPlayerActivity][onEvent][AudioStoppedEvent]");
 

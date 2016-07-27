@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 import static android.media.AudioManager.STREAM_MUSIC;
 

@@ -18,7 +18,7 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

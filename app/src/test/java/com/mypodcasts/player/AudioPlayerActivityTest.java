@@ -24,7 +24,7 @@ import org.robolectric.annotation.Config;
 import java.io.IOException;
 import java.util.Random;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;

@@ -10,7 +10,7 @@ import com.google.inject.Module;
 import com.google.inject.Scopes;
 import com.mypodcasts.support.MyPodcastsImageCache;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import retrofit.RestAdapter;
 
 public class MyPodcastsModule implements Module {

@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import roboguice.service.RoboService;
 
 import static com.mypodcasts.support.Support.MYPODCASTS_TAG;

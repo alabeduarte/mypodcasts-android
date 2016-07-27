@@ -21,7 +21,7 @@ android {
     minSdkVersion 21
     targetSdkVersion 23
     versionCode 1
-    versionName "0.1.0"
+    versionName "0.1.1"
   }
 
   buildTypes {
@@ -49,7 +49,7 @@ dependencies {
   compile 'com.mcxiaoke.volley:library:1.0.19'
   compile 'joda-time:joda-time:2.9'
 
-  compile 'de.greenrobot:eventbus:2.4.0'
+  compile 'org.greenrobot:eventbus:3.0.0'
 
   testCompile 'junit:junit:4.12'
   testCompile "org.mockito:mockito-core:1.10.19"
