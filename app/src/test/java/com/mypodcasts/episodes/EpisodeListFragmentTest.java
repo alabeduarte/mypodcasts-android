@@ -29,6 +29,7 @@ import java.util.List;
 
 import roboguice.activity.RoboFragmentActivity;
 
+import static com.mypodcasts.util.EpisodeHelper.anEpisode;
 import static com.mypodcasts.util.ListViewHelper.performItemClickAtPosition;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
@@ -188,10 +189,6 @@ public class EpisodeListFragmentTest {
   private Intent peekNextStartedActivity() {
     Activity activity = fragment.getActivity();
     return shadowOf(activity).peekNextStartedActivity();
-  }
-
-  private Episode anEpisode() {
-    return new Episode();
   }
 
   private View getView() {

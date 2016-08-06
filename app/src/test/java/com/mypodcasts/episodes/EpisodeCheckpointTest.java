@@ -15,6 +15,7 @@ import org.robolectric.annotation.Config;
 import java.util.Random;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.mypodcasts.util.EpisodeHelper.anEpisode;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.RuntimeEnvironment.application;
@@ -60,22 +61,5 @@ public class EpisodeCheckpointTest {
     return application.getSharedPreferences(
         EpisodeCheckpoint.STATE, MODE_PRIVATE
     );
-  }
-
-  private Episode anEpisode() {
-    return new Episode() {
-      @Override public String getTitle() {
-        return "An awesome episode";
-      }
-
-      @Override public Feed getFeed() {
-        return new Feed() {
-          @Override
-          public String getId() {
-            return "crazy_id_123";
-          }
-        };
-      }
-    };
   }
 }

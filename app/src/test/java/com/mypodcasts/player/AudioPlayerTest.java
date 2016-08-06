@@ -9,6 +9,8 @@ import com.mypodcasts.player.events.AudioPlayingEvent;
 import com.mypodcasts.repositories.models.Audio;
 import com.mypodcasts.repositories.models.Episode;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,11 +20,8 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
-import org.greenrobot.eventbus.EventBus;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -33,10 +32,9 @@ import static org.mockito.Mockito.when;
 public class AudioPlayerTest {
 
   AudioPlayer audioPlayer;
+  EventBus eventBus;
 
   MediaPlayer mediaPlayerMock = mock(MediaPlayer.class);
-  EventBus eventBusMock = mock(EventBus.class);
-
   EpisodeFile episodeFileMock = mock(EpisodeFile.class);
 
   Episode episode = new Episode() {
@@ -58,7 +56,8 @@ public class AudioPlayerTest {
 
   @Before
   public void setup() {
-    audioPlayer = new AudioPlayer(mediaPlayerMock, eventBusMock, episodeFileMock);
+    eventBus = EventBus.getDefault();
+    audioPlayer = new AudioPlayer(mediaPlayerMock, eventBus, episodeFileMock);
   }
 
   @Test
@@ -91,9 +90,12 @@ public class AudioPlayerTest {
 
   @Test
   public void itBroadcastsEventThatAudioIsPlaying() throws IOException {
+    CustomBroadcastReceiver customBroadcastReceiver = new CustomBroadcastReceiver(eventBus);
+    assertThat(customBroadcastReceiver.isMessageReceived(), is(false));
+
     audioPlayer.onPrepared(mediaPlayerMock);
 
-    verify(eventBusMock).post(any(AudioPlayingEvent.class));
+    assertThat(customBroadcastReceiver.isMessageReceived(), is(true));
   }
 
   @Test
@@ -176,5 +178,22 @@ public class AudioPlayerTest {
     when(mediaPlayerMock.isPlaying()).thenReturn(true);
 
     assertThat(audioPlayer.isPlaying(), is(true));
+  }
+
+  public class CustomBroadcastReceiver {
+    private boolean isMessageReceived;
+
+    public CustomBroadcastReceiver(EventBus eventBus) {
+      eventBus.register(this);
+    }
+
+    @Subscribe
+    public void onEvent(AudioPlayingEvent event) {
+      this.isMessageReceived = true;
+    }
+
+    public boolean isMessageReceived() {
+      return isMessageReceived;
+    }
   }
 }

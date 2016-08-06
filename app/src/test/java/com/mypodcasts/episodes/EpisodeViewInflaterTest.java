@@ -33,6 +33,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.joda.time.DateTime.parse;
 import static org.joda.time.format.DateTimeFormat.forPattern;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -53,7 +54,6 @@ public class EpisodeViewInflaterTest {
   ViewGroup parent;
   LayoutInflater spiedLayoutInflater;
 
-  ImageLoader imageLoaderMock = mock(ImageLoader.class);
   EpisodeDownloader episodeDownloaderMock = mock(EpisodeDownloader.class);
 
   @Before
@@ -68,36 +68,34 @@ public class EpisodeViewInflaterTest {
       }
     };
 
-    episodeViewInflater = new EpisodeViewInflater(activity, imageLoaderMock, episodeDownloaderMock);
-  }
-
-  private View inflateView(View view, Episode episode) {
-    return episodeViewInflater.inflate(view).with(episode).from(parent);
+    episodeViewInflater = new EpisodeViewInflater(activity, mock(ImageLoader.class), episodeDownloaderMock);
   }
 
   private View inflateView(Episode episode) {
-    return inflateView(null, episode);
+    return episodeViewInflater.inflate(null).with(episode).from(parent);
   }
 
   @Test
   public void itIsVisible() {
-    assertThat(inflateView(new Episode()).getVisibility(), is(VISIBLE));
+    View inflatedView = inflateView(new Episode());
+
+    assertThat(inflatedView.getVisibility(), is(VISIBLE));
   }
 
   @Test
   public void itInflatesView() {
-    inflateView(new Episode());
+    View view = inflateView(new Episode());
 
-    verify(spiedLayoutInflater).inflate(R.layout.episode_list_item, parent, false);
+    assertNotNull(view);
   }
 
   @Test
   public void itDoesNotInflateViewWhenViewIsAlreadySet() {
     View view = spiedLayoutInflater.inflate(R.layout.episode_list_item, parent, false);
 
-    inflateView(view, new Episode());
-    inflateView(view, new Episode());
-    inflateView(view, new Episode());
+    episodeViewInflater.inflate(view).with(new Episode()).from(parent);
+    episodeViewInflater.inflate(view).with(new Episode()).from(parent);
+    episodeViewInflater.inflate(view).with(new Episode()).from(parent);
 
     verify(spiedLayoutInflater, times(1)).inflate(R.layout.episode_list_item, parent, false);
   }
@@ -360,7 +358,8 @@ public class EpisodeViewInflaterTest {
 
     when(episodeDownloaderMock.isAlreadyDownloaded(episode)).thenReturn(false);
 
-    ViewGroup downloadButtonLayout = (ViewGroup) inflateView(episode)
+    View inflatedView = inflateView(episode);
+    ViewGroup downloadButtonLayout = (ViewGroup) inflatedView
         .findViewById(R.id.episode_download_layout);
 
     assertThat(downloadButtonLayout.getVisibility(), is(VISIBLE));
@@ -372,7 +371,8 @@ public class EpisodeViewInflaterTest {
 
     when(episodeDownloaderMock.isAlreadyDownloaded(episode)).thenReturn(true);
 
-    ViewGroup downloadButtonLayout = (ViewGroup) inflateView(episode)
+    View inflatedView = inflateView(episode);
+    ViewGroup downloadButtonLayout = (ViewGroup) inflatedView
         .findViewById(R.id.episode_download_layout);
 
     assertThat(downloadButtonLayout.getVisibility(), is(INVISIBLE));

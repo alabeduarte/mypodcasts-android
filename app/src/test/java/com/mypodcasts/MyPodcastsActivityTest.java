@@ -1,7 +1,8 @@
 package com.mypodcasts;
 
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Intent;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
@@ -10,7 +11,6 @@ import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.models.Feed;
 
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.mypodcasts.util.FeedHelper.aFeed;
 import static com.mypodcasts.util.ListViewHelper.performItemClickAtPosition;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -39,11 +40,7 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 @Config(constants = BuildConfig.class)
 public class MyPodcastsActivityTest {
 
-  MyPodcastsActivity activity;
-  ListView leftDrawer;
-
   UserFeedsRepository userFeedsRepositoryMock = mock(UserFeedsRepository.class);
-  ProgressDialog progressDialogMock = mock(ProgressDialog.class);
 
   @Before
   public void setup() {
@@ -57,9 +54,11 @@ public class MyPodcastsActivityTest {
 
   @Test
   public void itReturnsEmptyListWhenThereAreNoFeedsAvailable() {
-    createActivityWith(Collections.<Feed>emptyList());
+    Activity activity = createActivityWith(Collections.<Feed>emptyList());
 
-    assertThat(leftDrawer.getCount(), is(0));
+    ListView listView = (ListView) activity.findViewById(R.id.left_drawer);
+
+    assertThat(listView.getCount(), is(0));
   }
 
   @Test
@@ -69,10 +68,13 @@ public class MyPodcastsActivityTest {
       add(aFeed("Feed 2"));
     }};
 
-    createActivityWith(feeds);
+    MyPodcastsActivity activity = createActivityWith(feeds);
+    ListView listView = (ListView) activity.findViewById(R.id.left_drawer);
 
-    Feed menuItem1 = (Feed) leftDrawer.getAdapter().getItem(0);
-    Feed menuItem2 = (Feed) leftDrawer.getAdapter().getItem(1);
+    ListAdapter listAdapter = listView.getAdapter();
+
+    Feed menuItem1 = (Feed) listAdapter.getItem(0);
+    Feed menuItem2 = (Feed) listAdapter.getItem(1);
 
     assertThat(menuItem1, is(feeds.get(0)));
     assertThat(menuItem2, is(feeds.get(1)));
@@ -80,11 +82,13 @@ public class MyPodcastsActivityTest {
 
   @Test
   public void itOpensFeedPodcastsOnItemClick() {
-    createActivityWith(asList(aFeed("Some feed")));
+    MyPodcastsActivity activity = createActivityWith(asList(aFeed("Some feed")));
+    ListView listView = (ListView) activity.findViewById(R.id.left_drawer);
 
-    performItemClickAtPosition(leftDrawer, 0);
+    performItemClickAtPosition(listView, 0);
 
     Intent intent = shadowOf(activity).peekNextStartedActivity();
+
     assertThat(
         EpisodeFeedsActivity.class.getCanonicalName(),
         is(intent.getComponent().getClassName())
@@ -94,40 +98,27 @@ public class MyPodcastsActivityTest {
   @Test
   public void itOpensFeedPodcastsOnItemClickPassingAnFeedToBeOpenned() {
     Feed someFeed = aFeed("Some feed");
-    createActivityWith(asList(someFeed));
+    MyPodcastsActivity activity = createActivityWith(asList(someFeed));
+    ListView listView = (ListView) activity.findViewById(R.id.left_drawer);
 
-    Matcher<Serializable> serializedFeed = CoreMatchers.<Serializable>is(someFeed);
-
-    performItemClickAtPosition(leftDrawer, 0);
+    performItemClickAtPosition(listView, 0);
 
     Intent intent = shadowOf(activity).peekNextStartedActivity();
 
     assertThat(
         intent.getSerializableExtra(Feed.class.toString()),
-        serializedFeed
+        CoreMatchers.<Serializable>is(someFeed)
     );
   }
 
-  private Feed aFeed(final String title) {
-    return new Feed() {
-      @Override
-      public String getTitle() {
-        return title;
-      }
-    };
-  }
-
-  private void createActivityWith(List<Feed> feeds) {
+  private MyPodcastsActivity createActivityWith(List<Feed> feeds) {
     when(userFeedsRepositoryMock.getFeeds()).thenReturn(feeds);
 
-    activity = buildActivity(MyPodcastsActivity.class).create().get();
-    leftDrawer = (ListView) activity.findViewById(R.id.left_drawer);
+    return buildActivity(MyPodcastsActivity.class).create().get();
   }
-
   public class MyTestModule extends AbstractModule {
     @Override
     protected void configure() {
-      bind(ProgressDialog.class).toInstance(progressDialogMock);
       bind(UserFeedsRepository.class).toInstance(userFeedsRepositoryMock);
     }
   }

@@ -1,17 +1,12 @@
 package com.mypodcasts.episodes.latestepisodes;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.os.Bundle;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
 import com.mypodcasts.BuildConfig;
 import com.mypodcasts.R;
-import com.mypodcasts.episodes.EpisodeList;
-import com.mypodcasts.episodes.EpisodeListFragment;
-import com.mypodcasts.episodes.EpisodeListHeaderInfo;
-import com.mypodcasts.episodes.EpisodeViewInflater;
 import com.mypodcasts.repositories.UserFeedsRepository;
 import com.mypodcasts.repositories.UserLatestEpisodesRepository;
 import com.mypodcasts.repositories.models.Episode;
@@ -24,11 +19,12 @@ import org.mockito.InOrder;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -46,14 +42,10 @@ import static roboguice.RoboGuice.overrideApplicationInjector;
 public class LatestEpisodesActivityTest {
 
   LatestEpisodesActivity activity;
-  EpisodeListFragment episodeListFragment = new EpisodeListFragment();
 
-  EpisodeViewInflater episodeViewInflaterMock = mock(EpisodeViewInflater.class);
   UserFeedsRepository userFeedsMock = mock(UserFeedsRepository.class);
   UserLatestEpisodesRepository userLatestEpisodesRepositoryMock = mock(UserLatestEpisodesRepository.class);
   ProgressDialog progressDialogMock = mock(ProgressDialog.class);
-  FragmentManager fragmentManager = mock(FragmentManager.class);
-  FragmentTransaction transaction = mock(FragmentTransaction.class);
 
   List<Episode> emptyList = Collections.<Episode>emptyList();
 
@@ -71,32 +63,29 @@ public class LatestEpisodesActivityTest {
   public void itReplacesContentFrameByLatestEpisodesFragment() {
     activity = createActivity();
 
-    InOrder order = inOrder(fragmentManager, transaction);
-
-    order.verify(fragmentManager).beginTransaction();
-    order.verify(transaction).replace(R.id.content_frame, episodeListFragment);
-    order.verify(transaction).commitAllowingStateLoss();
+    assertNotNull(activity.findViewById(R.id.content_frame));
+    assertNotNull(activity.findViewById(R.id.episodes_list_title));
+    assertNotNull(activity.findViewById(R.id.episodes_list_view));
   }
 
   @Test
-  public void itSetsFragmentHeader() {
+  public void itSetsHeader() {
     activity = createActivity();
 
-    EpisodeListHeaderInfo headerInfo = (EpisodeListHeaderInfo) episodeListFragment.getArguments()
-        .getSerializable(EpisodeList.HEADER);
+    TextView episodesListTitle = (TextView) activity.findViewById(R.id.episodes_list_title);
 
-    assertThat(headerInfo.getTitle(), is(application.getString(R.string.latest_episodes)));
+    assertThat(valueOf(episodesListTitle.getText()), is(application.getString(R.string.latest_episodes)));
   }
 
   @Test
-  public void itSetsFragmentEpisodeList() {
+  public void itSetsEpisodeList() {
     activity = createActivityWith(emptyList);
 
-    Bundle arguments = episodeListFragment.getArguments();
-    Serializable serializable = arguments.getSerializable(EpisodeList.LIST);
-    EpisodeList episodeList = (EpisodeList) serializable;
+    ListView episodesListView = (ListView) activity.findViewById(R.id.episodes_list_view);
 
-    assertThat(episodeList.getEpisodes(), is(emptyList));
+    assertNotNull(episodesListView);
+
+    assertThat(episodesListView.getAdapter().getCount(), is(emptyList.size()));
   }
 
   @Test
@@ -137,12 +126,6 @@ public class LatestEpisodesActivityTest {
   }
 
   LatestEpisodesActivity createActivityWith(List<Episode> episodes) {
-    when(fragmentManager.beginTransaction())
-        .thenReturn(transaction);
-
-    when(transaction.replace(R.id.content_frame, episodeListFragment))
-        .thenReturn(transaction);
-
     when(userLatestEpisodesRepositoryMock.getLatestEpisodes()).thenReturn(episodes);
 
     return buildActivity(LatestEpisodesActivity.class).create().get();
@@ -158,9 +141,6 @@ public class LatestEpisodesActivityTest {
       bind(ProgressDialog.class).toInstance(progressDialogMock);
       bind(UserFeedsRepository.class).toInstance(userFeedsMock);
       bind(UserLatestEpisodesRepository.class).toInstance(userLatestEpisodesRepositoryMock);
-      bind(FragmentManager.class).toInstance(fragmentManager);
-      bind(EpisodeListFragment.class).toInstance(episodeListFragment);
-      bind(EpisodeViewInflater.class).toInstance(episodeViewInflaterMock);
     }
   }
 }

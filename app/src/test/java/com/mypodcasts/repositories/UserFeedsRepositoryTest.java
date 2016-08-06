@@ -46,13 +46,80 @@ public class UserFeedsRepositoryTest {
     givenThat(get(urlEqualTo(userFeedsPath))
         .willReturn(aResponse()
             .withStatus(200)
-            .withBodyFile("user_feeds.json")));
+            .withBody("[" +
+                "  {" +
+                "    \"id\": \"123456\"," +
+                "    \"title\": \"Some podcast\"," +
+                "    \"image\": {" +
+                "      \"url\": \"http://example.com/feed_image.jpg\"" +
+                "    }" +
+                "  }," +
+                "  {" +
+                "    \"id\": \"98765\"," +
+                "    \"title\": \"Another podcast\"," +
+                "    \"image\": {" +
+                "      \"url\": \"http://example.com/another_feed_image.jpg\"" +
+                "    }" +
+                "  }" +
+                "]")
+        )
+    );
     when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
 
     givenThat(get(urlEqualTo(userFeedPath))
         .willReturn(aResponse()
             .withStatus(200)
-            .withBodyFile("user_feed_episodes.json")));
+            .withBody("{" +
+                "  \"id\": \"123456\"," +
+                "  \"title\": \"Some podcast\"," +
+                "  \"image\":{" +
+                "    \"url\": \"http://example.com/feed_image.jpg\"" +
+                "  }," +
+                "  \"episodes\": [" +
+                "    {" +
+                "      \"title\": \"Newest Episode!\"," +
+                "      \"publishedDate\": \"2015-09-23T15:00:00.000Z\"," +
+                "      \"description\": \"Newest episode description\"," +
+                "      \"duration\": \"01:01:07\"," +
+                "      \"image\": {" +
+                "        \"url\": \"http://example.com/episode_image.png\"" +
+                "      }," +
+                "      \"audio\": {" +
+                "        \"url\": \"http://example.com/newest_episode.mp3\"," +
+                "        \"length\": \"60000000\"," +
+                "        \"type\": \"audio/mpeg\"" +
+                "      }," +
+                "      \"podcast\":{" +
+                "        \"title\": \"MyPodcasts\"," +
+                "        \"image\":{" +
+                "          \"url\": \"http://example.com/feed_image.jpg\"" +
+                "        }" +
+                "      }" +
+                "    }," +
+                "    {" +
+                "      \"title\": \"Newest Episode from another podcast\"," +
+                "      \"publishedDate\": \"2015-05-15T15:00:00.000Z\"," +
+                "      \"description\": \"Another newest episode description\"," +
+                "      \"duration\": \"01:21:38\"," +
+                "      \"image\": {" +
+                "        \"url\": \"http://example.com/episode_image.png\"" +
+                "      }," +
+                "      \"audio\": {" +
+                "        \"url\": \"http://example.com/another_newest_episode.mp3\"," +
+                "        \"length\": \"52417026\"," +
+                "        \"type\": \"audio/mpeg\"" +
+                "      }," +
+                "      \"podcast\": {" +
+                "        \"title\": \"Another podcasts\"," +
+                "        \"image\": {" +
+                "          \"url\": \"http://example.com/another_feed_image.jpg\"" +
+                "        }" +
+                "      }" +
+                "    }" +
+                "  ]" +
+                "}")
+        )
+    );
     when(resources.getString(R.string.base_url)).thenReturn("http://localhost:1111");
 
     httpClient = new HttpClient(resources, new RestAdapter.Builder());

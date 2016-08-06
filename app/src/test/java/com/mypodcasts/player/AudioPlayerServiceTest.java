@@ -8,6 +8,7 @@ import com.mypodcasts.BuildConfig;
 import com.mypodcasts.player.events.AudioStoppedEvent;
 import com.mypodcasts.repositories.models.Episode;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,8 @@ import java.io.IOException;
 
 import org.greenrobot.eventbus.EventBus;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -34,10 +37,12 @@ public class AudioPlayerServiceTest {
   Episode episode = new Episode();
 
   AudioPlayer audioPlayerMock = mock(AudioPlayer.class);
-  EventBus eventBusMock = mock(EventBus.class);
+  EventBus eventBus;
 
   @Before
   public void setup() {
+    eventBus = EventBus.getDefault();
+
     overrideApplicationInjector(application, new MyTestModule());
   }
 
@@ -87,23 +92,25 @@ public class AudioPlayerServiceTest {
 
   @Test
   public void itPausesAudioAndTriggerAudioStoppedEventOnActionStop() throws IOException {
+    CustomBroadcastReceiver customBroadcastReceiver = new CustomBroadcastReceiver(eventBus);
+    assertThat(customBroadcastReceiver.isMessageReceived(), is(false));
+
     createService(buildIntent(episode, AudioPlayerService.ACTION_STOP));
 
     verify(audioPlayerMock).pause();
-    verify(eventBusMock).post(any(AudioStoppedEvent.class));
+    assertThat(customBroadcastReceiver.isMessageReceived(), is(true));
   }
 
   @Test
   public void itReleasesAudioPlayerOnDestroy() {
     Intent intent = buildIntent(episode, AudioPlayerService.ACTION_PLAY);
-    buildService(AudioPlayerService.class).withIntent(intent).create().destroy().get();
+    buildService(AudioPlayerService.class, intent).create().destroy().get();
 
     verify(audioPlayerMock).release();
   }
 
   private Service createService(Intent intent) {
-    return buildService(AudioPlayerService.class)
-      .withIntent(intent)
+    return buildService(AudioPlayerService.class, intent)
       .create()
       .startCommand(0, 1)
       .get();
@@ -121,7 +128,23 @@ public class AudioPlayerServiceTest {
     @Override
     protected void configure() {
       bind(AudioPlayer.class).toInstance(audioPlayerMock);
-      bind(EventBus.class).toInstance(eventBusMock);
+    }
+  }
+
+  public class CustomBroadcastReceiver {
+    private boolean isMessageReceived;
+
+    public CustomBroadcastReceiver(EventBus eventBus) {
+      eventBus.register(this);
+    }
+
+    @Subscribe
+    public void onEvent(AudioStoppedEvent event) {
+      this.isMessageReceived = true;
+    }
+
+    public boolean isMessageReceived() {
+      return isMessageReceived;
     }
   }
 }

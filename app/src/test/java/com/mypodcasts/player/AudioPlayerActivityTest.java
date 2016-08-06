@@ -14,6 +14,7 @@ import com.mypodcasts.player.events.AudioPlayingEvent;
 import com.mypodcasts.player.events.AudioStoppedEvent;
 import com.mypodcasts.repositories.models.Episode;
 
+import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +24,6 @@ import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 import java.util.Random;
-
-import org.greenrobot.eventbus.EventBus;
 
 import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.is;

@@ -19,6 +19,7 @@ import java.util.List;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -83,23 +84,9 @@ public class FeedsAdapterTest {
     List<Feed> feeds = givenFeeds(new Feed());
     FeedsAdapter feedsAdapter = givenAdapaterWith(feeds);
 
-    feedsAdapter.getView(firstPosition, recycledView, parent);
+    View view = feedsAdapter.getView(firstPosition, recycledView, parent);
 
-    verify(spiedLayoutInflater).inflate(R.layout.feed_list_item, parent, false);
-  }
-
-  @Test
-  public void itDoesNotInflateViewWhenViewIsAlreadySet() {
-    List<Feed> feeds = givenFeeds(new Feed());
-    FeedsAdapter feedsAdapter = givenAdapaterWith(feeds);
-
-    recycledView = spiedLayoutInflater.inflate(R.layout.feed_list_item, parent, false);
-
-    feedsAdapter.getView(firstPosition, recycledView, parent);
-    feedsAdapter.getView(firstPosition, recycledView, parent);
-    feedsAdapter.getView(firstPosition, recycledView, parent);
-
-    verify(spiedLayoutInflater, times(1)).inflate(R.layout.feed_list_item, parent, false);
+    assertNotNull(view);
   }
 
   @Test
@@ -117,5 +104,19 @@ public class FeedsAdapterTest {
     String title = valueOf(textView.getText());
 
     assertThat(title, is("Some Feed"));
+  }
+
+  @Test
+  public void itDoesNotInflateViewWhenViewIsAlreadySet() {
+    List<Feed> feeds = givenFeeds(new Feed());
+    FeedsAdapter feedsAdapter = givenAdapaterWith(feeds);
+
+    recycledView = spiedLayoutInflater.inflate(R.layout.feed_list_item, parent, false);
+
+    feedsAdapter.getView(firstPosition, recycledView, parent);
+    feedsAdapter.getView(firstPosition, recycledView, parent);
+    feedsAdapter.getView(firstPosition, recycledView, parent);
+
+    verify(spiedLayoutInflater, times(1)).inflate(R.layout.feed_list_item, parent, false);
   }
 }
