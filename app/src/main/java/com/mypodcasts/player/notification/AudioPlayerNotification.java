@@ -43,10 +43,10 @@ public class AudioPlayerNotification {
         .setContentText(episode.getTitle())
         .setStyle(mediaStyle)
         .setVisibility(Notification.VISIBILITY_PUBLIC)
-        .addAction(generateAction(episode, android.R.drawable.ic_media_rew, REWIND, ACTION_REWIND))
-        .addAction(generateAction(episode, android.R.drawable.ic_media_pause, PAUSE, ACTION_PAUSE))
-        .addAction(generateAction(episode, android.R.drawable.ic_lock_power_off, STOP, ACTION_STOP))
-        .addAction(generateAction(episode, android.R.drawable.ic_media_ff, FAST_FORWARD, ACTION_FAST_FORWARD))
+        .addAction(generateAction(episode, R.drawable.ic_fast_rewind, REWIND, ACTION_REWIND))
+        .addAction(generateAction(episode, R.drawable.ic_pause, PAUSE, ACTION_PAUSE))
+        .addAction(generateAction(episode, R.drawable.ic_stop_black, STOP, ACTION_STOP))
+        .addAction(generateAction(episode, R.drawable.ic_fast_forward, FAST_FORWARD, ACTION_FAST_FORWARD))
         .build();
   }
 

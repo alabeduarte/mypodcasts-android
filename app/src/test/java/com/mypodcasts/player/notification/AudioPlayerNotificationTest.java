@@ -83,25 +83,25 @@ public class AudioPlayerNotificationTest {
     assertThat(String.valueOf(notification.actions[0].title), is(REWIND));
     assertThat(
         notification.actions[0].getIcon().toString(),
-        is(Icon.createWithResource("", android.R.drawable.ic_media_rew).toString())
+        is(Icon.createWithResource("", R.drawable.ic_fast_rewind).toString())
     );
 
     assertThat(String.valueOf(notification.actions[1].title), is(PAUSE));
     assertThat(
         notification.actions[1].getIcon().toString(),
-        is(Icon.createWithResource("", android.R.drawable.ic_media_pause).toString())
+        is(Icon.createWithResource("", R.drawable.ic_pause).toString())
     );
 
     assertThat(String.valueOf(notification.actions[2].title), is(STOP));
     assertThat(
         notification.actions[2].getIcon().toString(),
-        is(Icon.createWithResource("", android.R.drawable.ic_lock_power_off).toString())
+        is(Icon.createWithResource("", R.drawable.ic_stop_black).toString())
     );
 
     assertThat(String.valueOf(notification.actions[3].title), is(FAST_FORWARD));
     assertThat(
         notification.actions[3].getIcon().toString(),
-        is(Icon.createWithResource("", android.R.drawable.ic_media_ff).toString())
+        is(Icon.createWithResource("", R.drawable.ic_fast_forward).toString())
     );
   }
 }

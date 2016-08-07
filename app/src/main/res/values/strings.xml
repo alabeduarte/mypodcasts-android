@@ -3,7 +3,7 @@
 
   <string name="hello_world">Hello world!</string>
   <string name="action_settings">Settings</string>
-  <string name="base_url">http://mypodcasts-api-staging.herokuapp.com</string>
+  <string name="base_url">https://mypodcasts-api-staging.herokuapp.com</string>
 
   <string name="loading_latest_episodes">Loading the latest episodes</string>
   <string name="loading_feed_episodes">Loading %s episodes</string>
@@ -12,8 +12,9 @@
   <string name="drawer_open">Open Drawer</string>
   <string name="drawer_close">Close Drawer</string>
   <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a magna nec nisl cursus condimentum.</string>
-  <string name="episode_default_image">http://soundfusemag.com/wp-content/uploads/2013/06/Headphones-300x214.jpg</string>
+  <string name="episode_default_image">https://www.materialui.co/materialIcons/hardware/headset_black_144x144.png</string>
 
   <string name="no_internet_connection">No internet connection</string>
   <string name="retry">Retry</string>
+  <string name="search">Search</string>
 </resources>
