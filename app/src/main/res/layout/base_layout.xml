@@ -9,7 +9,7 @@
       android:layout_width="match_parent"
       android:orientation="vertical"
       >
-    <include android:id="@+id/tool_bar" layout="@layout/tool_bar"></include>
+    <include android:id="@+id/tool_bar" layout="@layout/tool_bar"/>
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"

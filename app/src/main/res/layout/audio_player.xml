@@ -3,7 +3,7 @@
                 android:id="@+id/audio_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-  <include android:id="@+id/tool_bar" layout="@layout/tool_bar"></include>
+  <include android:id="@+id/tool_bar" layout="@layout/tool_bar"/>
   <TextView
     android:id="@+id/episode_description"
     android:layout_height="match_parent"

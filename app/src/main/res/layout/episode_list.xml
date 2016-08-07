@@ -15,12 +15,18 @@
         android:id="@+id/episode_list_thumbnail"
         android:layout_width="60dp"
         android:layout_height="60dp"/>
-    <TextView
-        android:id="@+id/episodes_list_title"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        style="@style/EpisodeTitle"
-        />
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginStart="10dp">
+      <TextView
+          android:id="@+id/episodes_list_title"
+          android:layout_height="match_parent"
+          android:layout_width="match_parent"
+          style="@style/EpisodeTitle"
+          />
+    </LinearLayout>
   </LinearLayout>
   <ListView
       android:id="@+id/episodes_list_view"

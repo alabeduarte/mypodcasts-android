@@ -17,7 +17,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp">
+        android:layout_marginStart="10dp">
       <TextView
           android:id="@+id/episode_published_date"
           android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
       <LinearLayout
           android:orientation="horizontal"
           android:id="@+id/media_play_layout"
-          android:gravity="left"
+          android:gravity="start"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content">
         <ImageButton
@@ -66,8 +66,8 @@
       <LinearLayout
           android:id="@+id/episode_download_layout"
           android:orientation="horizontal"
-          android:layout_toRightOf="@+id/media_play_layout"
-          android:gravity="right"
+          android:layout_toEndOf="@+id/media_play_layout"
+          android:gravity="end"
           android:layout_width="match_parent"
           android:layout_height="wrap_content">
         <ImageButton
