@@ -29,6 +29,32 @@ I strongly recommend to use [Android Studio](http://developer.android.com/sdk/in
 $ ./gradlew test
 ```
 
+### Known issues with Android Studio
+
+Some actions need to be taken by if you face this error below when trying to run the tests locally through Android Studio:
+
+```
+java.io.FileNotFoundException: build/intermediates/bundles/debug/AndroidManifest.xml (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at org.robolectric.res.FileFsFile.getInputStream(FileFsFile.java:78)
+	at org.robolectric.manifest.AndroidManifest.parseAndroidManifest(AndroidManifest.java:130)
+	at org.robolectric.manifest.AndroidManifest.getTargetSdkVersion(AndroidManifest.java:480)
+	at org.robolectric.RobolectricTestRunner.pickSdkVersion(RobolectricTestRunner.java:380)
+	at org.robolectric.RobolectricTestRunner.runChild(RobolectricTestRunner.java:173)
+	at org.robolectric.RobolectricTestRunner.runChild(RobolectricTestRunner.java:63)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.robolectric.RobolectricTestRunner$1.evaluate(RobolectricTestRunner.java:140)
+```
+
+Set the `Working directory` with the variable `$MODULE_DIR$` and it should be fine.
+More details about this issue can be followed on [robolectric#1648](https://github.com/robolectric/robolectric/issues/1648).
+
 ## Running locally with stubbed service
 
 As we don't have any API live yet, there is a stub that return some feeds for local tests purposes.
