@@ -1,7 +1,7 @@
 # mypodcasts-android
 
 [![travis build](https://img.shields.io/travis/alabeduarte/mypodcasts-android.svg)](https://travis-ci.org/alabeduarte/mypodcasts-android)
-[![license](https://img.shields.io/npm/l/mypodcasts-android.svg)](https://spdx.org/licenses/MIT)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/alabeduarte/mypodcasts-android/blob/mypodcasts-android/LICENSE.txt)
 
 Podcast client for android.
 
