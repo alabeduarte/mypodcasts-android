@@ -1,6 +1,7 @@
-# My Podcasts
+# mypodcasts-android
 
-[![Build Status](https://snap-ci.com/alabeduarte/mypodcasts-android/branch/master/build_image)](https://snap-ci.com/alabeduarte/mypodcasts-android/branch/master)
+[![travis build](https://img.shields.io/travis/alabeduarte/mypodcasts-android.svg)](https://travis-ci.org/alabeduarte/mypodcasts-android)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/alabeduarte/mypodcasts-android/blob/mypodcasts-android/LICENSE.txt)
 
 Podcast client for android.
 
