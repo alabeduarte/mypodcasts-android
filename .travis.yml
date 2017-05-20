@@ -2,15 +2,14 @@ language: android
 jdk: oraclejdk8
 android:
   components:
-    - platform-tool
-    - build-tools-23.0.1
-    - android-23
-    - extra
+  - platform-tool
+  - build-tools-23.0.1
+  - android-23
+  - extra
 notifications:
   email: true
 before_cache:
 - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-
 cache:
   directories:
   - "$HOME/.m2"
@@ -18,10 +17,18 @@ cache:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
 script:
-  - "./gradlew test"
+- "./gradlew test"
+before_deploy: "./gradlew assemble"
 deploy:
-  provider: script
-  script:
-    - "sh ./ci/release.sh"
+  provider: releases
+  api_key:
+    secure: sJscVrGRUt6Fa8AoXRbJ1z1VNlTaPdK78getTM2NN8kRcFtaeaTyfdV4ldX3AmG1jXzbwHAeC028EMgrTnMpkjTnwXYE8ARTQJ1vhW2FAqFLBNXw7LGTtjxsmbwo2jF9CC1PAg44FsbY7QGGsJE6b2NF9/YHdci2hP1R+9UjyCMn60kZO6YM6hL8j3us8G2VI2UV4W7qp8m4ddr1wmNmenQZMX7vOpt3AF683/jAiYK3BNMPGnzridM+MSSypJ6xVLBsvhlDjT+qDH6zAFE6qZp0XFZfk1V38P5dZ+LBWzdqbqWy5PoP+dxySIgRcV5jMhybx+qxEp/bMF2n4zK/UNsZyrhgYjY575OzJDPzRiAQYefJPfJiD7F8D0ibxUrj1NeLTQxFe0r/NQw5bNFBB17ukNQ1kfW7iuRZMsS6Ddh1Qip622e+ixgElLnYhLdaQrq+elIfnHQTrOiqg/jdRzPlCNIbj+j03xVXyEgoUGUxjBaUIhPq8TrPCzgYgsvS4iJoecQ+TSX+XLqu3EEpxJSVBlghEBlOkdhBmGb6kBDdn/ztm3B39kI6uNe/NtYyJ1HUGUkJxK19dxV22tt9LImVRgxHPWuxkyLaOSPhoYwpvDnpIaLU9fiSY+1AOjs840Usowg4alH+q0JgyxxowKBmpQ7yirJrtuzSudCy7nA=
+  file: app/build/outputs/apk/app-release-unsigned.apk
+  file_glob: "true"
+  skip_cleanup: true
   on:
+    repo: alabeduarte/mypodcasts-android
     branch: master
+after_success:
+- sh ./ci/set_tags.sh
+- sh ./ci/release.sh
