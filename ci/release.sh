@@ -1,7 +1,5 @@
 #!/bin/bash
 
-./gradlew assemble
-
 echo "Upload app to TestFairy"
 
 rm app-release-unsigned.apk
