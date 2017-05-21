@@ -12,6 +12,9 @@ Let's make a good app to listen our favorite podcasts with all amazing features 
 <img src="screenshots/player.png" width="220" height="380" />
 <img src="screenshots/media_control_notification.png" width="180" height="380" />
 
+## Download the APK
+The APK is available [here](https://github.com/alabeduarte/mypodcasts-android/releases)
+
 ## Contributing:
 I have a set of features to be worked and I plan to make them available as soon as possible which are:
 
@@ -20,8 +23,6 @@ I have a set of features to be worked and I plan to make them available as soon 
 * Feed search (using [mypodcasts-api](https://github.com/alabeduarte/mypodcasts-api) on top of some existing API that retrieves those). 
  
 Some of this [issues](https://github.com/alabeduarte/mypodcasts-android/issues) are listed already, so any help will be well received.
-
-If you want to use the app and report bugs, please [send me an email](alabeduarte@gmail.com) so I can add you to the Beta testers list on [TestFairy](https://free.testfairy.com).
 
 ## Running tests:
 I strongly recommend to use [Android Studio](http://developer.android.com/sdk/index.html) for a smooth integration, but follow the command below if you wanna run all unit tests on your own environment:
